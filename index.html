@@ -2060,11 +2060,11 @@ document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.c
 document.addEventListener("click",e=>{ if(view!=="settings") return; const hit=document.elementFromPoint(e.clientX,e.clientY); const b=e.target.closest&&e.target.closest("[data-set]"); logDiag({click:b?b.dataset.set:(e.target.className||e.target.tagName)+"", hit:hit?(hit.className||hit.tagName)+"":"none"});},true);
 document.addEventListener("click",e=>{
   if(!(e.target.closest&&e.target.closest("#settings-body"))) return;
-  logDiag({handler:(e.target.closest("[data-set],[data-skin]")||{}).dataset?.set||"other"});
+  logDiag({handler:(e.target.closest("[data-set],button[data-skin]")||{}).dataset?.set||"other"});
   try{ settingsClick(e) }catch(err){ logDiag({err:"settings: "+(err&&err.message||err)}); const l=$("#v-settings .lede"); if(l) l.textContent="Something went wrong: "+(err&&err.message||err); }
 });
 function settingsClick(e){
-  const sk=e.target.closest("[data-skin]"); if(sk){skin=sk.dataset.skin;applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(err){}renderSettings();return}
+  const sk=e.target.closest("button[data-skin]"); if(sk){skin=sk.dataset.skin;applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(err){}renderSettings();return}
   const b=e.target.closest("[data-set]"); if(!b) return;
   const k=b.dataset.set;
   if(k==="quiz"){ openBook("quiz"); return logDiag({done:"quiz",open:!$("#intro").hidden}) }
