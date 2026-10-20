@@ -99,7 +99,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
 
 .stage{background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-#scroller,.leaf-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:28px 40px}
+#scroller,.leaf-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:64px 40px}
 .pageleaf{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;pointer-events:none;backface-visibility:hidden;will-change:transform}
 .pageleaf .leaf-sc{overflow:hidden}
 .pageleaf::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0}
@@ -118,8 +118,9 @@ button,input,textarea,select{font:inherit;color:inherit}
 .ribbon-clip{position:absolute;left:0;right:0;top:calc(100% - 1px);height:60px;overflow:hidden;pointer-events:none}
 .ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:scaleY(0);transform-origin:50% 0;transition:transform .42s cubic-bezier(.3,.9,.35,1.15);filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
 .ribbon svg{display:block;width:100%;height:100%;overflow:visible}
-.rb-fill{fill:var(--band)}
-.rb-line{fill:none;stroke:var(--rule);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
+.rb-bg{position:absolute;inset:0;background-color:var(--band);background-image:var(--noise);background-size:200px 200px;clip-path:polygon(0 0,100% 0,100% 100%,50% 59.1%,0 100%)}
+.ribbon svg{position:relative}
+.rb-line{fill:none;stroke:var(--rule);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
 .ribbon.on{transform:scaleY(1)}
 .ribbon:not(.on){transition-duration:.24s;transition-timing-function:ease-in}
 .foot{flex:none;background:var(--paper);background-image:var(--noise);background-size:200px 200px;padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -300,7 +301,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .exactions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 
 /* landing: lines only, no pills or rounded boxes */
-.landing{padding-block:12px 8px}
+.landing{padding-block:12px 8px;margin-top:-36px}
 .lwrap{display:grid;gap:40px}
 .lpanel{display:grid;gap:20px;max-width:920px;align-content:start;transition:opacity .28s ease,transform .28s ease}
 .lpanel.lout{opacity:0;transform:translateY(-6px)}
@@ -507,7 +508,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
   .nav button{white-space:nowrap}
-  #scroller,.leaf-sc{padding-block:18px 28px}
+  #scroller,.leaf-sc{padding-block:58px 28px}
+  .landing{margin-top:-40px}
   .vcard{grid-template-columns:1fr;gap:8px}
   .vcard .scorecol{display:flex;align-items:baseline;gap:10px}
   .aday{grid-template-columns:1fr;gap:4px}
@@ -570,7 +572,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Conjurings</button>
     </nav>
-    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-fill" d="M0 0V44L50 26L100 44V0Z"/><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span>
+    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><span class="rb-bg"></span><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span>
   </div>
 </header>
 
@@ -672,7 +674,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <button class="btn" type="button" id="intro-go">Turn the page</button>
         <div class="iswipe" id="iswipe" role="button" tabindex="0" aria-label="Swipe left to turn the page">
           <svg class="fp" viewBox="0 0 40 48" aria-hidden="true"><path d="M5 19a15 15 0 0 1 30 0M8 25c0-9 5-15 12-15s12 6 12 15v4M12 41c-2-4-3-8-3-13M12 22a8 8 0 0 1 16 0v9c0 5-1 9-3 13M16 23a4 4 0 0 1 8 0v9c0 5-2 9-4 12M20 24v9c0 4-1 7-3 10M28 36c0 3-1 6-2 8"/></svg>
-          <p class="iswipe-copy">Swipe left to turn the page</p>
+          <p class="iswipe-copy">Swipe left or tap to turn the page</p>
         </div>
       </div>
     </div>
@@ -2017,7 +2019,7 @@ $("#iswipe").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.p
   pg.addEventListener("pointermove",e=>{ if(x0===null) return; dx=Math.min(0,e.clientX-x0);
     if(!cap){ if(dx>-8) return; cap=true; pg.classList.add("drag"); try{pg.setPointerCapture(e.pointerId)}catch(err){} }
     pg.style.transform=`translateX(${dx}px) rotateY(${Math.max(dx*.03,-18)}deg)`; });
-  const up=()=>{ if(x0===null) return; x0=null; if(!cap) return; cap=false; pg.classList.remove("drag"); pg.style.transform="";
+  const up=e=>{ if(x0===null) return; x0=null; if(!cap){ if(!(e&&e.target&&e.target.closest&&e.target.closest("button,a"))) endIntro(); return } cap=false; pg.classList.remove("drag"); pg.style.transform="";
     if(dx<-60){pg.classList.add("gone");endIntro()} };
   pg.addEventListener("pointerup",up); pg.addEventListener("pointercancel",up);
 }
