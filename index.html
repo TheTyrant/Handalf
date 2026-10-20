@@ -17,6 +17,7 @@
   --f-mono:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --pill:999px;
   --eye:#F3E6CF; --pupil:#2E1B10;
+  --book-cover:#FFFFFF; --book-page:#E9E7E1; --book-spine:#141414; --book-line:#141414; --book-face:#141414; --book-eye:#FFFFFF; --book-pupil:#141414;
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
   color-scheme:dark;
 }
@@ -26,6 +27,7 @@
   --ultra:#3A3A3A; --ultra-soft:#EDEDED; --copper:#141414; --copper-soft:#EFEFEF;
   --good:#2A2A2A; --risk:#141414; --band:#FFFFFF; --band-fg:#141414;
   --eye:#FFFFFF; --pupil:#141414;
+  --book-cover:#4A2C18; --book-page:#F2E9D8; --book-spine:#2E1B10; --book-line:#2E1B10; --book-face:#D9B45E; --book-eye:#F3E6CF; --book-pupil:#2E1B10;
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
   color-scheme:light;
 }
@@ -42,16 +44,19 @@ button,input,textarea,select{font:inherit;color:inherit}
 
 /* masthead */
 .band{background-color:var(--band);background-image:var(--noise);background-size:200px 200px;color:var(--band-fg);border-bottom:1px solid var(--gold)}
-.mast{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;padding-block:26px 20px}
-.logo{width:64px;height:auto;color:var(--band-fg)}
+.mast{display:grid;grid-template-columns:auto auto 1fr;gap:20px;align-items:center;padding-block:16px 14px}
+.logo-btn{background:none;border:0;padding:0;border-radius:0;cursor:pointer;line-height:0;transition:transform .25s ease}
+.logo-btn:hover{transform:rotate(-4deg) translateY(-2px)}
+.logo-btn:focus-visible{outline:2px solid var(--gold-hi);outline-offset:4px}
+.logo{width:60px;height:auto;display:block}
+.brand{display:grid;justify-items:end;text-align:right;gap:2px}
+.edition{white-space:nowrap;font-family:var(--f-title);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 2px}
 .logo .gold{color:var(--copper)}
 .mark{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,8vw,92px);line-height:.95;letter-spacing:.01em;margin:0}
 .mark span{color:var(--copper)}
 :root[data-skin="ink"] .mark span{color:#6E6E6E}
-.tag{justify-self:end}
-.tag{max-width:36ch;display:grid;gap:6px;text-wrap:balance}
-.tagline{font-family:var(--f-title);font-weight:600;font-size:clamp(18px,2.2vw,24px);letter-spacing:.06em;color:var(--gold);margin:0}
-.tagsub{font-size:14px;color:var(--mute);margin:0}
+.tagline{font-family:var(--f-title);font-weight:600;font-size:clamp(14px,1.5vw,18px);letter-spacing:.06em;color:var(--gold);margin:4px 0 0}
+.tagsub{justify-self:end;align-self:end;max-width:36ch;font-size:14px;color:var(--mute);margin:0 0 4px;text-wrap:balance;text-align:right}
 .nav{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-block:0}
 .nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--gold) 62%,transparent);border-bottom:3px solid transparent}
 .nav button:hover{color:var(--gold-hi)}
@@ -348,7 +353,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 @media (max-width:860px){
   .results,.split,.ways3{grid-template-columns:1fr}
   .mast{grid-template-columns:auto 1fr}
-  .tag{grid-column:1/-1;justify-self:start}
+  .tagsub{grid-column:1/-1;justify-self:start;align-self:start;text-align:left;margin:0}
 }
 @media (max-width:520px){
   .run{grid-template-columns:1fr}
@@ -364,9 +369,11 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .perch{width:110px;margin-bottom:52px}
   .status{display:none}
   .mast{padding-block:14px 10px;gap:12px}
-  .logo{width:40px}
+  .logo{width:38px}
+  .edition{font-size:9.5px;letter-spacing:.1em}
+  .tagline{font-size:12px}
   .mark{font-size:40px}
-  .tag{display:none}
+  .tagsub{display:none}
   .nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
   .nav button{white-space:nowrap}
@@ -385,7 +392,6 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .stance .btn{grid-column:2}
   .status{width:100%;margin-left:0;padding-bottom:8px}
   .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
-  #reset-btn{margin-left:auto}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
 </style>
@@ -393,22 +399,31 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 <header class="band">
   <div class="wrap">
     <div class="mast">
-      <svg class="logo" viewBox="0 0 64 96" role="img" aria-label="Handalf the owl on a phone screen">
-        <rect x="4" y="2" width="56" height="92" rx="10" fill="none" stroke="currentColor" stroke-width="3"/>
-        <line x1="26" y1="10" x2="38" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-        <ellipse cx="32" cy="57" rx="18.5" ry="15" fill="none" stroke="currentColor" stroke-width="2.6"/>
-        <circle cx="24.5" cy="56.5" r="6.4" fill="var(--eye)" stroke="currentColor" stroke-width="1.6"/><circle cx="39.5" cy="56.5" r="6.4" fill="var(--eye)" stroke="currentColor" stroke-width="1.6"/>
-        <circle cx="25.5" cy="57.5" r="2.9" fill="var(--pupil)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--pupil)"/>
-        <circle cx="26.4" cy="56.3" r=".9" fill="var(--eye)"/><circle cx="39.4" cy="56.3" r=".9" fill="var(--eye)"/>
-        <path class="gold" fill="currentColor" d="M29.2 63.2h5.6L32 68.4z"/>
-        <path class="gold" fill="currentColor" d="M11.5 43.5C21 39.5 43 39.5 52.5 43.5C43 47 21 47 11.5 43.5Z"/>
-        <path class="gold" fill="currentColor" d="M21 42.5C24 34 27.5 25 34.5 18C38.5 15 43.5 15.5 45.5 19C41.5 18 38.5 20 37.6 23.5C38.6 29.5 39.6 36 41.8 42.5Z"/>
-        <path fill="var(--band)" d="M31.5 31l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>
-        <path class="gold" fill="currentColor" d="M50.5 24l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z"/>
-        <line x1="24" y1="84" x2="40" y2="84" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <button type="button" class="logo-btn" id="skin-btn" aria-label="Switch to the paperback look">
+      <svg class="logo" viewBox="0 0 64 84" aria-hidden="true">
+        <path d="M13 8h40a4 4 0 0 1 4 4v64a4 4 0 0 1-4 4H13z" fill="var(--book-page)" stroke="var(--book-line)" stroke-width="2"/>
+        <path d="M53 20h4M53 32h4M53 44h4M53 56h4M53 68h4" stroke="var(--book-line)" stroke-width="1" opacity=".5"/>
+        <path d="M9 4h40a4 4 0 0 1 4 4v64a4 4 0 0 1-4 4H9z" fill="var(--book-cover)" stroke="var(--book-line)" stroke-width="2.4" stroke-linejoin="round"/>
+        <rect x="4" y="4" width="9" height="72" rx="3" fill="var(--book-spine)" stroke="var(--book-line)" stroke-width="2.4"/>
+        <path d="M4 14h9M4 66h9" stroke="var(--book-face)" stroke-width="1.4"/>
+        <rect x="18" y="10" width="29" height="60" rx="2" fill="none" stroke="var(--book-face)" stroke-width="1.1" opacity=".6"/>
+        <g transform="translate(12.4 13.6) scale(.63)">
+          <ellipse cx="32" cy="57" rx="18.5" ry="15" fill="var(--book-cover)" stroke="var(--book-face)" stroke-width="2.8"/>
+          <circle cx="24.5" cy="56.5" r="6.4" fill="var(--book-eye)" stroke="var(--book-face)" stroke-width="1.8"/><circle cx="39.5" cy="56.5" r="6.4" fill="var(--book-eye)" stroke="var(--book-face)" stroke-width="1.8"/>
+          <circle cx="25.5" cy="57.5" r="2.9" fill="var(--book-pupil)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--book-pupil)"/>
+          <path fill="var(--book-face)" d="M29.2 63.2h5.6L32 68.4z"/>
+          <path fill="var(--book-face)" d="M11.5 43.5C21 39.5 43 39.5 52.5 43.5C43 47 21 47 11.5 43.5Z"/>
+          <path fill="var(--book-face)" d="M21 42.5C24 34 27.5 25 34.5 18C38.5 15 43.5 15.5 45.5 19C41.5 18 38.5 20 37.6 23.5C38.6 29.5 39.6 36 41.8 42.5Z"/>
+          <path fill="var(--book-cover)" d="M31.5 31l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>
+        </g>
       </svg>
-      <h1 class="mark">Hand<span>alf</span></h1>
-      <div class="tag"><p class="tagline">Make Content Magical</p><p class="tagsub">Find the take only you can make, measured against the crowd and backed by your own words.</p></div>
+      </button>
+      <div class="brand">
+        <p class="edition" id="edition"><span class="ed-name">Leather bound</span><span class="ed-hint"> · tap the book</span></p>
+        <h1 class="mark">Hand<span>alf</span></h1>
+        <p class="tagline">Find the magic in your stories.</p>
+      </div>
+      <p class="tagsub">Find the take only you can make, measured against the crowd and backed by your own words.</p>
     </div>
     <nav class="nav" role="tablist">
       <button role="tab" data-view="engine" aria-selected="true">Engine</button>
@@ -417,8 +432,6 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Export</button>
       <span class="status" id="status">Saved in this browser</span>
-      <button type="button" id="skin-btn">Black and white</button>
-      <button type="button" id="reset-btn" style="margin-right:0">Start over</button>
     </nav>
   </div>
 </header>
@@ -1645,13 +1658,17 @@ $("#export-body").addEventListener("change",e=>{const k=e.target.dataset&&e.targ
 $("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexport]"))show("export")});
 
 /* ---------- look: Leather or black and white ---------- */
-function applySkin(k){ if(k==="ink") document.documentElement.setAttribute("data-skin","ink"); else document.documentElement.removeAttribute("data-skin"); $("#skin-btn").textContent=k==="ink"?"Leather":"Black and white"; }
+function applySkin(k){
+  if(k==="ink") document.documentElement.setAttribute("data-skin","ink"); else document.documentElement.removeAttribute("data-skin");
+  $("#edition").innerHTML=k==="ink"?'<span class="ed-name">Paperback</span><span class="ed-hint"> · tap the book</span>':'<span class="ed-name">Leather bound</span><span class="ed-hint"> · tap the book</span>';
+  $("#skin-btn").setAttribute("aria-label",k==="ink"?"Switch to the leather bound look":"Switch to the paperback look");
+}
 let skin="leather"; try{skin=localStorage.getItem("handalf.skin")||"leather"}catch(e){}
 applySkin(skin);
 $("#skin-btn").addEventListener("click",()=>{skin=skin==="ink"?"leather":"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}});
 
 /* ---------- start over = landing ---------- */
-$("#reset-btn").addEventListener("click",goHome);
+
 
 function renderAll(){renderEngine();renderStances();renderProfile();renderVault();renderSources()}
 

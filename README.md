@@ -1,6 +1,6 @@
 # Handalf
 
-Make Content Magical. Conjure content with an idea and a relationship.
+Find the magic in your stories. Conjure content with an idea and a relationship.
 
 Handalf is also the name of the app's mascot, a wise owl in a wizard hat (named after Gandalf).
 

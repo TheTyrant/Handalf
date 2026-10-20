@@ -1,6 +1,6 @@
 # Handalf: 1of10 process mapped to the engine
 
-Tagline: Make Content Magical
+Tagline: Find the magic in your stories.
 
 ## What 1of10 does
 1. Outlier score: a video's views divided by its channel's typical views. 10x to 100x marks an outlier.
@@ -23,7 +23,7 @@ Tagline: Make Content Magical
 6. Start over: new search, redo brand setup, or erase everything.
 
 ## Look
-Two looks, switched from the header: Leather (brown leather with light monochrome noise, gold lines, gold serif tabs and headers) and Black and white (paper and ink line art, a children's book for business people). Web app layout: header fixed at the top, the icon row fixed as a footer, only the middle scrolls. Uncial wordmark, Cinzel titles, EB Garamond content titles. Logo: Handalf the owl's face in his wizard hat on a phone screen. Handalf, full body, rests on a branch that runs off the left edge of the screen and waves his wand to bring in each question.
+Two editions, switched by tapping the book logo: Leather bound (brown leather with light monochrome noise, gold lines, gold serif tabs and headers) and Paperback (black and white paper and ink line art, a children's book for business people). Web app layout: header fixed at the top, the icon row fixed as a footer, only the middle scrolls. Uncial wordmark, Cinzel titles, EB Garamond content titles. Logo: a book with Handalf's face on the cover, drawn in the other edition's colors so it previews the switch. Handalf, full body, rests on a branch that runs off the left edge of the screen and waves his wand to bring in each question.
 
 ## Tied to Claude today
 1. AI calls (engine, remix, interview, outlines) run on the viewer's Claude account. Standalone needs a small server holding an AI API key.
