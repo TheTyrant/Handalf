@@ -34,7 +34,7 @@
   color-scheme:dark;
 }
 /* leather bound: leather covers, cream pages with deep gray ink */
-:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx,:root:not([data-skin]) .bendwrap{
+:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx{
   --paper:#F4ECDA; --sheet:#FBF6EA; --ink:#2F2F2F; --mute:#655E54; --rule:#CDBE9C;
   --gold:#8A6620; --gold-hi:#6C4F15; --on-gold:#FFF8EA;
   --ultra:#3D5E8C; --ultra-soft:#E2E7EF; --copper:#8A6620; --copper-soft:#EEE2C6;
@@ -116,30 +116,16 @@ button,input,textarea,select{font:inherit;color:inherit}
 @keyframes turnIn{0%{transform:perspective(1500px) translateZ(0) rotateY(-112deg)}55%{transform:perspective(1500px) translateZ(90px) rotateY(-55deg)}100%{transform:perspective(1500px) translateZ(0) rotateY(0)}}
 .pageleaf.fx{position:fixed;inset:auto;z-index:55;box-shadow:0 18px 40px rgba(0,0,0,.35)}
 .pageunder{position:fixed;z-index:54;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
-.ipage .pageunder{position:absolute;inset:0;z-index:2;background-color:var(--sheet)}
-.bpage{display:grid;grid-template-rows:auto 1fr;width:100%;height:100%;background-color:var(--sheet);background-image:var(--noise);background-size:200px 200px}
-.bendwrap{z-index:56;perspective:1700px;perspective-origin:50% 40%;pointer-events:none;transform-style:preserve-3d}
-.bstrip{position:absolute;top:0;transform-style:preserve-3d;transform-origin:0 50%;will-change:transform}
-.bclip{position:absolute;inset:0;overflow:hidden}
-.bstrip-in{position:absolute;top:0;display:flex;flex-direction:column;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
-.ipage .bstrip-in{background-color:var(--sheet)}
-.bstrip-in>.leaf-sc{flex:1 1 auto;overflow:hidden}
-.bshade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.35));opacity:0}
-.bendwrap>.bstrip{box-shadow:0 20px 40px rgba(0,0,0,.25)}
+.ipage .pageunder{position:absolute;inset:0;z-index:2;display:grid;grid-template-rows:auto 1fr;background-color:var(--sheet)}
 @keyframes shade{0%{opacity:0}100%{opacity:1}}
 .turned{animation:settle .72s ease-out}
 .intro[hidden]{display:none!important}
 @keyframes settle{0%{filter:brightness(.82)}100%{filter:none}}
-.band{flex:none;position:relative;z-index:58}
+.band{flex:none;position:relative;z-index:6}
 .band>.wrap{position:relative}
-.ribbon-clip{position:absolute;left:0;right:0;top:calc(100% - 1px);height:70px;overflow:hidden;pointer-events:none;z-index:57}
-.ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:scaleY(0);transform-origin:50% 0;transition:transform .42s cubic-bezier(.3,.9,.35,1.15),left .6s cubic-bezier(.45,.05,.3,1),width .6s cubic-bezier(.45,.05,.3,1);filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
+.ribbon-clip{position:absolute;left:0;right:0;top:calc(100% - 1px);height:60px;overflow:hidden;pointer-events:none}
+.ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:scaleY(0);transform-origin:50% 0;transition:transform .42s cubic-bezier(.3,.9,.35,1.15);filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
 .ribbon svg{display:block;width:100%;height:100%;overflow:visible}
-.rb-sway{position:absolute;inset:0;transform-origin:50% 0}
-.ribbon.sway-r .rb-sway{animation:swayR .9s cubic-bezier(.3,.7,.4,1)}
-.ribbon.sway-l .rb-sway{animation:swayL .9s cubic-bezier(.3,.7,.4,1)}
-@keyframes swayR{0%{transform:none}25%{transform:rotate(-11deg) skewX(8deg) scaleY(1.08)}60%{transform:rotate(5deg) skewX(-4deg)}82%{transform:rotate(-2deg)}100%{transform:none}}
-@keyframes swayL{0%{transform:none}25%{transform:rotate(11deg) skewX(-8deg) scaleY(1.08)}60%{transform:rotate(-5deg) skewX(4deg)}82%{transform:rotate(2deg)}100%{transform:none}}
 .rb-bg{position:absolute;inset:0;background-color:var(--gold);background-image:var(--noise);background-size:200px 200px;clip-path:polygon(0 0,100% 0,100% 100%,50% 59.1%,0 100%)}
 .ribbon svg{position:relative}
 .rb-line{fill:none;stroke:color-mix(in srgb,var(--on-gold) 35%,transparent);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
@@ -650,7 +636,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="vault" aria-selected="false">Library<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Conjurings</button>
     </nav>
-    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><span class="rb-sway"><span class="rb-bg"></span><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span></span>
+    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><span class="rb-bg"></span><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span>
   </div>
 </header>
 
@@ -861,50 +847,16 @@ function cloneScroller(){
   c.querySelectorAll("input,textarea,select,button,a").forEach(n=>{n.setAttribute("tabindex","-1");n.removeAttribute("name")});
   return c;
 }
-/* ---------- paper page turn: the page is cut into strips that curl like real paper ---------- */
-const BEND={strips:12,ms:780};
-function bendLeaf(contentFn,host,rect,dir,onDone){
-  // host: element to append to; rect: {left,top,width,height} in host coords or fixed
-  const wrap=document.createElement("div"); wrap.className="bendwrap"; wrap.setAttribute("aria-hidden","true");
-  Object.assign(wrap.style,{left:rect.left+"px",top:rect.top+"px",width:rect.width+"px",height:rect.height+"px",position:rect.fixed?"fixed":"absolute"});
-  const n=BEND.strips, sw=rect.width/n, strips=[];
-  let parent=wrap;
-  for(let i=0;i<n;i++){
-    const st=document.createElement("div"); st.className="bstrip";
-    Object.assign(st.style,{left:(i?sw:0)+"px",width:(sw+0.6)+"px",height:rect.height+"px"});
-    const clip=document.createElement("div"); clip.className="bclip";
-    const inner=document.createElement("div"); inner.className="bstrip-in";
-    Object.assign(inner.style,{left:(-i*sw)+"px",width:rect.width+"px",height:rect.height+"px"});
-    inner.appendChild(contentFn());
-    const shade=document.createElement("div"); shade.className="bshade";
-    clip.append(inner,shade); st.appendChild(clip); parent.appendChild(st); strips.push({st,shade}); parent=st;
-  }
-  host.appendChild(wrap);
-  const t0=performance.now(), ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-  function frame(now){
-    let t=Math.min(1,(now-t0)/BEND.ms); const e=ease(t), p=dir>0?e:1-e;
-    const base=-178*p, curl=Math.sin(Math.PI*p)*(dir>0?-9:-9), lift=Math.sin(Math.PI*p)*70;
-    strips.forEach((s,i)=>{
-      const k=i/(n-1), a=i===0?base:curl*(0.35+k*0.9);
-      s.st.style.transform=i===0?`translateZ(${lift}px) rotateY(${a}deg)`:`rotateY(${a}deg)`;
-      const face=Math.abs(base+curl*k*n*0.6)%360;
-      s.shade.style.opacity=String(Math.min(.55,Math.sin(Math.PI*p)*(.15+k*.4)));
-    });
-    if(t<1) requestAnimationFrame(frame); else { wrap.remove(); onDone&&onDone() }
-  }
-  requestAnimationFrame(frame);
-  return wrap;
-}
 function fxBox(cls){ const r=$("#stage").getBoundingClientRect(), d=document.createElement("div"); d.className=cls+" stagefx"; d.setAttribute("aria-hidden","true");
   Object.assign(d.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"}); return d }
 function turnPage(from,to,dir){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches||!$("#stage")) return null;
-  document.querySelectorAll(".bendwrap.stagefx,.pageunder.stagefx").forEach(x=>x.remove());
-  const fwd=dir!=null?dir>0:(ORDER[to]??0)>=(ORDER[from]??0), sc=$("#scroller"), st=sc.scrollTop, r=$("#stage").getBoundingClientRect();
-  const rect={left:r.left,top:r.top,width:r.width,height:r.height,fixed:true};
-  if(fwd){ const old=cloneScroller(); const w=bendLeaf(()=>old.cloneNode(true),document.body,rect,1); w.classList.add("stagefx"); w.querySelectorAll(".leaf-sc").forEach(c=>c.scrollTop=st); return null }
-  const under=fxBox("pageunder"), old=cloneScroller(); under.appendChild(old); document.body.appendChild(under); old.scrollTop=st;
-  return ()=>{ const nw=cloneScroller(), ns=$("#scroller").scrollTop; const w=bendLeaf(()=>nw.cloneNode(true),document.body,rect,-1,()=>under.remove()); w.classList.add("stagefx"); w.querySelectorAll(".leaf-sc").forEach(c=>c.scrollTop=ns) };
+  document.querySelectorAll(".pageleaf.fx,.pageunder.stagefx").forEach(x=>x.remove());
+  const fwd=dir!=null?dir>0:(ORDER[to]??0)>=(ORDER[from]??0), sc=$("#scroller"), st=sc.scrollTop, old=cloneScroller();
+  if(fwd){ const leaf=fxBox("pageleaf fx fwd"); leaf.appendChild(old); document.body.appendChild(leaf); old.scrollTop=st; setTimeout(()=>leaf.remove(),760); return null }
+  const under=fxBox("pageunder"); under.appendChild(old); document.body.appendChild(under); old.scrollTop=st;
+  return ()=>{ const leaf=fxBox("pageleaf fx back"), nw=cloneScroller(); leaf.appendChild(nw); document.body.appendChild(leaf); nw.scrollTop=$("#scroller").scrollTop;
+    setTimeout(()=>{leaf.remove();under.remove()},760) };
 }
 function placeRibbon(v){
   const r=$("#ribbon"); if(!r) return;
@@ -914,9 +866,7 @@ function placeRibbon(v){
   const w=bb.width, x=bb.left-wrap.left;
   if(!r.classList.contains("on")||r.dataset.v===v) r.style.width=w+"px";
   const drop=()=>{r.style.left=x+"px";r.dataset.v=v;requestAnimationFrame(()=>r.classList.add("on"))};
-  if(r.classList.contains("on")&&r.dataset.v!==v){
-    const right=x>parseFloat(r.style.left||0); r.classList.remove("sway-l","sway-r"); void r.offsetWidth; r.classList.add(right?"sway-r":"sway-l");
-    r.style.width=w+"px"; r.style.left=x+"px"; r.dataset.v=v; return }
+  if(r.classList.contains("on")&&r.dataset.v!==v){r.classList.remove("on");setTimeout(()=>{r.style.width=w+"px";drop()},250);return}
   else if(!r.classList.contains("on")) drop();
   else r.style.left=x+"px";
 }
@@ -2240,16 +2190,14 @@ function bookTurn(dir,to){
   if(book.pages[book.i]==="reveal"&&dir>0&&book.pick){ state.profile.archetype=book.pick.primary; state.profile.archetype2=book.pick.secondary||""; persist("profile"); }
   const anim=!matchMedia("(prefers-reduced-motion: reduce)").matches, pg=$(".ipage");
   pg.querySelectorAll(".pageleaf,.pageunder").forEach(x=>x.remove());
-  pg.querySelectorAll(".bendwrap").forEach(x=>x.remove());
-  let under=null; const rect={left:0,top:pg.scrollTop,width:pg.clientWidth,height:pg.clientHeight};
-  const pageOf=parts=>{const d=document.createElement("div"); d.className="bpage"; d.append(...parts); return d};
+  let under=null;
   if(anim){
-    const old=pageOf(bookClone());
-    if(dir>0) bendLeaf(()=>old.cloneNode(true),pg,rect,1);
-    else { under=document.createElement("div"); under.className="pageunder"; under.setAttribute("aria-hidden","true"); under.style.top=pg.scrollTop+"px"; under.append(old); pg.appendChild(under) }
+    const old=bookClone();
+    if(dir>0){ const leaf=document.createElement("div"); leaf.className="pageleaf fwd"; leaf.setAttribute("aria-hidden","true"); leaf.style.top=pg.scrollTop+"px"; leaf.append(...old); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760) }
+    else { under=document.createElement("div"); under.className="pageunder"; under.setAttribute("aria-hidden","true"); under.style.top=pg.scrollTop+"px"; under.append(...old); pg.appendChild(under) }
   }
   book.i=ni; book.showGrid=false; renderBook();
-  if(under){ const nw=pageOf(bookClone()); bendLeaf(()=>nw.cloneNode(true),pg,rect,-1,()=>under.remove()) }
+  if(under){ const leaf=document.createElement("div"); leaf.className="pageleaf back"; leaf.setAttribute("aria-hidden","true"); leaf.append(...bookClone()); pg.appendChild(leaf); setTimeout(()=>{leaf.remove();under.remove()},760) }
 }
 function openBook(mode){
   const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
