@@ -1,6 +1,8 @@
 # Handalf
 
-Make Content Magical.
+Make Content Magical. Conjure content with an idea and a relationship.
+
+Handalf is also the name of the app's mascot, a wise owl in a wizard hat (named after Gandalf).
 
 Handalf is a contrarian content engine for creators. You give it a topic, and it maps what most creators in your space would say about it (the 1x baseline). It then ranks contrary takes by how far they move from that baseline and how well your own stances back them up.
 
