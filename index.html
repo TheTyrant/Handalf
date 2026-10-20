@@ -399,7 +399,18 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .ibook.read .ipage-in>*:nth-child(2){transition-delay:.2s}
 .ibook.read .ipage-in>*:nth-child(3){transition-delay:.6s}
 .ibook.read .ipage-in>*:nth-child(4){transition-delay:1s}
-.ibook.read .ipage-in>*:nth-child(5){transition-delay:1.4s}
+.ibook.read .ipage-in>*:nth-child(5),.ibook.read .ipage-in>*:nth-child(6){transition-delay:1.4s}
+.iswipe{display:none;position:relative;height:96px;margin-top:6px;cursor:pointer}
+.fp{position:absolute;top:0;left:calc(100% - 40px);width:40px;height:48px;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round;opacity:0}
+.iswipe-copy{position:absolute;left:0;right:0;top:60px;margin:0;font-family:var(--f-title);font-weight:600;font-size:13px!important;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)!important;text-align:center;clip-path:inset(0 0 0 100%)}
+.ibook.read .fp{animation:fpmove 2.6s cubic-bezier(.45,.05,.35,1) 1.9s infinite}
+.ibook.read .iswipe-copy{animation:fpcopy 2.6s cubic-bezier(.45,.05,.35,1) 1.9s infinite}
+@keyframes fpmove{0%{left:calc(100% - 40px);opacity:0}12%{left:calc(100% - 40px);opacity:1}72%{left:0;opacity:1}88%,100%{left:0;opacity:0}}
+@keyframes fpcopy{0%,12%{clip-path:inset(0 0 0 100%)}72%,100%{clip-path:inset(0 0 0 0)}}
+.ipage.drag{transition:none}
+.ipage{transform-origin:0 50%;transition:transform .45s cubic-bezier(.3,.8,.3,1)}
+.ipage.gone{transform:translateX(-105%) rotateY(18deg)}
+@media (max-width:640px),(pointer:coarse){.ipage-in #intro-go{display:none}.iswipe{display:block}.ipage{touch-action:pan-y}}
 .icover{position:absolute;inset:0;z-index:2;transform-origin:0 50%;transform-style:preserve-3d;transition:transform 1.5s cubic-bezier(.6,.05,.3,1),opacity .5s ease 1s}
 .ibook.open .icover{transform:rotateY(-180deg);opacity:0;pointer-events:none}
 .iface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-content:center;justify-items:center;text-align:center;gap:14px}
@@ -479,7 +490,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .status{width:100%;margin-left:0;padding-bottom:8px}
   .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.sprout *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.fp,.iswipe-copy,.sprout *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
 </style>
 
 <header class="band">
@@ -625,6 +636,10 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <p>I'm Handalf. I read the crowd, then I read you, and together we find the story only you can tell.</p>
         <p>Tell me who you are, give me a topic, and we'll conjure something worth saying.</p>
         <button class="btn" type="button" id="intro-go">Turn the page</button>
+        <div class="iswipe" id="iswipe" role="button" tabindex="0" aria-label="Swipe left to turn the page">
+          <svg class="fp" viewBox="0 0 40 48" aria-hidden="true"><path d="M5 19a15 15 0 0 1 30 0M8 25c0-9 5-15 12-15s12 6 12 15v4M12 41c-2-4-3-8-3-13M12 22a8 8 0 0 1 16 0v9c0 5-1 9-3 13M16 23a4 4 0 0 1 8 0v9c0 5-2 9-4 12M20 24v9c0 4-1 7-3 10M28 36c0 3-1 6-2 8"/></svg>
+          <p class="iswipe-copy">Swipe left to turn the page</p>
+        </div>
       </div>
     </div>
     <div class="icover">
@@ -1875,7 +1890,7 @@ $("#gear-btn").addEventListener("click",()=>show(view==="settings"?"start":"sett
 let introTimers=[];
 function playIntro(){
   const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
-  bk.className="ibook"; o.classList.remove("out"); o.hidden=false;
+  bk.className="ibook"; $(".ipage").classList.remove("gone"); o.classList.remove("out"); o.hidden=false;
   $("#intro-owner").textContent=state.profile.name||"you";
   if(matchMedia("(prefers-reduced-motion: reduce)").matches){bk.classList.add("open","read");$("#intro-go").focus();return}
   introTimers.push(setTimeout(()=>bk.classList.add("open"),900));
@@ -1889,7 +1904,15 @@ function endIntro(){
   lastAct=Date.now(); if(view==="start"){const i=$("#l-topic");if(i)i.focus()}
 }
 $("#intro-go").addEventListener("click",endIntro);
-$("#intro").addEventListener("click",e=>{if(e.target.closest("[data-skip]"))endIntro()});
+$("#intro").addEventListener("click",e=>{if(e.target.closest("[data-skip]")||e.target.closest("#iswipe"))endIntro()});
+$("#iswipe").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();endIntro()}});
+{ const pg=$(".ipage"); let x0=null, dx=0;
+  pg.addEventListener("pointerdown",e=>{ if(!$("#ibook").classList.contains("read")||e.target.closest("button,a")) return; x0=e.clientX; dx=0; pg.classList.add("drag"); try{pg.setPointerCapture(e.pointerId)}catch(err){} });
+  pg.addEventListener("pointermove",e=>{ if(x0===null) return; dx=Math.min(0,e.clientX-x0); pg.style.transform=`translateX(${dx}px) rotateY(${Math.max(dx*.03,-18)}deg)`; });
+  const up=()=>{ if(x0===null) return; x0=null; pg.classList.remove("drag"); pg.style.transform="";
+    if(dx<-60){pg.classList.add("gone");endIntro()} };
+  pg.addEventListener("pointerup",up); pg.addEventListener("pointercancel",up);
+}
 addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#intro").hidden)endIntro()});
 
 /* ---------- start over = landing ---------- */
