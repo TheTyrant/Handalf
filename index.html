@@ -34,7 +34,7 @@
   color-scheme:dark;
 }
 /* leather bound: leather covers, cream pages with deep gray ink */
-:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage{
+:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx{
   --paper:#F4ECDA; --sheet:#FBF6EA; --ink:#2F2F2F; --mute:#655E54; --rule:#CDBE9C;
   --gold:#8A6620; --gold-hi:#6C4F15; --on-gold:#FFF8EA;
   --ultra:#3D5E8C; --ultra-soft:#E2E7EF; --copper:#8A6620; --copper-soft:#EEE2C6;
@@ -94,11 +94,12 @@ button,input,textarea,select{font:inherit;color:inherit}
 .gear:hover .rays,.gear[aria-pressed="true"] .rays{transform:scale(1.24)}
 .gear:hover{color:var(--gold-hi)}
 .gear:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
-.nav{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-block:0}
-.nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--gold) 62%,transparent);border-bottom:3px solid transparent}
-.nav button:hover{color:var(--gold-hi)}
-.nav button[aria-selected="true"]{color:var(--gold);border-bottom-color:transparent}
-.nav .count{color:var(--copper);margin-left:6px}
+.nav{position:relative;display:flex;gap:2px;flex-wrap:wrap;padding-block:0;isolation:isolate}
+.nav::before{content:"";position:absolute;inset:0 -100vw;z-index:-1;background-color:var(--gold);background-image:var(--noise);background-size:200px 200px}
+.nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--on-gold) 62%,transparent);border-bottom:3px solid transparent}
+.nav button:hover{color:var(--on-gold)}
+.nav button[aria-selected="true"]{color:var(--on-gold);border-bottom-color:transparent}
+.nav .count{color:var(--on-gold);margin-left:6px}
 .status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
 
 .stage{background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}
@@ -107,11 +108,15 @@ button,input,textarea,select{font:inherit;color:inherit}
 .pageleaf .leaf-sc{overflow:hidden}
 .pageleaf::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0}
 .pageleaf.fwd{transform-origin:0 50%;animation:turnF .72s cubic-bezier(.55,.05,.4,1) forwards}
-.pageleaf.back{transform-origin:100% 50%;animation:turnB .72s cubic-bezier(.55,.05,.4,1) forwards}
+.pageleaf.back{transform-origin:0 50%;animation:turnIn .72s cubic-bezier(.45,0,.35,1) forwards}
 .pageleaf.fwd::after{background:linear-gradient(90deg,transparent 30%,rgba(0,0,0,.45));animation:shade .72s ease-in forwards}
-.pageleaf.back::after{background:linear-gradient(270deg,transparent 30%,rgba(0,0,0,.45));animation:shade .72s ease-in forwards}
-@keyframes turnF{0%{transform:perspective(2400px) rotateY(0)}100%{transform:perspective(2400px) rotateY(-108deg)}}
-@keyframes turnB{0%{transform:perspective(2400px) rotateY(0)}100%{transform:perspective(2400px) rotateY(108deg)}}
+.pageleaf.back::after{background:linear-gradient(90deg,transparent 30%,rgba(0,0,0,.45));animation:unshade .72s ease-out forwards}
+@keyframes unshade{0%{opacity:1}100%{opacity:0}}
+@keyframes turnF{0%{transform:perspective(1500px) translateZ(0) rotateY(0)}45%{transform:perspective(1500px) translateZ(90px) rotateY(-55deg)}100%{transform:perspective(1500px) translateZ(0) rotateY(-112deg)}}
+@keyframes turnIn{0%{transform:perspective(1500px) translateZ(0) rotateY(-112deg)}55%{transform:perspective(1500px) translateZ(90px) rotateY(-55deg)}100%{transform:perspective(1500px) translateZ(0) rotateY(0)}}
+.pageleaf.fx{position:fixed;inset:auto;z-index:55;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.pageunder{position:fixed;z-index:54;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
+.ipage .pageunder{position:absolute;inset:0;z-index:2;display:grid;grid-template-rows:auto 1fr;background-color:var(--sheet)}
 @keyframes shade{0%{opacity:0}100%{opacity:1}}
 .turned{animation:settle .72s ease-out}
 .intro[hidden]{display:none!important}
@@ -121,12 +126,12 @@ button,input,textarea,select{font:inherit;color:inherit}
 .ribbon-clip{position:absolute;left:0;right:0;top:calc(100% - 1px);height:60px;overflow:hidden;pointer-events:none}
 .ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:scaleY(0);transform-origin:50% 0;transition:transform .42s cubic-bezier(.3,.9,.35,1.15);filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
 .ribbon svg{display:block;width:100%;height:100%;overflow:visible}
-.rb-bg{position:absolute;inset:0;background-color:var(--band);background-image:var(--noise);background-size:200px 200px;clip-path:polygon(0 0,100% 0,100% 100%,50% 59.1%,0 100%)}
+.rb-bg{position:absolute;inset:0;background-color:var(--gold);background-image:var(--noise);background-size:200px 200px;clip-path:polygon(0 0,100% 0,100% 100%,50% 59.1%,0 100%)}
 .ribbon svg{position:relative}
-.rb-line{fill:none;stroke:var(--rule);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
+.rb-line{fill:none;stroke:color-mix(in srgb,var(--on-gold) 35%,transparent);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
 .ribbon.on{transform:scaleY(1)}
 .ribbon:not(.on){transition-duration:.24s;transition-timing-function:ease-in}
-.foot{flex:none;background:var(--paper);background-image:var(--noise);background-size:200px 200px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.foot{flex:none;background-color:var(--gold);background-image:var(--noise);background-size:200px 200px;padding-bottom:env(safe-area-inset-bottom,0px)}
 .view{display:grid;gap:24px}
 h2{color:var(--gold);font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1.05;margin:0;text-wrap:balance}
 h3{color:var(--gold);font-family:var(--f-title);font-weight:700;font-size:19px;line-height:1.15;letter-spacing:.04em;margin:0}
@@ -371,14 +376,14 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lfile{color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .ldrop.over{background:color-mix(in srgb,var(--gold) 8%,transparent)}
 .modes{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--gold)}
-.modes::before,.modes::after{content:"";position:absolute;top:-8px;width:15px;height:15px;background:var(--gold);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:twinkle 2.6s ease-in-out infinite}
+.modes::before,.modes::after{content:"";position:absolute;top:-8px;width:15px;height:15px;background:var(--on-gold);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:twinkle 2.6s ease-in-out infinite}
 .modes::before{left:-7px}
 .modes::after{right:-7px;animation-delay:1.3s}
-.mode{background:none;border:0;border-radius:0;padding:18px 8px;display:grid;justify-items:center;align-content:start;gap:8px;color:var(--mute);cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.05em;text-align:center;line-height:1.25}
+.mode{background:none;border:0;border-radius:0;padding:18px 8px;display:grid;justify-items:center;align-content:start;gap:8px;color:color-mix(in srgb,var(--on-gold) 62%,transparent);cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.05em;text-align:center;line-height:1.25}
 .mode svg{width:30px;height:30px}
-.mode:hover{color:var(--gold-hi)}
-.mode[aria-pressed="true"]{color:var(--gold);box-shadow:inset 0 -3px 0 var(--gold)}
-.mode.danger:hover,.mode.danger[aria-pressed="true"]{color:var(--risk);box-shadow:inset 0 -3px 0 var(--risk)}
+.mode:hover{color:var(--on-gold)}
+.mode[aria-pressed="true"]{color:var(--on-gold);box-shadow:inset 0 -3px 0 var(--on-gold)}
+.mode.danger:hover,.mode.danger[aria-pressed="true"]{color:var(--on-gold);box-shadow:inset 0 -3px 0 var(--on-gold)}
 
 /* Handalf perched on the mode bar */
 .ltop{display:grid;align-content:start}
@@ -457,6 +462,10 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .bopts.answered button[aria-pressed="true"]{opacity:1;color:var(--gold)}
 .bnav{display:flex;justify-content:space-between;gap:16px;min-height:22px}
 .bturn{display:grid;gap:8px;justify-items:start}
+.itop-acts{display:flex;gap:6px;align-items:center}
+.iicon{width:38px;height:38px;display:grid;place-items:center;background:none;border:1px solid var(--rule);border-radius:50%;color:var(--gold);cursor:pointer}
+.iicon:hover{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.iicon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .bturn .iswipe{justify-self:stretch;width:100%}
 .ipage-in>.ltext{justify-self:start}
 .bturn2{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
@@ -719,7 +728,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 <div class="intro" id="intro" hidden role="dialog" aria-label="Welcome to Handalf">
   <div class="ibook" id="ibook">
     <div class="ipage">
-      <div class="itop"><span class="itop-mark">Handalf</span><button class="ltext iskip" type="button" data-skip>Skip</button></div>
+      <div class="itop" id="itop"></div>
       <div class="ipage-in" id="ipage-in"></div>
     </div>
     <div class="icover">
@@ -832,16 +841,21 @@ document.querySelectorAll(".nav [data-view]").forEach(b=>b.addEventListener("cli
 let view="engine";
 const ORDER={start:0,engine:1,stances:2,profile:3,vault:4,export:5,settings:6};
 let booted=false;
-function turnPage(from,to){
-  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const st=$("#stage"), sc=$("#scroller"); if(!st||!sc) return;
-  st.querySelectorAll(".pageleaf").forEach(x=>x.remove());
-  const leaf=document.createElement("div"); leaf.className="pageleaf "+((ORDER[to]??0)>=(ORDER[from]??0)?"fwd":"back"); leaf.setAttribute("aria-hidden","true");
-  const c=sc.cloneNode(true); c.removeAttribute("id"); c.className="leaf-sc"; c.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id"));
+function cloneScroller(){
+  const sc=$("#scroller"), c=sc.cloneNode(true); c.removeAttribute("id"); c.className="leaf-sc"; c.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id"));
   c.querySelectorAll("input,textarea,select,button,a").forEach(n=>{n.setAttribute("tabindex","-1");n.removeAttribute("name")});
-  leaf.appendChild(c); st.appendChild(leaf); c.scrollTop=sc.scrollTop;
-  sc.classList.remove("turned"); void sc.offsetWidth; sc.classList.add("turned");
-  setTimeout(()=>leaf.remove(),760);
+  return c;
+}
+function fxBox(cls){ const r=$("#stage").getBoundingClientRect(), d=document.createElement("div"); d.className=cls+" stagefx"; d.setAttribute("aria-hidden","true");
+  Object.assign(d.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"}); return d }
+function turnPage(from,to,dir){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches||!$("#stage")) return null;
+  document.querySelectorAll(".pageleaf.fx,.pageunder.stagefx").forEach(x=>x.remove());
+  const fwd=dir!=null?dir>0:(ORDER[to]??0)>=(ORDER[from]??0), sc=$("#scroller"), st=sc.scrollTop, old=cloneScroller();
+  if(fwd){ const leaf=fxBox("pageleaf fx fwd"); leaf.appendChild(old); document.body.appendChild(leaf); old.scrollTop=st; setTimeout(()=>leaf.remove(),760); return null }
+  const under=fxBox("pageunder"); under.appendChild(old); document.body.appendChild(under); old.scrollTop=st;
+  return ()=>{ const leaf=fxBox("pageleaf fx back"), nw=cloneScroller(); leaf.appendChild(nw); document.body.appendChild(leaf); nw.scrollTop=$("#scroller").scrollTop;
+    setTimeout(()=>{leaf.remove();under.remove()},760) };
 }
 function placeRibbon(v){
   const r=$("#ribbon"); if(!r) return;
@@ -857,8 +871,8 @@ function placeRibbon(v){
 }
 addEventListener("resize",()=>placeRibbon(view));
 document.querySelector(".nav").addEventListener("scroll",()=>placeRibbon(view),{passive:true});
-function show(v){
-  if(booted&&v!==view) turnPage(view,v);
+function show(v,dir){
+  const fin=booted&&(v!==view||dir!=null)?turnPage(view,v,dir):null;
   view=v;
   document.querySelectorAll(".nav [data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
   ["start","engine","stances","profile","vault","export","settings"].forEach(x=>$("#v-"+x).hidden=x!==v);
@@ -868,6 +882,7 @@ function show(v){
   if(v==="start") renderStart(); else if(typeof renderModes==="function") renderModes();
   const sc=document.getElementById("scroller"); if(sc) sc.scrollTop=0;
   placeRibbon(v);
+  if(fin) fin();
   try{history.replaceState(null,"","#"+v)}catch(e){}
 }
 
@@ -980,13 +995,13 @@ const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, 
 </svg>`;
 let waveNext=true, perchTilt=0, ebText="";
 const TILT=[-7,5,-3,7,-5,3,0,0];
-const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["bio","Link LLM or bio",ICON.link],["erase","Erase everything",ICON.reset]];
+const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["bio","Add a bio",ICON.page],["erase","Erase everything",ICON.reset]];
 let mode="conjure", llm="ChatGPT", found=null, flash="", intro=false, askSeed=0, animIn=false;
 /* the landing talks: several ways to pose each question, picked at random */
 const PHR={
  conjure:["What are we talking about?","What's on your mind today?","What should we stir up?","Got an idea brewing?","Where should we point the wand?","What's the topic everyone's getting wrong?"],
  quiz:["Want to find your brand archetype? Six quick questions.","Shall I figure out how your brand argues? It takes six questions.","Hoo are you, as a brand? Give me six answers and I'll tell you.","I have six questions that reveal your archetype. Want them?"],
- bio:["Does another AI know you better than I do?","Got a bio lying around?","Which assistant have you been talking to?","Written anything about yourself lately?"]
+ bio:["Got a bio lying around?","Written anything about yourself lately?","Have a bio that says who you are?","Tell me who you are in your own words?"]
 };
 const pidx={conjure:0,quiz:0,bio:0};
 const say=k=>PHR[k][pidx[k]%PHR[k].length];
@@ -1060,7 +1075,7 @@ function renderStart(){
   const p=state.profile, thin=!p.archetype&&!p.niche&&!p.expertise&&!p.brief;
   let panel="";
   if(mode==="conjure"){
-    const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Take the brand quiz, or link your LLM or upload a bio below."
+    const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Play your brand story, or add a bio below."
       :`Shaped for ${p.name?esc(p.name)+", ":""}${p.archetype?`${/^[AEIOU]/.test(p.archetype)?"an":"a"} ${esc(p.archetype)} brand`:"your brand"}${p.niche?` in ${esc(p.niche)}`:""}.`);
     flash="";
     ebText="Conjure";
@@ -1071,22 +1086,17 @@ function renderStart(){
   }else if(mode==="quiz"){
     panel=quizPanel();
   }else if(mode==="bio"&&intro){
-    ebText="Link LLM or bio";
+    ebText="Add a bio";
     panel=`<h2 class="lq">${esc(say("bio"))}</h2>
-      <p class="lhint" style="font-size:17px">Handalf can read the profile your AI writes about you, or a bio you've written, and learn your brand and the opinions you hold.</p>
-      <button class="lbtn solo" type="button" data-full="bio">Link your LLM or upload a bio</button>`;
+      <p class="lhint" style="font-size:17px">Paste a bio, brand brief or media kit text. Handalf reads it and learns your brand and the opinions you hold.</p>
+      <button class="lbtn solo" type="button" data-full="bio">Add a bio</button>`;
   }else if(mode==="bio"){
-    const isBio=llm==="My bio", url=LLMS[llm], name=llm==="Other LLM"?"your assistant":llm;
-    ebText="Link LLM or bio";
-    panel=`<h2 class="lq sm">${isBio?"What have you written about yourself?":"Which assistant knows you best?"}</h2>
-      <div class="llms">${Object.keys(LLMS).map(k=>`<button type="button" data-llm="${k}" aria-pressed="${llm===k}">${k}</button>`).join("")}</div>
-      ${isBio?`<p class="lhint">A bio, brand brief or media kit text. Paste it below, or <label class="lfile" for="brief-file">choose a file</label> (.txt, .md or .json).</p>`
-        :`<p class="lhint">Copy Handalf's prompt, paste it into ${esc(name)}${url?` (<a class="ltext" href="${url}" target="_blank" rel="noopener">open ${esc(llm)}</a>)`:""}, then paste its answer below. Works best with memory turned on in that app.</p>
-      <div class="lnav" style="justify-content:flex-start;gap:24px"><button class="lbtn solo" type="button" data-copy>Copy prompt</button><button class="ltext" type="button" data-peek>See the prompt</button></div>
-      <pre class="lpre" id="link-prompt" hidden>${esc(LINK_PROMPT)}</pre>`}
+    ebText="Add a bio";
+    panel=`<h2 class="lq sm">What have you written about yourself?</h2>
+      <p class="lhint">A bio, brand brief or media kit text. Paste it below, or <label class="lfile" for="brief-file">choose a file</label> (.txt, .md or .json).</p>
       <input id="brief-file" type="file" accept=".txt,.md,.json" hidden>
-      <div class="ldrop"><textarea id="bio-text" aria-label="${isBio?"Your bio":"Your assistant's answer"}" placeholder="${isBio?"Paste or drop your bio here":"Paste the answer here"}"></textarea></div>
-      <button class="lbtn solo" type="button" data-read>Read my profile</button><p class="lhint" id="read-hint"></p>`;
+      <div class="ldrop"><textarea id="bio-text" aria-label="Your bio" placeholder="Paste or drop your bio here"></textarea></div>
+      <button class="lbtn solo" type="button" data-read>Read my bio</button><p class="lhint" id="read-hint"></p>`;
   }else if(mode==="erase"){
     ebText="Erase everything";
     panel=`<h2 class="lq sm">Start over from zero?</h2>
@@ -1115,9 +1125,10 @@ function renderModes(){
 }
 $("#modes").addEventListener("click",e=>{
   const b=e.target.closest("[data-mode]"); if(!b) return;
-  const k=b.dataset.mode; mode=k; intro=false; waveNext=true;
-  if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}
-  if(view!=="start") show("start"); else renderStart();
+  const k=b.dataset.mode, prevMode=mode; if(k!=="quiz"){mode=k; intro=false; waveNext=true}
+  if(k==="quiz"){ return playBrandStory() }
+  const order=["conjure","quiz","bio","erase"], from=order.indexOf(prevMode);
+  if(view!=="start") show("start"); else if(prevMode!==k) show("start",order.indexOf(k)>=from?1:-1); else renderStart();
   toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()}
 });
 function setMode(k){ mode=k; intro=false; waveNext=true; if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
@@ -1188,7 +1199,7 @@ async function readProfile(text,source){
     p.linked={source,at:Date.now()}; persist("profile");
     found={source,parsed:true,arch,arch2,fields,stances:n}; mode="done"; renderStart();
   }catch(e){
-    btn.disabled=false; btn.textContent="Read my profile";
+    btn.disabled=false; btn.textContent="Read my bio";
     hint.textContent=errCopy(e)||"Reading failed. Try again.";
   }
 }
@@ -1201,7 +1212,7 @@ $("#quiz").addEventListener("submit",e=>{
 $("#quiz").addEventListener("click",async e=>{
   const m=e.target.closest("[data-mode]"); if(m) return setMode(m.dataset.mode);
   if(e.target.closest("[data-golast]")) return show("engine");
-  if(e.target.closest("[data-qstart]")){openBook("quiz");return}
+  if(e.target.closest("[data-qstart]")){playBrandStory();return}
   const fu=e.target.closest("[data-full]"); if(fu){intro=false;renderStart();return}
   const o=e.target.closest("[data-q]"); if(o){qans[qi]=+o.dataset.q;qi++;qpick=null;waveNext=true;renderStart();toLanding();return}
   const a=e.target.closest("[data-arch]");
@@ -1224,7 +1235,7 @@ $("#quiz").addEventListener("click",async e=>{
   const c=e.target.closest("[data-copy]");
   if(c){try{await navigator.clipboard.writeText(LINK_PROMPT);c.textContent="Copied"}catch(err){$("#link-prompt").hidden=false;const r=document.createRange();r.selectNodeContents($("#link-prompt"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r);c.textContent="Selected. Press copy on your keyboard"}return}
   const r=e.target.closest("[data-read]");
-  if(r){ readProfile($("#bio-text").value, llm==="My bio"?"Uploaded bio":"Linked "+(llm==="Other LLM"?"LLM":llm)); return }
+  if(r){ readProfile($("#bio-text").value,"Your bio"); return }
   if(e.target.closest("[data-erase]")){
     if(runCtl)runCtl.abort();
     state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;queue=[];open.clear();
@@ -1601,8 +1612,8 @@ const pf=$("#profile-form");
 function renderProfile(){
   [...pf.elements].forEach(el=>{if(el.name)el.value=state.profile[el.name]||""});
   const p=state.profile, A=p.archetype&&ARCH[p.archetype];
-  $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-retake>Retake quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`
-    :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Take the brand quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`;
+  $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-retake>Retake quiz</button><button class="btn ghost" type="button" data-setup>Add a bio</button></div>`
+    :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Take the brand quiz</button><button class="btn ghost" type="button" data-setup>Add a bio</button></div>`;
 }
 $("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("bio")});
 pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
@@ -2037,7 +2048,7 @@ function renderSettings(){
   $("#settings-body").innerHTML=`<div class="sets">
     <p class="setgroup">Your profile sources</p>
     ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
-    ${row("LLM or bio",src?esc(srcName):(p.brief?"Your bio":"Not added"),src?`Read ${when(src.at)}. Add again any time to refresh it.`:"Let ChatGPT, Claude or Gemini describe your brand from what it already knows, or upload a bio you've written.",`<button class="btn" type="button" data-set="bio">${src?"Add again":"Link LLM or upload bio"}</button>`)}
+    ${row("Your bio",src||p.brief?"Added":"Not added",src?`Read ${when(src.at)}. Add a new one any time to refresh it.`:p.brief?"Saved as your brand brief.":"Paste a bio, brand brief or media kit text and Handalf learns your brand from it.",`<button class="btn" type="button" data-set="bio">${src||p.brief?"Add a new bio":"Add a bio"}</button>`)}
     ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn" type="button" data-set="stances">Manage elements</button>`)}
     ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn" type="button" data-set="profile">Edit brand</button>`)}
     <p class="setgroup">App</p>
@@ -2166,6 +2177,8 @@ function bookHTML(key){
 }
 function renderBook(){
   const key=book.pages[book.i], el=$("#ipage-in");
+  $("#itop").innerHTML=`<span class="itop-mark">Handalf</span>`+(book.mode==="first"?`<button class="ltext iskip" type="button" data-skip>Skip</button>`
+    :`<span class="itop-acts">${book.mode==="story"?`<button class="iicon" type="button" data-bedit aria-label="Edit this part of your story" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.6L16.5 4.1a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8z M14.5 6l3.5 3.5 M4 20l4.6-1.2"/></svg></button>`:""}<button class="iicon" type="button" data-skip aria-label="Close the book" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>`);
   el.innerHTML=bookHTML(key);
   el.dataset.kind=NARRATIVE.has(key)?"narrative":"choice";
   el.classList.remove("fresh"); void el.offsetWidth; el.classList.add("fresh");
@@ -2173,17 +2186,24 @@ function renderBook(){
   $(".ipage").scrollTop=0;
   const ink=el.querySelector("[data-ink].new"); if(ink) ink.classList.add("write");
 }
-function bookTurn(dir){
-  const ni=book.i+dir; if(ni<0||ni>=book.pages.length) return;
+function bookClone(){
+  const pg=$(".ipage"), top=pg.querySelector(".itop").cloneNode(true), c=$("#ipage-in").cloneNode(true);
+  c.removeAttribute("id"); c.classList.remove("fresh"); [top,c].forEach(x=>x.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id")));
+  return [top,c];
+}
+function bookTurn(dir,to){
+  const ni=to!=null?to:book.i+dir; if(ni<0||ni>=book.pages.length) return;
   if(book.pages[book.i]==="reveal"&&dir>0&&book.pick){ state.profile.archetype=book.pick.primary; state.profile.archetype2=book.pick.secondary||""; persist("profile"); }
-  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
-    const pg=$(".ipage"); pg.querySelectorAll(".pageleaf").forEach(x=>x.remove());
-    const leaf=document.createElement("div"); leaf.className="pageleaf "+(dir>0?"fwd":"back"); leaf.setAttribute("aria-hidden","true");
-    const top=pg.querySelector(".itop").cloneNode(true), c=$("#ipage-in").cloneNode(true);
-    c.removeAttribute("id"); c.classList.remove("fresh"); [top,c].forEach(x=>x.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id")));
-    leaf.style.top=pg.scrollTop+"px"; leaf.append(top,c); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760);
+  const anim=!matchMedia("(prefers-reduced-motion: reduce)").matches, pg=$(".ipage");
+  pg.querySelectorAll(".pageleaf,.pageunder").forEach(x=>x.remove());
+  let under=null;
+  if(anim){
+    const old=bookClone();
+    if(dir>0){ const leaf=document.createElement("div"); leaf.className="pageleaf fwd"; leaf.setAttribute("aria-hidden","true"); leaf.style.top=pg.scrollTop+"px"; leaf.append(...old); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760) }
+    else { under=document.createElement("div"); under.className="pageunder"; under.setAttribute("aria-hidden","true"); under.style.top=pg.scrollTop+"px"; under.append(...old); pg.appendChild(under) }
   }
   book.i=ni; book.showGrid=false; renderBook();
+  if(under){ const leaf=document.createElement("div"); leaf.className="pageleaf back"; leaf.setAttribute("aria-hidden","true"); leaf.append(...bookClone()); pg.appendChild(leaf); setTimeout(()=>{leaf.remove();under.remove()},760) }
 }
 function openBook(mode){
   const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
@@ -2198,6 +2218,7 @@ function openBook(mode){
   introTimers.push(setTimeout(()=>bk.classList.add("read"),fast?1500:2300));
 }
 function playIntro(){openBook(state.profile.quiz&&answers().some(x=>x!=null)?"story":"first")}
+function playBrandStory(){openBook(answers().some(x=>x!=null)?"story":"quiz")}
 function endIntro(){
   const o=$("#intro"); if(o.hidden) return; introTimers.forEach(clearTimeout);
   o.classList.add("out"); setTimeout(()=>{o.hidden=true},600);
@@ -2213,6 +2234,10 @@ function finishBook(){
 }
 $("#intro").addEventListener("click",e=>{
   if(e.target.closest("[data-skip]")) return endIntro();
+  if(e.target.closest("[data-bedit]")){
+    const key=book.pages[book.i], target={"story-intro":"q0",story1:"q0",story2:"q3","story-arch":"reveal","story-niche":"niche","story-end":"q0"}[key]||"q0";
+    book.mode="quiz"; book.pages=bookPages("quiz"); book.pick=null; return bookTurn(1,book.pages.indexOf(target));
+  }
   if(e.target.closest("[data-bclose]")) return book.pages[book.i]==="end"?finishBook():endIntro();
   if(e.target.closest("[data-bretake]")){ book.mode="quiz"; book.pages=bookPages("quiz"); book.i=-1; state.profile.quiz={answers:[],at:0}; book.pick=null; return bookTurn(1); }
   if(e.target.closest("[data-bprev]")) return bookTurn(-1);
