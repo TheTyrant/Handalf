@@ -346,13 +346,19 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 <header class="band">
   <div class="wrap">
     <div class="mast">
-      <svg class="logo" viewBox="0 0 64 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
-        <rect x="4" y="2" width="56" height="92" rx="10"/>
-        <line x1="26" y1="10" x2="38" y2="10"/>
-        <path class="gold" stroke="none" fill="currentColor" d="M33 26 C 40 33, 44 46, 47 60 L 17 60 C 22 50, 26 38, 33 26 Z M33 26 C 36 22, 42 20, 47 23 C 42 23, 38 25, 35 29 Z"/>
-        <path stroke="currentColor" d="M10 62 C 20 68, 44 68, 54 62"/>
-        <path class="gold" stroke="none" fill="currentColor" d="M50 36 l1.4 3.2 3.2 1.4 -3.2 1.4 -1.4 3.2 -1.4 -3.2 -3.2 -1.4 3.2 -1.4z"/>
-        <line x1="24" y1="84" x2="40" y2="84"/>
+      <svg class="logo" viewBox="0 0 64 96" role="img" aria-label="Handalf the owl on a phone screen">
+        <rect x="4" y="2" width="56" height="92" rx="10" fill="none" stroke="currentColor" stroke-width="3"/>
+        <line x1="26" y1="10" x2="38" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="32" cy="57" rx="18.5" ry="15" fill="none" stroke="currentColor" stroke-width="2.6"/>
+        <circle cx="24.5" cy="56.5" r="6.4" fill="currentColor"/><circle cx="39.5" cy="56.5" r="6.4" fill="currentColor"/>
+        <circle cx="25.5" cy="57.5" r="2.9" fill="var(--band)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--band)"/>
+        <circle cx="26.4" cy="56.3" r=".9" fill="currentColor"/><circle cx="39.4" cy="56.3" r=".9" fill="currentColor"/>
+        <path class="gold" fill="currentColor" d="M29.2 63.2h5.6L32 68.4z"/>
+        <path class="gold" fill="currentColor" d="M11.5 43.5C21 39.5 43 39.5 52.5 43.5C43 47 21 47 11.5 43.5Z"/>
+        <path class="gold" fill="currentColor" d="M21 42.5C24 34 27.5 25 34.5 18C38.5 15 43.5 15.5 45.5 19C41.5 18 38.5 20 37.6 23.5C38.6 29.5 39.6 36 41.8 42.5Z"/>
+        <path fill="var(--band)" d="M31.5 31l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>
+        <path class="gold" fill="currentColor" d="M50.5 24l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z"/>
+        <line x1="24" y1="84" x2="40" y2="84" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
       </svg>
       <h1 class="mark">Hand<span>alf</span></h1>
       <div class="tag"><p class="tagline">Make Content Magical</p><p class="tagsub">Find the take only you can make, measured against the crowd and backed by your own words.</p></div>
@@ -598,7 +604,7 @@ const ICON={
  page:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h8l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h4.5"/><path d="M12.2 18v-6.5M9.4 14.2l2.8-2.8 2.8 2.8"/></svg>',
  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 3.5V8h4.5"/></svg>'
 };
-const OWL=`<svg class="owl" viewBox="0 0 160 182" role="img" aria-label="An owl in a wizard hat holding a wand">
+const OWL=`<svg class="owl" viewBox="0 0 160 182" role="img" aria-label="Handalf the owl, in his wizard hat, holding a wand">
  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
   <path class="gold" d="M113 120 148 72" stroke-width="4.5"/>
   <path d="M44 96C32 124 38 164 78 168C118 164 124 124 112 96" fill="var(--sheet)"/>
@@ -650,7 +656,7 @@ function quizPanel(){
   const total=QUIZ.length+2, bar=n=>`<div class="lbar"><b style="width:${n/total*100}%"></b></div>`;
   if(qi<QUIZ.length){
     const Q=QUIZ[qi];
-    return `${owlHead(`Brand quiz · ${qi+1} of ${QUIZ.length}`,Q.q,qi)}${bar(qi+1)}
+    return `${owlHead(`Handalf asks · ${qi+1} of ${QUIZ.length}`,Q.q,qi)}${bar(qi+1)}
       <ol class="lopts">${Q.o.map((o,i)=>`<li><button type="button" data-q="${i}" aria-pressed="${qans[qi]===i}"><span class="lk">${"ABCD"[i]}</span><span>${esc(o[0])}</span></button></li>`).join("")}</ol>
       <div class="lnav">${qi>0?`<button class="ltext" type="button" data-qnav="back">Back</button>`:"<span></span>"}<button class="ltext" type="button" data-qnav="skip">I already know my archetype</button></div>`;
   }
