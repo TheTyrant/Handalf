@@ -18,3 +18,18 @@ Handalf is a contrarian content engine for creators. You give it a topic, and it
 ## Running it
 
 `index.html` is a single self-contained page. It currently runs as a Claude artifact: AI calls, saved data and downloads go through the viewer's Claude account. To run it on its own, it needs a small server for the AI calls, a database, and user sign-in. See `docs/spec.md`.
+
+## License
+
+The code is licensed under the [Apache License 2.0](LICENSE). Fork it, learn from it, build on it.
+
+## Forking and the Handalf brand
+
+The Apache license covers the code only. The **Handalf** name, the owl mascot, the logo, and all Handalf artwork and illustrations are not licensed, and all rights in them are reserved. If you fork this project:
+
+1. Give it your own name.
+2. Replace the logo, the owl and any Handalf artwork with your own.
+3. Give it your own presentation: a look and feel that can't be mistaken for Handalf.
+4. Don't present your version as Handalf, or as made or endorsed by its author.
+
+See [NOTICE](NOTICE) for details.
