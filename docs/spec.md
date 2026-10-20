@@ -23,7 +23,7 @@ Tagline: Make Content Magical
 6. Start over: new search, redo brand setup, or erase everything.
 
 ## Look
-Brown leather with light monochrome noise, gold dividers, gold pill inputs and buttons, gold serif tabs and headers (Uncial wordmark, Cinzel titles, EB Garamond content titles), filled score pills. Logo: wizard hat on a phone screen.
+Two looks, switched from the header: Leather (brown leather with light monochrome noise, gold lines, gold serif tabs and headers) and Black and white (paper and ink line art, a children's book for business people). Web app layout: header fixed at the top, the icon row fixed as a footer, only the middle scrolls. Uncial wordmark, Cinzel titles, EB Garamond content titles. Logo: Handalf the owl's face in his wizard hat on a phone screen. Handalf, full body, rests on a branch that runs off the left edge of the screen and waves his wand to bring in each question.
 
 ## Tied to Claude today
 1. AI calls (engine, remix, interview, outlines) run on the viewer's Claude account. Standalone needs a small server holding an AI API key.

@@ -16,12 +16,23 @@
   --f-body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --f-mono:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --pill:999px;
+  --eye:#F3E6CF; --pupil:#2E1B10;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
   color-scheme:dark;
 }
-html{background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");background-size:200px 200px}
+:root[data-skin="ink"]{
+  --paper:#F7F6F2; --sheet:#FFFFFF; --ink:#141414; --mute:#5A5A5A; --rule:#A3A3A3;
+  --gold:#141414; --gold-hi:#000000; --on-gold:#FFFFFF;
+  --ultra:#3A3A3A; --ultra-soft:#EDEDED; --copper:#141414; --copper-soft:#EFEFEF;
+  --good:#2A2A2A; --risk:#141414; --band:#FFFFFF; --band-fg:#141414;
+  --eye:#FFFFFF; --pupil:#141414;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+  color-scheme:light;
+}
+html{height:100%;margin:0;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");background-size:200px 200px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;min-height:100vh}
+body{background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;height:100%;margin:0;display:flex;flex-direction:column;overflow:hidden}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
 .wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 button,input,textarea,select{font:inherit;color:inherit}
@@ -30,12 +41,13 @@ button,input,textarea,select{font:inherit;color:inherit}
 .label{font-family:var(--f-body);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--mute)}
 
 /* masthead */
-.band{background-color:var(--band);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");background-size:200px 200px;color:var(--band-fg);border-bottom:1px solid var(--gold)}
+.band{background-color:var(--band);background-image:var(--noise);background-size:200px 200px;color:var(--band-fg);border-bottom:1px solid var(--gold)}
 .mast{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;padding-block:26px 20px}
 .logo{width:64px;height:auto;color:var(--band-fg)}
 .logo .gold{color:var(--copper)}
 .mark{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,8vw,92px);line-height:.95;letter-spacing:.01em;margin:0}
 .mark span{color:var(--copper)}
+:root[data-skin="ink"] .mark span{color:#6E6E6E}
 .tag{justify-self:end}
 .tag{max-width:36ch;display:grid;gap:6px;text-wrap:balance}
 .tagline{font-family:var(--f-title);font-weight:600;font-size:clamp(18px,2.2vw,24px);letter-spacing:.06em;color:var(--gold);margin:0}
@@ -47,7 +59,9 @@ button,input,textarea,select{font:inherit;color:inherit}
 .nav .count{color:var(--copper);margin-left:6px}
 .status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
 
-main{padding-block:28px 64px}
+#scroller{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:28px 40px}
+.band{flex:none}
+.foot{flex:none;background:var(--paper);background-image:var(--noise);background-size:200px 200px;padding-bottom:env(safe-area-inset-bottom,0px)}
 .view{display:grid;gap:24px}
 h2{color:var(--gold);font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1.05;margin:0;text-wrap:balance}
 h3{color:var(--gold);font-family:var(--f-title);font-weight:700;font-size:19px;line-height:1.15;letter-spacing:.04em;margin:0}
@@ -61,7 +75,7 @@ p{margin:0}
 .btn:hover{background:var(--gold-hi);border-color:var(--gold-hi)}
 .btn:disabled{opacity:.45;cursor:not-allowed;background:var(--gold);border-color:var(--gold)}
 .btn.ghost{background:transparent;color:var(--gold);border:1.5px solid var(--gold);padding:6px 14px;font-size:13px;font-weight:500}
-.btn.ghost:hover{background:rgba(217,180,94,.12);color:var(--gold-hi);border-color:var(--gold-hi)}
+.btn.ghost:hover{background:color-mix(in srgb,var(--gold) 12%,transparent);color:var(--gold-hi);border-color:var(--gold-hi)}
 .btn.quiet{background:transparent;color:var(--mute);border:0;padding:4px 8px;font-size:13px;border-radius:var(--pill)}
 .btn.quiet:hover{color:var(--risk);background:transparent}
 .hint{font-size:13px;color:var(--mute)}
@@ -98,7 +112,7 @@ p{margin:0}
 .backing q{color:var(--ultra)}
 .bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px;max-width:440px}
 .bar .label{font-size:11px;letter-spacing:.06em}
-.bar i{display:block;height:4px;background:rgba(217,180,94,.22);margin-top:3px}
+.bar i{display:block;height:4px;background:color-mix(in srgb,var(--gold) 22%,transparent);margin-top:3px}
 .bar i b{display:block;height:100%;background:var(--gold)}
 .risk{margin-top:8px;font-size:13px;color:var(--risk)}
 .actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
@@ -116,7 +130,7 @@ textarea{width:100%;min-height:120px;background:var(--paper);border:1.5px solid 
 .stance{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
 .sid{font-size:13px;font-weight:600;color:var(--mute)}
 .dots{display:flex;gap:3px;margin-top:6px}
-.dots i{width:7px;height:7px;border-radius:50%;background:rgba(217,180,94,.25)}
+.dots i{width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--gold) 25%,transparent)}
 .dots i.on{background:var(--copper)}
 .stance p{font-family:var(--f-head);color:var(--gold);font-size:18px;font-weight:600;line-height:1.3}
 .stance .vs{font-size:13px;color:var(--mute)}
@@ -222,7 +236,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
 /* landing: lines only, no pills or rounded boxes */
 .landing{padding-block:clamp(20px,6vh,72px) 8px}
-.lwrap{display:grid;min-height:calc(100vh - 290px);align-content:space-between;gap:40px}
+.lwrap{display:grid;gap:40px}
 .lpanel{display:grid;gap:20px;max-width:920px;align-content:start;transition:opacity .28s ease,transform .28s ease}
 .lpanel.lout{opacity:0;transform:translateY(-6px)}
 .lpanel.lin{animation:lin .45s ease both}
@@ -286,7 +300,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lfound{list-style:none;margin:0;padding:0;border-top:1px solid var(--gold)}
 .lfound li{padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px}
 .lfile{color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.ldrop.over{background:rgba(217,180,94,.08)}
+.ldrop.over{background:color-mix(in srgb,var(--gold) 8%,transparent)}
 .modes{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--gold)}
 .modes::before,.modes::after{content:"";position:absolute;top:-8px;width:15px;height:15px;background:var(--gold);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:twinkle 2.6s ease-in-out infinite}
 .modes::before{left:-7px}
@@ -347,9 +361,16 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .lrow .lbtn{border-left:0;border-top:1px solid var(--rule);margin:0;padding:14px 0;text-align:left}
   .mode{font-size:10.5px;padding:14px 2px;letter-spacing:.02em}
   .mode svg{width:24px;height:24px}
-  .lwrap{min-height:0}
   .perch{width:110px;margin-bottom:52px}
   .status{display:none}
+  .mast{padding-block:14px 10px;gap:12px}
+  .logo{width:40px}
+  .mark{font-size:40px}
+  .tag{display:none}
+  .nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav button{white-space:nowrap}
+  #scroller{padding-block:18px 28px}
   .vcard{grid-template-columns:1fr;gap:8px}
   .vcard .scorecol{display:flex;align-items:baseline;gap:10px}
   .aday{grid-template-columns:1fr;gap:4px}
@@ -376,9 +397,9 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <rect x="4" y="2" width="56" height="92" rx="10" fill="none" stroke="currentColor" stroke-width="3"/>
         <line x1="26" y1="10" x2="38" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
         <ellipse cx="32" cy="57" rx="18.5" ry="15" fill="none" stroke="currentColor" stroke-width="2.6"/>
-        <circle cx="24.5" cy="56.5" r="6.4" fill="currentColor"/><circle cx="39.5" cy="56.5" r="6.4" fill="currentColor"/>
-        <circle cx="25.5" cy="57.5" r="2.9" fill="var(--band)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--band)"/>
-        <circle cx="26.4" cy="56.3" r=".9" fill="currentColor"/><circle cx="39.4" cy="56.3" r=".9" fill="currentColor"/>
+        <circle cx="24.5" cy="56.5" r="6.4" fill="var(--eye)" stroke="currentColor" stroke-width="1.6"/><circle cx="39.5" cy="56.5" r="6.4" fill="var(--eye)" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="25.5" cy="57.5" r="2.9" fill="var(--pupil)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--pupil)"/>
+        <circle cx="26.4" cy="56.3" r=".9" fill="var(--eye)"/><circle cx="39.4" cy="56.3" r=".9" fill="var(--eye)"/>
         <path class="gold" fill="currentColor" d="M29.2 63.2h5.6L32 68.4z"/>
         <path class="gold" fill="currentColor" d="M11.5 43.5C21 39.5 43 39.5 52.5 43.5C43 47 21 47 11.5 43.5Z"/>
         <path class="gold" fill="currentColor" d="M21 42.5C24 34 27.5 25 34.5 18C38.5 15 43.5 15.5 45.5 19C41.5 18 38.5 20 37.6 23.5C38.6 29.5 39.6 36 41.8 42.5Z"/>
@@ -396,12 +417,13 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Export</button>
       <span class="status" id="status">Saved in this browser</span>
+      <button type="button" id="skin-btn">Black and white</button>
       <button type="button" id="reset-btn" style="margin-right:0">Start over</button>
     </nav>
   </div>
 </header>
 
-<main class="wrap">
+<main id="scroller"><div class="wrap">
   <!-- LANDING -->
   <section class="view landing" id="v-start" hidden>
     <div id="quiz" class="lwrap"></div>
@@ -478,7 +500,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Export plan</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
     <div id="vault-list"></div>
   </section>
-</main>
+</div></main>
+<footer class="foot"><div class="wrap"><nav class="modes" id="modes" aria-label="Ways to start"></nav></div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
@@ -571,7 +594,8 @@ function show(v){
   document.querySelectorAll(".nav [data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
   ["start","engine","stances","profile","vault","export"].forEach(x=>$("#v-"+x).hidden=x!==v);
   if(v==="export") renderExport();
-  if(v==="start") renderStart();
+  if(v==="start") renderStart(); else if(typeof renderModes==="function") renderModes();
+  const sc=document.getElementById("scroller"); if(sc) sc.scrollTop=0;
   try{history.replaceState(null,"","#"+v)}catch(e){}
 }
 
@@ -651,7 +675,7 @@ const OWL=`<svg class="owl" viewBox="0 0 160 182" role="img" aria-label="Handalf
  <circle class="gold spark spark2" fill="currentColor" cx="136" cy="56" r="2.6"/>
 </svg>`;
 const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, perched on a branch, holding his wand">
- <path d="M0 176C60 172 140 174 200 170" fill="none" stroke="var(--gold)" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M-6000 176L0 176C60 172 140 174 200 170" fill="none" stroke="var(--gold)" stroke-width="3.5" stroke-linecap="round"/>
  <path d="M166 171c6-10 16-12 22-10c-4 8-12 12-22 10z" fill="var(--gold)"/>
  <path d="M30 175c-4-8-12-11-18-10c3 7 10 11 18 10z" fill="var(--gold)" opacity=".8"/>
  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -662,9 +686,9 @@ const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, 
  </g>
  <g class="head">
   <ellipse cx="98" cy="92" rx="39" ry="31" fill="var(--sheet)" stroke="currentColor" stroke-width="3"/>
-  <circle cx="82" cy="92" r="13" fill="currentColor"/><circle cx="114" cy="92" r="13" fill="currentColor"/>
-  <circle cx="84" cy="94" r="6" fill="var(--paper)"/><circle cx="112" cy="94" r="6" fill="var(--paper)"/>
-  <circle cx="86" cy="91.5" r="1.8" fill="currentColor"/><circle cx="114" cy="91.5" r="1.8" fill="currentColor"/>
+  <circle cx="82" cy="92" r="13" fill="var(--eye)" stroke="currentColor" stroke-width="2.5"/><circle cx="114" cy="92" r="13" fill="var(--eye)" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="84" cy="94" r="6" fill="var(--pupil)"/><circle cx="112" cy="94" r="6" fill="var(--pupil)"/>
+  <circle cx="86" cy="91.5" r="1.8" fill="var(--eye)"/><circle cx="114" cy="91.5" r="1.8" fill="var(--eye)"/>
   <path fill="var(--gold)" d="M92 103h12l-6 10z"/>
   <path fill="var(--gold)" d="M56 68C78 59 118 59 140 68C120 75 76 75 56 68Z"/>
   <path fill="var(--gold)" d="M74 66C80 47 89 28 106 13C116 6 128 8 132 15C123 13 116 17 114 26C116 40 119 53 123 66Z"/>
@@ -808,9 +832,21 @@ function renderStart(){
   }
   const active=mode==="done"?"":mode; const wasAnim=animIn; animIn=false; const wv=waveNext; waveNext=false; if(!(mode==="quiz"&&qi>=0)) perchTilt=0;
   $("#quiz").innerHTML=`<div class="ltop"><div class="perch${wv?" waving":""}" style="--tilt:${perchTilt}deg" aria-hidden="true">${PERCH}</div><div class="lpanel${wasAnim||wv?" lin":""}${wv?" late":""}">${panel}</div></div>
-    <nav class="modes" aria-label="Ways to start">${MODES.map(([k,l,ic])=>`<button type="button" class="mode${k==="erase"?" danger":""}" data-mode="${k}" aria-pressed="${active===k}">${ic}<span>${l}</span></button>`).join("")}</nav>`;
+`;
+  renderModes();
 }
-function toLanding(){const tp=$("#v-start").getBoundingClientRect().top;if(tp<0)window.scrollBy(0,tp-8)}
+function toLanding(){$("#scroller").scrollTop=0}
+function renderModes(){
+  const active=view==="start"&&mode!=="done"?mode:"";
+  $("#modes").innerHTML=MODES.map(([k,l,ic])=>`<button type="button" class="mode${k==="erase"?" danger":""}" data-mode="${k}" aria-pressed="${active===k}">${ic}<span>${l}</span></button>`).join("");
+}
+$("#modes").addEventListener("click",e=>{
+  const b=e.target.closest("[data-mode]"); if(!b) return;
+  const k=b.dataset.mode; mode=k; intro=false; waveNext=true;
+  if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}
+  if(view!=="start") show("start"); else renderStart();
+  toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()}
+});
 function setMode(k){ mode=k; intro=false; waveNext=true; if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
 function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
 function openSetup(k){mode=k||"quiz";intro=false;if(mode==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}show("start")}
@@ -1607,6 +1643,12 @@ $("#export-body").addEventListener("click",async e=>{
 });
 $("#export-body").addEventListener("change",e=>{const k=e.target.dataset&&e.target.dataset.exon;if(!k)return;const v=vfind(k);if(v){v.exportOn=e.target.checked;persist("vault");renderExport()}});
 $("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexport]"))show("export")});
+
+/* ---------- look: Leather or black and white ---------- */
+function applySkin(k){ if(k==="ink") document.documentElement.setAttribute("data-skin","ink"); else document.documentElement.removeAttribute("data-skin"); $("#skin-btn").textContent=k==="ink"?"Leather":"Black and white"; }
+let skin="leather"; try{skin=localStorage.getItem("handalf.skin")||"leather"}catch(e){}
+applySkin(skin);
+$("#skin-btn").addEventListener("click",()=>{skin=skin==="ink"?"leather":"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}});
 
 /* ---------- start over = landing ---------- */
 $("#reset-btn").addEventListener("click",goHome);
