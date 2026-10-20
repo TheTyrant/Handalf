@@ -6,7 +6,7 @@ Handalf is a contrarian content engine for creators. You give it a topic, and it
 
 ## How it works
 
-1. **Brand setup.** Take the brand archetype quiz, link your main LLM by pasting in the profile it writes about you, upload a brief, or skip.
+1. **Landing.** "What are we talking about?" opens every visit. Type a topic and Conjure content, or switch the same space to the brand quiz, link your LLM, upload a prompt, or erase everything.
 2. **Stances.** Drop in ChatGPT or Claude conversation exports. Handalf reads only your side of each chat and pulls out the positions where you pushed back.
 3. **Engine.** Enter a topic and get a consensus map plus ranked takes. Each take is scored on divergence, ownership, defensibility and fit.
 4. **Remix.** Add your own context, or talk a take through with the interviewer, then rebuild it.

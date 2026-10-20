@@ -220,6 +220,78 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .doc p{max-width:68ch}
 .exactions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 
+/* landing: lines only, no pills or rounded boxes */
+.landing{padding-block:clamp(20px,6vh,72px) 8px}
+.lwrap{display:grid;min-height:calc(100vh - 290px);align-content:space-between;gap:40px}
+.lpanel{display:grid;gap:20px;max-width:920px;align-content:start}
+.leyebrow{font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0}
+.lq{font-family:var(--f-display);font-weight:400;color:var(--gold);font-size:clamp(38px,6.4vw,72px);line-height:1.04;margin:0;text-wrap:balance}
+.lq.sm{font-family:var(--f-head);font-weight:600;font-size:clamp(28px,4vw,44px);line-height:1.15}
+.lrow{display:grid;grid-template-columns:minmax(0,1fr) auto;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
+.lrow:focus-within{border-color:var(--gold-hi)}
+.lrow input{min-width:0;background:transparent;border:0;border-radius:0;padding:18px 0;font-family:var(--f-head);font-size:clamp(22px,2.8vw,30px);color:var(--ink)}
+.lrow input::placeholder{color:var(--mute);opacity:.75}
+.lrow input:focus-visible{outline:none}
+.lbtn{background:transparent;border:0;border-left:1px solid var(--gold);border-radius:0;margin-left:16px;padding:0 0 0 22px;color:var(--gold);font-family:var(--f-title);font-weight:700;font-size:clamp(15px,1.6vw,18px);letter-spacing:.08em;cursor:pointer;white-space:nowrap}
+.lbtn:hover{color:var(--gold-hi)}
+.lbtn:disabled{opacity:.5;cursor:default}
+.lbtn.solo{border-left:0;border-bottom:1px solid var(--gold);margin:0;padding:8px 0;justify-self:start}
+.lbtn.danger{color:var(--risk);border-color:var(--risk)}
+.ltext{background:none;border:0;border-radius:0;padding:0;color:var(--gold);font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.ltext:hover{color:var(--gold-hi)}
+.lhint{color:var(--mute);font-size:15px;max-width:72ch;margin:0}
+.lgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 32px}
+.lfield{display:grid;gap:2px}
+.lfield.wide{grid-column:1/-1}
+.lfield input,.lfield textarea,.lpanel textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--gold);border-radius:0;padding:10px 0;font-size:17px;color:var(--ink);min-height:0}
+.lpanel textarea{border-top:1px solid var(--rule);min-height:150px;resize:vertical}
+.lfield textarea{min-height:80px;border-top:0}
+.lopts{list-style:none;margin:0;padding:0;border-top:1px solid var(--gold)}
+.lopts li{border-bottom:1px solid var(--rule)}
+.lbar+.lopts{border-top:0}
+.lsteps textarea{border-top:0}
+.lopts button{width:100%;text-align:left;background:none;border:0;border-radius:0;padding:16px 4px;display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;font-size:18px;line-height:1.4;color:var(--ink);cursor:pointer}
+.lopts button:hover{color:var(--gold-hi)}
+.lopts button[aria-pressed="true"]{color:var(--gold)}
+.lk{font-family:var(--f-title);font-weight:700;color:var(--gold)}
+.lquiz{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center}
+.owl{display:block;width:clamp(96px,12vw,140px);height:auto;color:var(--ink);transform:rotate(var(--tilt,0deg));transform-origin:50% 90%;transition:transform .45s ease}
+.owl .gold{color:var(--gold)}
+.owl .spark{transform-box:fill-box;transform-origin:center;animation:twinkle 1.8s ease-in-out infinite}
+.owl .spark2{animation-delay:.6s}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:1;transform:scale(1.15)}}
+.lbar{height:1px;background:var(--rule);position:relative}
+.lbar b{position:absolute;inset:0 auto 0 0;background:var(--gold);transition:width .3s}
+.larch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--gold);column-gap:24px}
+.larch button{background:none;border:0;border-bottom:1px solid var(--rule);border-radius:0;padding:12px 0;text-align:left;cursor:pointer;display:grid;gap:2px}
+.larch b{font-family:var(--f-title);font-weight:700;color:var(--ink);font-size:15px;letter-spacing:.03em}
+.larch span{font-size:13px;color:var(--mute)}
+.larch button:hover b{color:var(--gold-hi)}
+.larch button[aria-pressed="true"] b{color:var(--gold)}
+.larch button.second b{color:var(--ultra)}
+.lnav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.lsteps{list-style:none;margin:0;padding:0;border-top:1px solid var(--gold)}
+.lsteps>li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.lsteps>li>div{display:grid;gap:10px;min-width:0}
+.lsteps .n{font-family:var(--f-title);font-weight:700;font-size:22px;line-height:1;color:var(--gold)}
+.lpre{font-family:var(--f-body);white-space:pre-wrap;font-size:14px;line-height:1.55;color:var(--mute);max-height:190px;overflow:auto;margin:0;border-left:1px solid var(--rule);padding-left:14px}
+.llms{display:flex;flex-wrap:wrap}
+.llms button{background:none;border:0;border-left:1px solid var(--rule);border-radius:0;padding:4px 18px;color:var(--mute);font-family:var(--f-title);font-weight:600;font-size:16px;cursor:pointer}
+.llms button:first-child{border-left:0;padding-left:0}
+.llms button:hover{color:var(--gold-hi)}
+.llms button[aria-pressed="true"]{color:var(--gold)}
+.lfound{list-style:none;margin:0;padding:0;border-top:1px solid var(--gold)}
+.lfound li{padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px}
+.lfile{color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.ldrop.over{background:rgba(217,180,94,.08)}
+.modes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
+.mode{background:none;border:0;border-left:1px solid var(--rule);border-radius:0;padding:18px 8px;display:grid;justify-items:center;align-content:start;gap:8px;color:var(--mute);cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.05em;text-align:center;line-height:1.25}
+.mode:first-child{border-left:0}
+.mode svg{width:30px;height:30px}
+.mode:hover{color:var(--gold-hi)}
+.mode[aria-pressed="true"]{color:var(--gold);box-shadow:inset 0 -3px 0 var(--gold)}
+.mode.danger:hover,.mode.danger[aria-pressed="true"]{color:var(--risk);box-shadow:inset 0 -3px 0 var(--risk)}
+
 /* deepen panel */
 .deep{margin-top:14px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px;display:grid;gap:10px}
 .deep textarea{min-height:84px;background:var(--paper)}
@@ -243,6 +315,15 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .run{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
   .opts,.result,.ways{grid-template-columns:1fr}
+  .lgrid,.larch{grid-template-columns:1fr}
+  .lquiz{gap:14px}
+  .owl{width:78px}
+  .lrow{grid-template-columns:1fr}
+  .lrow .lbtn{border-left:0;border-top:1px solid var(--rule);margin:0;padding:14px 0;text-align:left}
+  .mode{font-size:10.5px;padding:14px 2px;letter-spacing:.02em}
+  .mode svg{width:24px;height:24px}
+  .lwrap{min-height:0}
+  .status{display:none}
   .vcard{grid-template-columns:1fr;gap:8px}
   .vcard .scorecol{display:flex;align-items:baseline;gap:10px}
   .aday{grid-template-columns:1fr;gap:4px}
@@ -259,7 +340,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
   #reset-btn{margin-left:auto}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark{animation:none}}
 </style>
 
 <header class="band">
@@ -283,31 +364,22 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Export</button>
       <span class="status" id="status">Saved in this browser</span>
-      <button type="button" id="reset-btn" aria-expanded="false" style="margin-right:0">Start over</button>
+      <button type="button" id="reset-btn" style="margin-right:0">Start over</button>
     </nav>
   </div>
 </header>
 
 <main class="wrap">
-  <div class="panel resetp" id="reset-panel" hidden>
-    <div class="qstep"><h3>Start over</h3><button class="btn quiet" type="button" data-reset="cancel">Close</button></div>
-    <div class="ways3">
-      <button class="way" type="button" data-reset="search"><b>New search</b><p>Clear the current results and start a fresh topic. Your brand, stances and vault stay.</p></button>
-      <button class="way" type="button" data-reset="setup"><b>Redo brand setup</b><p>Go back to the four ways in: quiz, link your LLM, upload a prompt, or skip. Nothing is deleted.</p></button>
-      <button class="way danger" type="button" data-reset="erase"><b>Erase everything</b><p>Delete your brand, stances, vault and results, and start from zero.</p></button>
-    </div>
-    <p class="notice err" id="erase-confirm" hidden>This can't be undone. <button class="btn" type="button" data-reset="erase-yes">Erase everything</button> <button class="btn ghost" type="button" data-reset="erase-no">Keep my data</button></p>
-  </div>
-  <!-- BRAND QUIZ -->
-  <section class="view" id="v-start" hidden>
-    <div class="quiz" id="quiz"></div>
+  <!-- LANDING -->
+  <section class="view landing" id="v-start" hidden>
+    <div id="quiz" class="lwrap"></div>
   </section>
 
   <!-- ENGINE -->
   <section class="view" id="v-engine" hidden>
     <form class="run" id="run-form">
-      <input id="topic" type="text" placeholder="Drop a topic or idea, e.g. AI tools for illustrators" autocomplete="off" aria-label="Topic">
-      <button class="btn" id="run-btn" type="submit">Find outliers</button>
+      <input id="topic" type="text" placeholder="What are we talking about?" autocomplete="off" aria-label="What are we talking about?">
+      <button class="btn" id="run-btn" type="submit">Conjure content</button>
     </form>
     <p class="hint" id="run-hint">Each run maps what most creators would say about the topic (the 1x baseline), then ranks contrary takes by how far they move from it and how well your own stances back them.</p>
     <div id="run-notice"></div>
@@ -518,73 +590,43 @@ const QUIZ=[
   ["Instigator",{Outlaw:2,Jester:1}],
   ["Master builder they learn from",{Creator:2,Ruler:1,Hero:1}]]}
 ];
+/* ---------- landing: one mode at a time ---------- */
+const ICON={
+ wand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 15 9"/><path d="M17 2.5l1.3 3 3 1.3-3 1.3-1.3 3-1.3-3-3-1.3 3-1.3z"/><path d="M8 4v2M7 5h2M20 15v2M19 16h2"/></svg>',
+ hat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19.5h19"/><path d="M6 19.5c1.6-5 3.6-10.5 8.5-16 1.4-.8 3-.3 3.5.7-1.6-.2-2.6.6-2.8 1.8.3 4.5 1.3 9 2.8 13.5"/><path d="M11 13.5l.6 1.3 1.3.6-1.3.6-.6 1.3-.6-1.3-1.3-.6 1.3-.6z"/></svg>',
+ link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+ page:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h8l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h4.5"/><path d="M12.2 18v-6.5M9.4 14.2l2.8-2.8 2.8 2.8"/></svg>',
+ reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 3.5V8h4.5"/></svg>'
+};
+const OWL=`<svg class="owl" viewBox="0 0 160 182" role="img" aria-label="An owl in a wizard hat holding a wand">
+ <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path class="gold" d="M113 120 148 72" stroke-width="4.5"/>
+  <path d="M44 96C32 124 38 164 78 168C118 164 124 124 112 96" fill="var(--sheet)"/>
+  <path d="M65 128q6 5 13 0q6 5 13 0M61 143q8 5 17 0q8 5 17 0" opacity=".65"/>
+  <path d="M47 108C39 124 42 145 56 156"/>
+  <path d="M108 106C124 106 134 116 127 128C120 135 108 131 103 122" fill="var(--sheet)"/>
+  <ellipse cx="78" cy="92" rx="39" ry="31" fill="var(--sheet)"/>
+  <path class="gold" d="M68 168v7M75 168v7M83 168v7M90 168v7"/>
+ </g>
+ <circle cx="62" cy="92" r="13" fill="currentColor"/><circle cx="94" cy="92" r="13" fill="currentColor"/>
+ <circle cx="64" cy="94" r="6" fill="var(--paper)"/><circle cx="92" cy="94" r="6" fill="var(--paper)"/>
+ <circle cx="66" cy="91.5" r="1.8" fill="currentColor"/><circle cx="94" cy="91.5" r="1.8" fill="currentColor"/>
+ <path class="gold" fill="currentColor" d="M72 103h12l-6 10z"/>
+ <path class="gold" fill="currentColor" d="M36 68C58 59 98 59 120 68C100 75 56 75 36 68Z"/>
+ <path class="gold" fill="currentColor" d="M54 66C60 47 69 28 86 13C96 6 108 8 112 15C103 13 96 17 94 26C96 40 99 53 103 66Z"/>
+ <path fill="var(--band)" d="M80 40l1.8 4.2 4.2 1.8-4.2 1.8-1.8 4.2-1.8-4.2-4.2-1.8 4.2-1.8z"/>
+ <path class="gold spark" fill="currentColor" d="M149 54l2.6 8.4 8.4 2.6-8.4 2.6-2.6 8.4-2.6-8.4-8.4-2.6 8.4-2.6z"/>
+ <circle class="gold spark spark2" fill="currentColor" cx="136" cy="56" r="2.6"/>
+</svg>`;
+const TILT=[-7,5,-3,7,-5,3,0,0];
+const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["link","Link your LLM",ICON.link],["upload","Upload a prompt",ICON.page],["erase","Erase everything",ICON.reset]];
+let mode="conjure", llm="ChatGPT", found=null, flash="";
 let qi=0, qans=[], qpick=null;
 function tally(){
-  const s={}; Object.keys(ARCH).forEach(k=>s[k]=0);
-  qans.forEach((a,i)=>{ if(a==null) return; Object.entries(QUIZ[i].o[a][1]).forEach(([k,v])=>s[k]+=v) });
-  return Object.entries(s).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+  const sc={}; Object.keys(ARCH).forEach(k=>sc[k]=0);
+  qans.forEach((a,i)=>{ if(a==null) return; Object.entries(QUIZ[i].o[a][1]).forEach(([k,v])=>sc[k]+=v) });
+  return Object.entries(sc).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
 }
-function renderQuiz(){
-  const el=$("#quiz"), total=QUIZ.length+2;
-  const head=(n,label)=>`<div class="qstep"><span class="label">${label}</span><span class="label">Step ${n} of ${total}</span></div><div class="qbar"><b style="width:${n/total*100}%"></b></div>`;
-  if(qi<QUIZ.length){
-    const Q=QUIZ[qi];
-    el.innerHTML=`${qi===0?`<div><h2>Find your brand archetype</h2><p class="lede" style="margin-top:6px">Six quick questions. Your archetype shapes how Handalf builds contrary takes, because a Sage and an Outlaw disagree in different ways.</p></div>`:""}
-      ${head(qi+1,"Brand quiz")}
-      <p class="qtext">${esc(Q.q)}</p>
-      <div class="opts">${Q.o.map((o,i)=>`<button class="opt" type="button" data-q="${i}" aria-pressed="${qans[qi]===i}"><span class="mono">${"ABCD"[i]}</span>${esc(o[0])}</button>`).join("")}</div>
-      <div class="qstep">${qi>0?`<button class="btn ghost" data-qnav="back" type="button">Back</button>`:`<button class="btn ghost" data-qnav="choices" type="button">Other ways in</button>`}<button class="btn quiet" data-qnav="skip" type="button">I know my archetype</button></div>`;
-    return;
-  }
-  if(qi===QUIZ.length){
-    const ranked=qans.some(a=>a!=null)?tally():[state.profile.archetype||"Creator"];
-    if(!qpick) qpick={primary:state.profile.archetype&&!qans.length?state.profile.archetype:ranked[0],secondary:qans.some(a=>a!=null)?ranked[1]:(state.profile.archetype2||"")};
-    const A=ARCH[qpick.primary];
-    el.innerHTML=`${head(qi+1,"Your archetype")}
-      <div class="result">
-        <div><span class="label">Primary</span><p class="archname">${esc(qpick.primary)}</p><p><strong>${esc(A.line)}</strong></p><p class="lede" style="margin-top:8px">${esc(A.style)}</p>
-          ${qpick.secondary?`<p class="hint" style="margin-top:12px">Secondary: <b>${esc(qpick.secondary)}</b>. ${esc(ARCH[qpick.secondary].line)}</p>`:""}</div>
-        <div><span class="label">Not quite? Tap one to make it primary. Your previous pick becomes secondary.</span>
-          <div class="arch-grid" style="margin-top:8px">${Object.entries(ARCH).map(([k,v])=>`<button class="arch${qpick.secondary===k?" second":""}" type="button" data-arch="${k}" aria-pressed="${qpick.primary===k}"><b>${k}</b><span>${esc(v.line)}</span></button>`).join("")}</div></div>
-      </div>
-      <div class="qstep"><button class="btn ghost" data-qnav="back" type="button">Back</button><button class="btn" data-qnav="next" type="button">Keep ${esc(qpick.primary)}</button></div>`;
-    return;
-  }
-  const p=state.profile;
-  el.innerHTML=`${head(total,"Niche and expertise")}
-    <p class="qtext">What do you know that most creators in your space don't?</p>
-    <div class="form">
-      <div class="field"><label class="label" for="q-niche">Niche</label><input id="q-niche" value="${esc(p.niche||"")}" placeholder="Illustration, comics, creative business"></div>
-      <div class="field"><label class="label" for="q-audience">Who it's for</label><input id="q-audience" value="${esc(p.audience||"")}" placeholder="Indie artists who want to own their work"></div>
-      <div class="field wide"><label class="label" for="q-expertise">Your expertise</label><textarea id="q-expertise" placeholder="What you know from doing it. Years in, things built, mistakes made.">${esc(p.expertise||"")}</textarea></div>
-      <div class="field wide"><label class="label" for="q-platforms">Where you post</label><input id="q-platforms" value="${esc(p.platforms||"")}" placeholder="YouTube video essays, IG carousels, X threads"></div>
-    </div>
-    <div class="qstep"><button class="btn ghost" data-qnav="back" type="button">Back</button><button class="btn" data-qnav="finish" type="button">Start finding takes</button></div>`;
-}
-$("#quiz").addEventListener("click",e=>{
-  const o=e.target.closest("[data-q]");
-  if(o){qans[qi]=+o.dataset.q; qi++; qpick=null; renderQuiz(); return}
-  const a=e.target.closest("[data-arch]");
-  if(a){const k=a.dataset.arch;
-    if(qpick.primary===k) return;
-    qpick.secondary=qpick.primary; qpick.primary=k;
-    renderQuiz(); return}
-  const n=e.target.closest("[data-qnav]"); if(!n) return;
-  const act=n.dataset.qnav;
-  if(act==="choices"){mode="choose";renderStart();return}
-  if(act==="back"){qi=Math.max(0,qi-1);renderQuiz()}
-  if(act==="skip"){qi=QUIZ.length;qans=[];qpick={primary:state.profile.archetype||"Creator",secondary:state.profile.archetype2||""};renderQuiz()}
-  if(act==="next"){state.profile.archetype=qpick.primary;state.profile.archetype2=qpick.secondary||"";persist("profile");qi++;renderQuiz()}
-  if(act==="finish"){
-    [["niche","q-niche"],["audience","q-audience"],["expertise","q-expertise"],["platforms","q-platforms"]].forEach(([k,id])=>state.profile[k]=$("#"+id).value.trim());
-    state.profile.onboarded=true; persist("profile"); renderProfile(); renderEngine(); show("engine");
-  }
-});
-function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
-function openSetup(){mode="choose";show("start")}
-
-/* ---------- setup: four ways in ---------- */
-let mode="choose", llm="ChatGPT", found=null;
 const LLMS={ChatGPT:"https://chatgpt.com/",Claude:"https://claude.ai/new",Gemini:"https://gemini.google.com/app",Other:""};
 const LINK_PROMPT=`I'm setting up a content strategy tool and want it to know me as a creator. Based on everything you know about me from our past conversations and your memory of me, write a profile with these sections:
 
@@ -601,56 +643,89 @@ Brand archetype: which one fits me best and a runner up, from Sage, Explorer, Ou
 Then list 5 to 15 opinions I hold that go against the common view in my field. For each one, give the opinion, the common view it pushes against, and my own words if you remember them.
 
 Only use what you actually know about me. Write "unknown" where you don't know.`;
-function renderStart(){
-  if(mode==="quiz") return renderQuiz();
-  const el=$("#quiz");
-  if(mode==="choose"){
-    el.innerHTML=`<div><h2>Tell Handalf who you are</h2><p class="lede" style="margin-top:6px">Takes get sharper the more Handalf knows about you and your brand. Pick one way in. You can add the others later from the Brand tab.</p></div>
-    <div class="ways">
-      <button class="way" type="button" data-way="quiz"><span class="label">About 2 minutes</span><b>Take the brand archetype quiz</b><p>Six questions to find how your brand argues, then your niche and expertise.</p></button>
-      <button class="way" type="button" data-way="link"><span class="label">About 3 minutes</span><b>Link your LLM</b><p>Have ChatGPT, Claude or Gemini describe your brand from what it already knows about you.</p></button>
-      <button class="way" type="button" data-way="upload"><span class="label">About 1 minute</span><b>Upload a prompt</b><p>Drop in a brand brief, a bio, or a prompt you already use about yourself.</p></button>
-      <button class="way skip" type="button" data-way="skip"><span class="label">Go straight in</span><b>Skip for now</b><p>Use the engine right away. Takes stay more general until Handalf knows you.</p></button>
-    </div>`;
-    return;
-  }
-  const back=`<button class="btn ghost" data-qnav="choices" type="button">Other ways in</button>`;
-  if(mode==="link"){
-    const url=LLMS[llm];
-    el.innerHTML=`<div class="qstep"><span class="label">Link your LLM</span>${back}</div>
-    <p class="qtext">Let the assistant you use most describe you.</p>
-    <div class="llms">${Object.keys(LLMS).map(k=>`<button class="chip" type="button" data-llm="${k}" aria-pressed="${llm===k}">${k}</button>`).join("")}</div>
-    <ol class="steps">
-      <li><div><span class="label">Copy this prompt</span><textarea class="promptbox" id="link-prompt" readonly>${esc(LINK_PROMPT)}</textarea><button class="btn ghost" type="button" data-copy style="justify-self:start">Copy prompt</button></div></li>
-      <li><div><span class="label">Paste it into ${llm==="Other"?"your assistant":esc(llm)}</span>${url?`<a class="btn ghost" href="${url}" target="_blank" rel="noopener">Open ${esc(llm)}</a>`:""}<p class="hint">Works best with memory turned on in that app, so it can draw on your past chats.</p></div></li>
-      <li><div><label class="label" for="link-reply">Paste its answer here</label><textarea id="link-reply" placeholder="Paste the whole reply"></textarea><button class="btn" type="button" data-read="link" style="justify-self:start">Read my profile</button><p class="hint" id="read-hint"></p></div></li>
-    </ol>
-    <p class="hint">Direct account linking is on the way. For your full history, upload a conversation export in the Stances tab.</p>`;
-    return;
-  }
-  if(mode==="upload"){
-    el.innerHTML=`<div class="qstep"><span class="label">Upload a prompt</span>${back}</div>
-    <p class="qtext">Give Handalf something you've already written about yourself.</p>
-    <label class="drop" for="brief-file"><strong>Drop a file or choose one</strong><br><span class="hint">.txt, .md or .json. A brand brief, bio, media kit text, or a custom instructions prompt.</span></label>
-    <input id="brief-file" type="file" accept=".txt,.md,.json" hidden>
-    <label class="label" for="brief-text">Or paste it</label>
-    <textarea id="brief-text" placeholder="Paste your brief or prompt" style="min-height:180px"></textarea>
-    <div><button class="btn" type="button" data-read="upload">Read my profile</button></div>
-    <p class="hint" id="read-hint"></p>`;
-    return;
-  }
-  if(mode==="done"){
-    const f=found||{};
-    el.innerHTML=`<div class="qstep"><span class="label">${esc(f.source||"Profile")}</span></div>
-    <p class="qtext">${f.parsed?"Here's what Handalf picked up.":"Saved. Handalf will read this on every run."}</p>
-    ${f.parsed?`<ul class="found">
-      ${f.arch?`<li>Brand archetype: <b>${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}</li>`:`<li>No clear archetype. The quiz can find one.</li>`}
-      <li>${f.fields.length?`Filled in ${esc(f.fields.join(", "))}`:"No new brand fields. Your existing ones were kept."}</li>
-      <li>${f.stances} contrary stance${f.stances===1?"":"s"} added to your bank</li></ul>`:""}
-    <p class="hint">You can edit any of it in the Brand tab.</p>
-    <div class="qstep"><button class="btn ghost" type="button" data-way="quiz">${f.arch?"Refine with the quiz":"Take the quiz"}</button><button class="btn" type="button" data-way="engine">Start finding takes</button></div>`;
-  }
+function owlHead(eyebrow,q,n){
+  return `<div class="lquiz"><div style="--tilt:${TILT[n]||0}deg">${OWL}</div><div style="min-width:0;display:grid;gap:10px"><p class="leyebrow">${eyebrow}</p><h2 class="lq sm">${esc(q)}</h2></div></div>`;
 }
+function quizPanel(){
+  const total=QUIZ.length+2, bar=n=>`<div class="lbar"><b style="width:${n/total*100}%"></b></div>`;
+  if(qi<QUIZ.length){
+    const Q=QUIZ[qi];
+    return `${owlHead(`Brand quiz · ${qi+1} of ${QUIZ.length}`,Q.q,qi)}${bar(qi+1)}
+      <ol class="lopts">${Q.o.map((o,i)=>`<li><button type="button" data-q="${i}" aria-pressed="${qans[qi]===i}"><span class="lk">${"ABCD"[i]}</span><span>${esc(o[0])}</span></button></li>`).join("")}</ol>
+      <div class="lnav">${qi>0?`<button class="ltext" type="button" data-qnav="back">Back</button>`:"<span></span>"}<button class="ltext" type="button" data-qnav="skip">I already know my archetype</button></div>`;
+  }
+  if(qi===QUIZ.length){
+    const ranked=qans.some(a=>a!=null)?tally():[state.profile.archetype||"Creator"];
+    if(!qpick) qpick={primary:!qans.some(a=>a!=null)&&state.profile.archetype?state.profile.archetype:ranked[0],secondary:qans.some(a=>a!=null)?ranked[1]:(state.profile.archetype2||"")};
+    const A=ARCH[qpick.primary];
+    return `${owlHead("Your archetype",qpick.primary,6)}${bar(QUIZ.length+1)}
+      <p class="lhint" style="color:var(--ink);font-size:18px">${esc(A.line)} ${esc(A.style)}</p>
+      ${qpick.secondary?`<p class="lhint">Secondary: <b style="color:var(--ultra)">${esc(qpick.secondary)}</b>. ${esc(ARCH[qpick.secondary].line)}</p>`:""}
+      <p class="leyebrow" style="margin-top:6px">Not quite? Tap one to make it primary. Your previous pick becomes secondary.</p>
+      <div class="larch">${Object.entries(ARCH).map(([k,v])=>`<button type="button" data-arch="${k}" class="${qpick.secondary===k?"second":""}" aria-pressed="${qpick.primary===k}"><b>${k}</b><span>${esc(v.line)}</span></button>`).join("")}</div>
+      <div class="lnav"><button class="ltext" type="button" data-qnav="back">Back</button><button class="lbtn solo" type="button" data-qnav="next">Keep ${esc(qpick.primary)}</button></div>`;
+  }
+  const p=state.profile;
+  return `${owlHead("Niche and expertise","What do you know that most creators in your space don't?",7)}${bar(total)}
+    <div class="lgrid">
+      <div class="lfield"><label class="leyebrow" for="q-niche">Niche</label><input id="q-niche" value="${esc(p.niche||"")}" placeholder="Illustration, comics, creative business"></div>
+      <div class="lfield"><label class="leyebrow" for="q-audience">Who it's for</label><input id="q-audience" value="${esc(p.audience||"")}" placeholder="Indie artists who want to own their work"></div>
+      <div class="lfield wide"><label class="leyebrow" for="q-expertise">Your expertise</label><textarea id="q-expertise" placeholder="What you know from doing it. Years in, things built, mistakes made.">${esc(p.expertise||"")}</textarea></div>
+      <div class="lfield wide"><label class="leyebrow" for="q-platforms">Where you post</label><input id="q-platforms" value="${esc(p.platforms||"")}" placeholder="YouTube video essays, IG carousels, X threads"></div>
+    </div>
+    <div class="lnav"><button class="ltext" type="button" data-qnav="back">Back</button><button class="lbtn solo" type="button" data-qnav="finish">Save and conjure</button></div>`;
+}
+function renderStart(){
+  const p=state.profile, thin=!p.archetype&&!p.niche&&!p.expertise&&!p.brief;
+  let panel="";
+  if(mode==="conjure"){
+    const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Take the brand quiz, link your LLM, or upload a prompt below."
+      :`Shaped for ${p.name?esc(p.name)+", ":""}${p.archetype?`a ${esc(p.archetype)} brand`:"your brand"}${p.niche?` in ${esc(p.niche)}`:""}.`);
+    flash="";
+    panel=`<p class="leyebrow">Conjure</p><h2 class="lq">What are we talking about?</h2>
+      <form class="lrow" id="l-form"><input id="l-topic" type="text" placeholder="A topic, an idea, a hunch" autocomplete="off" aria-label="What are we talking about?"><button class="lbtn" type="submit">Conjure content</button></form>
+      <p class="lhint">${msg}${state.last?` <button class="ltext" type="button" data-golast>Back to “${esc(state.last.topic)}”</button>`:""}</p>
+      ${sample?"":`<p class="lhint">Conjuring runs on Claude, so open this page inside Claude to use it.</p>`}`;
+  }else if(mode==="quiz"){
+    panel=quizPanel();
+  }else if(mode==="link"){
+    const url=LLMS[llm];
+    panel=`<p class="leyebrow">Link your LLM</p><h2 class="lq sm">Which assistant knows you best?</h2>
+      <div class="llms">${Object.keys(LLMS).map(k=>`<button type="button" data-llm="${k}" aria-pressed="${llm===k}">${k}</button>`).join("")}</div>
+      <ol class="lsteps">
+        <li><span class="n">1</span><div><span class="leyebrow">Copy this prompt</span><pre class="lpre" id="link-prompt">${esc(LINK_PROMPT)}</pre><button class="lbtn solo" type="button" data-copy>Copy prompt</button></div></li>
+        <li><span class="n">2</span><div><span class="leyebrow">Paste it into ${llm==="Other"?"your assistant":esc(llm)}</span>${url?`<a class="ltext" href="${url}" target="_blank" rel="noopener">Open ${esc(llm)}</a>`:""}<p class="lhint">Works best with memory turned on in that app.</p></div></li>
+        <li><span class="n">3</span><div><label class="leyebrow" for="link-reply">Paste its answer here</label><textarea id="link-reply" placeholder="Paste the whole reply"></textarea><button class="lbtn solo" type="button" data-read="link">Read my profile</button><p class="lhint" id="read-hint"></p></div></li>
+      </ol>`;
+  }else if(mode==="upload"){
+    panel=`<p class="leyebrow">Upload a prompt</p><h2 class="lq sm">What have you written about yourself?</h2>
+      <p class="lhint">A brand brief, a bio, media kit text, or a custom instructions prompt. Paste it, or <label class="lfile" for="brief-file">choose a file</label> (.txt, .md or .json).</p>
+      <input id="brief-file" type="file" accept=".txt,.md,.json" hidden>
+      <div class="ldrop"><textarea id="brief-text" placeholder="Paste or drop your brief here"></textarea></div>
+      <button class="lbtn solo" type="button" data-read="upload">Read my profile</button><p class="lhint" id="read-hint"></p>`;
+  }else if(mode==="erase"){
+    panel=`<p class="leyebrow">Erase everything</p><h2 class="lq sm">Start over from zero?</h2>
+      <p class="lhint" style="font-size:17px">This deletes your brand, stances, vault and results. It can't be undone.</p>
+      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo danger" type="button" data-erase>Erase everything</button><button class="ltext" type="button" data-mode="conjure">Keep my data</button></div>`;
+  }else if(mode==="done"){
+    const f=found||{};
+    panel=`<p class="leyebrow">${esc(f.source||"Profile")}</p><h2 class="lq sm">${f.parsed?"Here's what Handalf picked up.":"Saved. Handalf will read this on every run."}</h2>
+      ${f.parsed?`<ul class="lfound">
+        <li>${f.arch?`Brand archetype: <b style="color:var(--gold)">${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}`:"No clear archetype. The brand quiz can find one."}</li>
+        <li>${f.fields.length?`Filled in ${esc(f.fields.join(", "))}`:"No new brand fields. Your existing ones were kept."}</li>
+        <li>${f.stances} contrary stance${f.stances===1?"":"s"} added to your bank</li></ul>`:""}
+      <p class="lhint">You can edit any of it in the Brand tab.</p>
+      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button><button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine with the quiz":"Take the brand quiz"}</button></div>`;
+  }
+  const active=mode==="done"?"":mode;
+  $("#quiz").innerHTML=`<div class="lpanel">${panel}</div>
+    <nav class="modes" aria-label="Ways to start">${MODES.map(([k,l,ic])=>`<button type="button" class="mode${k==="erase"?" danger":""}" data-mode="${k}" aria-pressed="${active===k}">${ic}<span>${l}</span></button>`).join("")}</nav>`;
+}
+function toLanding(){const tp=$("#v-start").getBoundingClientRect().top;if(tp<0)window.scrollBy(0,tp-8)}
+function setMode(k){ mode=k; if(k==="quiz"){qi=0;qans=[];qpick=null} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
+function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
+function openSetup(k){mode=k||"quiz";if(mode==="quiz"){qi=0;qans=[];qpick=null}show("start")}
+function goHome(){mode="conjure";show("start");const i=$("#l-topic");if(i)i.focus()}
 const PROFILE_KEYS=["name","niche","expertise","audience","platforms","voice","pillars","off"];
 function extractPrompt(text){
 return `Below is text a content creator gave us about themselves: either a brief they wrote or a profile their AI assistant wrote about them. Extract a creator profile and their contrary opinions.
@@ -695,28 +770,49 @@ async function readProfile(text,source){
     hint.textContent=errCopy(e)||"Reading failed. Try again.";
   }
 }
+$("#quiz").addEventListener("submit",e=>{
+  if(e.target.id!=="l-form") return; e.preventDefault();
+  const t=$("#l-topic").value.trim(); if(!t){$("#l-topic").focus();return}
+  if(!sample){const h=$("#quiz .lhint");if(h)h.textContent="Conjuring runs on Claude, so open this page inside Claude to use it.";return}
+  $("#topic").value=t; show("engine"); $("#run-form").requestSubmit();
+});
 $("#quiz").addEventListener("click",async e=>{
-  const w=e.target.closest("[data-way]");
-  if(w){const k=w.dataset.way;
-    if(k==="quiz") return startQuiz();
-    if(k==="skip"){state.profile.onboarded=true;state.profile.skipped=true;persist("profile");renderEngine();return show("engine")}
-    if(k==="engine"){renderEngine();return show("engine")}
-    mode=k; renderStart(); return}
+  const m=e.target.closest("[data-mode]"); if(m) return setMode(m.dataset.mode);
+  if(e.target.closest("[data-golast]")) return show("engine");
+  const o=e.target.closest("[data-q]"); if(o){qans[qi]=+o.dataset.q;qi++;qpick=null;renderStart();toLanding();return}
+  const a=e.target.closest("[data-arch]");
+  if(a){const k=a.dataset.arch;if(qpick.primary!==k){qpick.secondary=qpick.primary;qpick.primary=k;renderStart()}return}
+  const n=e.target.closest("[data-qnav]");
+  if(n){const act=n.dataset.qnav;
+    if(act==="back"){qi=Math.max(0,qi-1);renderStart()}
+    toLanding();
+    if(act==="skip"){qi=QUIZ.length;qans=[];qpick={primary:state.profile.archetype||"Creator",secondary:state.profile.archetype2||""};renderStart()}
+    if(act==="next"){state.profile.archetype=qpick.primary;state.profile.archetype2=qpick.secondary||"";persist("profile");qi++;renderStart()}
+    if(act==="finish"){
+      [["niche","q-niche"],["audience","q-audience"],["expertise","q-expertise"],["platforms","q-platforms"]].forEach(([k,id])=>state.profile[k]=$("#"+id).value.trim());
+      state.profile.onboarded=true; persist("profile"); renderProfile(); renderEngine();
+      flash=`Saved. Takes will argue like a ${esc(state.profile.archetype||"creator")}.`; setMode("conjure");
+    }
+    return;
+  }
   const l=e.target.closest("[data-llm]"); if(l){llm=l.dataset.llm;const keep=$("#link-reply").value;renderStart();$("#link-reply").value=keep;return}
   const c=e.target.closest("[data-copy]");
-  if(c){try{await navigator.clipboard.writeText(LINK_PROMPT);c.textContent="Copied"}catch(err){const t=$("#link-prompt");t.focus();t.select();c.textContent="Selected. Press copy on your keyboard"}return}
+  if(c){try{await navigator.clipboard.writeText(LINK_PROMPT);c.textContent="Copied"}catch(err){const r=document.createRange();r.selectNodeContents($("#link-prompt"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r);c.textContent="Selected. Press copy on your keyboard"}return}
   const r=e.target.closest("[data-read]");
-  if(r){ if(r.dataset.read==="link") readProfile($("#link-reply").value,"Linked "+(llm==="Other"?"LLM":llm)); else readProfile($("#brief-text").value,"Uploaded prompt"); }
+  if(r){ if(r.dataset.read==="link") readProfile($("#link-reply").value,"Linked "+(llm==="Other"?"LLM":llm)); else readProfile($("#brief-text").value,"Uploaded prompt"); return }
+  if(e.target.closest("[data-erase]")){
+    if(runCtl)runCtl.abort();
+    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;queue=[];open.clear();
+    ["profile","stances","vault","last"].forEach(persist);
+    $("#topic").value=""; showNotice(""); renderAll(); setRunAvail();
+    flash="Everything was erased. This is a fresh start."; setMode("conjure");
+  }
 });
-$("#quiz").addEventListener("change",e=>{
-  if(e.target.id!=="brief-file"||!e.target.files[0]) return;
-  const f=e.target.files[0], rd=new FileReader();
-  rd.onload=()=>{$("#brief-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};
-  rd.readAsText(f); e.target.value="";
-});
-$("#quiz").addEventListener("dragover",e=>{if(e.target.closest(".drop")){e.preventDefault();e.target.closest(".drop").classList.add("over")}});
-$("#quiz").addEventListener("dragleave",e=>{const d=e.target.closest(".drop");if(d)d.classList.remove("over")});
-$("#quiz").addEventListener("drop",e=>{const d=e.target.closest(".drop");if(!d)return;e.preventDefault();d.classList.remove("over");const f=e.dataTransfer.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$("#brief-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};rd.readAsText(f)});
+function loadBrief(f){const rd=new FileReader();rd.onload=()=>{$("#brief-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};rd.readAsText(f)}
+$("#quiz").addEventListener("change",e=>{if(e.target.id==="brief-file"&&e.target.files[0]){loadBrief(e.target.files[0]);e.target.value=""}});
+$("#quiz").addEventListener("dragover",e=>{const d=e.target.closest(".ldrop");if(d){e.preventDefault();d.classList.add("over")}});
+$("#quiz").addEventListener("dragleave",e=>{const d=e.target.closest(".ldrop");if(d)d.classList.remove("over")});
+$("#quiz").addEventListener("drop",e=>{const d=e.target.closest(".ldrop");if(!d)return;e.preventDefault();d.classList.remove("over");const f=e.dataTransfer.files[0];if(f)loadBrief(f)});
 
 /* ---------- engine ---------- */
 function setRunAvail(){
@@ -782,7 +878,7 @@ $("#run-form").addEventListener("submit",async ev=>{
     if(!state.profile.ran){state.profile.ran=true;persist("profile")}
     persist("last"); renderEngine();
   }catch(e){ showNotice(errCopy(e),true); renderEngine(); }
-  finally{btn.disabled=false;btn.textContent="Find outliers";runCtl=null}
+  finally{btn.disabled=false;btn.textContent="Conjure content";runCtl=null}
 });
 let tk=0;
 function normTake(t){
@@ -1083,7 +1179,7 @@ function renderProfile(){
   $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-retake>Retake quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`
     :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Take the brand quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`;
 }
-$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup()});
+$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("link")});
 pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
 
 /* ---------- vault planner ---------- */
@@ -1400,25 +1496,8 @@ $("#export-body").addEventListener("click",async e=>{
 $("#export-body").addEventListener("change",e=>{const k=e.target.dataset&&e.target.dataset.exon;if(!k)return;const v=vfind(k);if(v){v.exportOn=e.target.checked;persist("vault");renderExport()}});
 $("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexport]"))show("export")});
 
-/* ---------- start over ---------- */
-const rp=$("#reset-panel"), rb=$("#reset-btn");
-function closeReset(){rp.hidden=true;$("#erase-confirm").hidden=true;rb.setAttribute("aria-expanded","false")}
-rb.addEventListener("click",()=>{const o=rp.hidden;closeReset();rp.hidden=!o;rb.setAttribute("aria-expanded",String(o));if(o)rp.scrollIntoView({block:"nearest"})});
-rp.addEventListener("click",e=>{
-  const b=e.target.closest("[data-reset]"); if(!b) return;
-  const a=b.dataset.reset;
-  if(a==="cancel") return closeReset();
-  if(a==="search"){ if(runCtl)runCtl.abort(); state.last=null; open.clear(); persist("last"); $("#topic").value=""; filter="all"; showNotice(""); renderEngine(); closeReset(); show("engine"); $("#topic").focus(); return }
-  if(a==="setup"){ closeReset(); openSetup(); return }
-  if(a==="erase"){ $("#erase-confirm").hidden=false; return }
-  if(a==="erase-no"){ $("#erase-confirm").hidden=true; return }
-  if(a==="erase-yes"){
-    if(runCtl)runCtl.abort();
-    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;queue=[];open.clear();
-    ["profile","stances","vault","last"].forEach(persist);
-    $("#topic").value=""; showNotice(""); renderAll(); setRunAvail(); closeReset(); openSetup();
-  }
-});
+/* ---------- start over = landing ---------- */
+$("#reset-btn").addEventListener("click",goHome);
 
 function renderAll(){renderEngine();renderStances();renderProfile();renderVault();renderSources()}
 
@@ -1426,11 +1505,10 @@ lsLoad(); renderAll(); setRunAvail();
 const h=(location.hash||"").slice(1);
 let touched=false; document.addEventListener("click",()=>touched=true,{capture:true,once:true});
 function boot(){
-  if(!state.profile.onboarded&&!state.profile.archetype) show("start");
-  else if(["engine","stances","profile","vault","export"].includes(h)) show(h);
-  else show("engine");
+  if(["engine","stances","profile","vault","export"].includes(h)) show(h);
+  else {mode="conjure";show("start")}
 }
 boot();
-initRuntime().then(()=>{ if(!touched&&view==="start"&&state.profile.archetype) boot(); });
+initRuntime().then(()=>{ if(view==="start"&&!touched) renderStart(); });
 })();
 </script>

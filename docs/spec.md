@@ -14,8 +14,8 @@ Tagline: Make Content Magical
 3. Outlier score becomes the take multiple: (divergence/5) x (ownership/5) x (defensibility/5) x (0.5 + fit/10). Tiers: 5x+ Outlier, 2.5x Strong, 1.2x Fresh, below that Echo.
 4. Ownership only scores high when one of the creator's own stances backs the take, cited with their words.
 
-## Current flow (v8, Oct 20, 2026)
-1. Setup, four ways in: brand archetype quiz (12 archetypes, each with a way of disagreeing), link your LLM (copy a profile prompt into ChatGPT, Claude or Gemini and paste the answer back), upload a prompt or brief, or skip. Then niche and expertise.
+## Current flow (v9, Oct 20, 2026)
+1. Landing page (also what Start over opens): "What are we talking about?" with Conjure content. An icon row switches the same space, one mode at a time, to the brand quiz (one question at a time with the wizard owl, 12 archetypes, then niche and expertise), link your LLM (copy a profile prompt into ChatGPT, Claude or Gemini and paste the answer back), upload a prompt or brief, or erase everything. Lines only, no pills or rounded boxes.
 2. Engine: topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
 3. Remix: add personal context or talk the take through with an interviewer; rebuilt takes cite stances pulled from that dialogue.
 4. Vault: no cap. Grouped by idea or by date. Each take is a single post with a date, or a 3 to 6 episode series with a start date and cadence.
