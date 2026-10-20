@@ -19,7 +19,7 @@ Tagline: Find the magic in your stories.
 1b. Landing page (also the home for the footer icons): "What are we talking about?" with Conjure content; the dialogue drifts between Conjure, Handalf's quiz invite and Link LLM or bio.
 2. Alchemy (the engine): topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
 3. Remix: add personal context or talk the take through with an interviewer; rebuilt takes cite stances pulled from that dialogue.
-4. Vault: a library of books on shelves. The first shelf holds the Book of your brand (archetype, niche, expertise, elements, with Reread, Retake and Edit). Takes are shelved by idea or by date; series are thicker books; spine color marks the medium. Opening a book shows its planner: single post or 3 to 6 episode series with dates and cadence.
+4. Library: a library of books on shelves. The first shelf holds the Book of your spell book (archetype, niche, expertise, elements, with Reread, Retake and Edit). Takes are shelved by idea or by date; series are thicker books; spine color marks the medium. Opening a book shows its planner: single post or 3 to 6 episode series with dates and cadence.
 5. Conjurings (export): pick concepts and choose one or more media per take (text, audio, video; several makes it mixed content with a version per medium). Each version gets an outline for its medium plus image prompts for image generators, and video versions get shot prompts for text-to-video tools. Filter by medium and download labeled Word docs: "Handalf video plan", "Handalf video prompt", and a "Shot and image prompts" pack.
 6. Start over: new search, redo brand setup, or erase everything.
 

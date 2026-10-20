@@ -34,7 +34,7 @@
   color-scheme:dark;
 }
 /* leather bound: leather covers, cream pages with deep gray ink */
-:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx{
+:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx,:root:not([data-skin]) .bendwrap{
   --paper:#F4ECDA; --sheet:#FBF6EA; --ink:#2F2F2F; --mute:#655E54; --rule:#CDBE9C;
   --gold:#8A6620; --gold-hi:#6C4F15; --on-gold:#FFF8EA;
   --ultra:#3D5E8C; --ultra-soft:#E2E7EF; --copper:#8A6620; --copper-soft:#EEE2C6;
@@ -116,16 +116,30 @@ button,input,textarea,select{font:inherit;color:inherit}
 @keyframes turnIn{0%{transform:perspective(1500px) translateZ(0) rotateY(-112deg)}55%{transform:perspective(1500px) translateZ(90px) rotateY(-55deg)}100%{transform:perspective(1500px) translateZ(0) rotateY(0)}}
 .pageleaf.fx{position:fixed;inset:auto;z-index:55;box-shadow:0 18px 40px rgba(0,0,0,.35)}
 .pageunder{position:fixed;z-index:54;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
-.ipage .pageunder{position:absolute;inset:0;z-index:2;display:grid;grid-template-rows:auto 1fr;background-color:var(--sheet)}
+.ipage .pageunder{position:absolute;inset:0;z-index:2;background-color:var(--sheet)}
+.bpage{display:grid;grid-template-rows:auto 1fr;width:100%;height:100%;background-color:var(--sheet);background-image:var(--noise);background-size:200px 200px}
+.bendwrap{z-index:56;perspective:1700px;perspective-origin:50% 40%;pointer-events:none;transform-style:preserve-3d}
+.bstrip{position:absolute;top:0;transform-style:preserve-3d;transform-origin:0 50%;will-change:transform}
+.bclip{position:absolute;inset:0;overflow:hidden}
+.bstrip-in{position:absolute;top:0;display:flex;flex-direction:column;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
+.ipage .bstrip-in{background-color:var(--sheet)}
+.bstrip-in>.leaf-sc{flex:1 1 auto;overflow:hidden}
+.bshade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.35));opacity:0}
+.bendwrap>.bstrip{box-shadow:0 20px 40px rgba(0,0,0,.25)}
 @keyframes shade{0%{opacity:0}100%{opacity:1}}
 .turned{animation:settle .72s ease-out}
 .intro[hidden]{display:none!important}
 @keyframes settle{0%{filter:brightness(.82)}100%{filter:none}}
-.band{flex:none;position:relative;z-index:6}
+.band{flex:none;position:relative;z-index:58}
 .band>.wrap{position:relative}
-.ribbon-clip{position:absolute;left:0;right:0;top:calc(100% - 1px);height:60px;overflow:hidden;pointer-events:none}
-.ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:scaleY(0);transform-origin:50% 0;transition:transform .42s cubic-bezier(.3,.9,.35,1.15);filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
+.ribbon-clip{position:absolute;left:0;right:0;top:calc(100% - 1px);height:70px;overflow:hidden;pointer-events:none;z-index:57}
+.ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:scaleY(0);transform-origin:50% 0;transition:transform .42s cubic-bezier(.3,.9,.35,1.15),left .6s cubic-bezier(.45,.05,.3,1),width .6s cubic-bezier(.45,.05,.3,1);filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
 .ribbon svg{display:block;width:100%;height:100%;overflow:visible}
+.rb-sway{position:absolute;inset:0;transform-origin:50% 0}
+.ribbon.sway-r .rb-sway{animation:swayR .9s cubic-bezier(.3,.7,.4,1)}
+.ribbon.sway-l .rb-sway{animation:swayL .9s cubic-bezier(.3,.7,.4,1)}
+@keyframes swayR{0%{transform:none}25%{transform:rotate(-11deg) skewX(8deg) scaleY(1.08)}60%{transform:rotate(5deg) skewX(-4deg)}82%{transform:rotate(-2deg)}100%{transform:none}}
+@keyframes swayL{0%{transform:none}25%{transform:rotate(11deg) skewX(-8deg) scaleY(1.08)}60%{transform:rotate(-5deg) skewX(4deg)}82%{transform:rotate(2deg)}100%{transform:none}}
 .rb-bg{position:absolute;inset:0;background-color:var(--gold);background-image:var(--noise);background-size:200px 200px;clip-path:polygon(0 0,100% 0,100% 100%,50% 59.1%,0 100%)}
 .ribbon svg{position:relative}
 .rb-line{fill:none;stroke:color-mix(in srgb,var(--on-gold) 35%,transparent);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
@@ -632,11 +646,11 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
     <nav class="nav" role="tablist">
       <button role="tab" data-view="engine" aria-selected="true">Alchemy</button>
       <button role="tab" data-view="stances" aria-selected="false">Elements<span class="count" id="n-stances"></span></button>
-      <button role="tab" data-view="profile" aria-selected="false">Brand</button>
-      <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
+      <button role="tab" data-view="profile" aria-selected="false">Spell book</button>
+      <button role="tab" data-view="vault" aria-selected="false">Library<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Conjurings</button>
     </nav>
-    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><span class="rb-bg"></span><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span>
+    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><span class="rb-sway"><span class="rb-bg"></span><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span></span>
   </div>
 </header>
 
@@ -690,7 +704,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- PROFILE -->
   <section class="view" id="v-profile" hidden>
-    <div><h2>Your brand</h2><p class="lede">The engine scores fit against this. Write it the way you would brief a collaborator.</p></div>
+    <div><h2>Your spell book</h2><p class="lede">The engine scores fit against this. Write it the way you would brief a collaborator.</p></div>
     <form class="form" id="profile-form">
       <div class="arch-readout" id="arch-readout"></div>
       <div class="field"><label class="label" for="p-name">Name or brand</label><input id="p-name" name="name"></div>
@@ -719,7 +733,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- VAULT -->
   <section class="view" id="v-vault" hidden>
-    <div class="vhead"><div><h2>Vault</h2><p class="lede">Your library. Your brand and every take you kept, shelved as books. Open one to plan it as a single post or a series.</p></div>
+    <div class="vhead"><div><h2>Library</h2><p class="lede">Your spell book and every take you kept, shelved as books. Open one to plan it as a single post or a series.</p></div>
       <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Conjurings</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
     <div id="vault-list"></div>
   </section>
@@ -847,16 +861,50 @@ function cloneScroller(){
   c.querySelectorAll("input,textarea,select,button,a").forEach(n=>{n.setAttribute("tabindex","-1");n.removeAttribute("name")});
   return c;
 }
+/* ---------- paper page turn: the page is cut into strips that curl like real paper ---------- */
+const BEND={strips:12,ms:780};
+function bendLeaf(contentFn,host,rect,dir,onDone){
+  // host: element to append to; rect: {left,top,width,height} in host coords or fixed
+  const wrap=document.createElement("div"); wrap.className="bendwrap"; wrap.setAttribute("aria-hidden","true");
+  Object.assign(wrap.style,{left:rect.left+"px",top:rect.top+"px",width:rect.width+"px",height:rect.height+"px",position:rect.fixed?"fixed":"absolute"});
+  const n=BEND.strips, sw=rect.width/n, strips=[];
+  let parent=wrap;
+  for(let i=0;i<n;i++){
+    const st=document.createElement("div"); st.className="bstrip";
+    Object.assign(st.style,{left:(i?sw:0)+"px",width:(sw+0.6)+"px",height:rect.height+"px"});
+    const clip=document.createElement("div"); clip.className="bclip";
+    const inner=document.createElement("div"); inner.className="bstrip-in";
+    Object.assign(inner.style,{left:(-i*sw)+"px",width:rect.width+"px",height:rect.height+"px"});
+    inner.appendChild(contentFn());
+    const shade=document.createElement("div"); shade.className="bshade";
+    clip.append(inner,shade); st.appendChild(clip); parent.appendChild(st); strips.push({st,shade}); parent=st;
+  }
+  host.appendChild(wrap);
+  const t0=performance.now(), ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  function frame(now){
+    let t=Math.min(1,(now-t0)/BEND.ms); const e=ease(t), p=dir>0?e:1-e;
+    const base=-178*p, curl=Math.sin(Math.PI*p)*(dir>0?-9:-9), lift=Math.sin(Math.PI*p)*70;
+    strips.forEach((s,i)=>{
+      const k=i/(n-1), a=i===0?base:curl*(0.35+k*0.9);
+      s.st.style.transform=i===0?`translateZ(${lift}px) rotateY(${a}deg)`:`rotateY(${a}deg)`;
+      const face=Math.abs(base+curl*k*n*0.6)%360;
+      s.shade.style.opacity=String(Math.min(.55,Math.sin(Math.PI*p)*(.15+k*.4)));
+    });
+    if(t<1) requestAnimationFrame(frame); else { wrap.remove(); onDone&&onDone() }
+  }
+  requestAnimationFrame(frame);
+  return wrap;
+}
 function fxBox(cls){ const r=$("#stage").getBoundingClientRect(), d=document.createElement("div"); d.className=cls+" stagefx"; d.setAttribute("aria-hidden","true");
   Object.assign(d.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"}); return d }
 function turnPage(from,to,dir){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches||!$("#stage")) return null;
-  document.querySelectorAll(".pageleaf.fx,.pageunder.stagefx").forEach(x=>x.remove());
-  const fwd=dir!=null?dir>0:(ORDER[to]??0)>=(ORDER[from]??0), sc=$("#scroller"), st=sc.scrollTop, old=cloneScroller();
-  if(fwd){ const leaf=fxBox("pageleaf fx fwd"); leaf.appendChild(old); document.body.appendChild(leaf); old.scrollTop=st; setTimeout(()=>leaf.remove(),760); return null }
-  const under=fxBox("pageunder"); under.appendChild(old); document.body.appendChild(under); old.scrollTop=st;
-  return ()=>{ const leaf=fxBox("pageleaf fx back"), nw=cloneScroller(); leaf.appendChild(nw); document.body.appendChild(leaf); nw.scrollTop=$("#scroller").scrollTop;
-    setTimeout(()=>{leaf.remove();under.remove()},760) };
+  document.querySelectorAll(".bendwrap.stagefx,.pageunder.stagefx").forEach(x=>x.remove());
+  const fwd=dir!=null?dir>0:(ORDER[to]??0)>=(ORDER[from]??0), sc=$("#scroller"), st=sc.scrollTop, r=$("#stage").getBoundingClientRect();
+  const rect={left:r.left,top:r.top,width:r.width,height:r.height,fixed:true};
+  if(fwd){ const old=cloneScroller(); const w=bendLeaf(()=>old.cloneNode(true),document.body,rect,1); w.classList.add("stagefx"); w.querySelectorAll(".leaf-sc").forEach(c=>c.scrollTop=st); return null }
+  const under=fxBox("pageunder"), old=cloneScroller(); under.appendChild(old); document.body.appendChild(under); old.scrollTop=st;
+  return ()=>{ const nw=cloneScroller(), ns=$("#scroller").scrollTop; const w=bendLeaf(()=>nw.cloneNode(true),document.body,rect,-1,()=>under.remove()); w.classList.add("stagefx"); w.querySelectorAll(".leaf-sc").forEach(c=>c.scrollTop=ns) };
 }
 function placeRibbon(v){
   const r=$("#ribbon"); if(!r) return;
@@ -866,7 +914,9 @@ function placeRibbon(v){
   const w=bb.width, x=bb.left-wrap.left;
   if(!r.classList.contains("on")||r.dataset.v===v) r.style.width=w+"px";
   const drop=()=>{r.style.left=x+"px";r.dataset.v=v;requestAnimationFrame(()=>r.classList.add("on"))};
-  if(r.classList.contains("on")&&r.dataset.v!==v){r.classList.remove("on");setTimeout(()=>{r.style.width=w+"px";drop()},250);return}
+  if(r.classList.contains("on")&&r.dataset.v!==v){
+    const right=x>parseFloat(r.style.left||0); r.classList.remove("sway-l","sway-r"); void r.offsetWidth; r.classList.add(right?"sway-r":"sway-l");
+    r.style.width=w+"px"; r.style.left=x+"px"; r.dataset.v=v; return }
   else if(!r.classList.contains("on")) drop();
   else r.style.left=x+"px";
 }
@@ -1101,7 +1151,7 @@ function renderStart(){
   }else if(mode==="erase"){
     ebText="Erase everything";
     panel=`<h2 class="lq sm">Start over from zero?</h2>
-      <p class="lhint" style="font-size:17px">This deletes your brand, stances, vault and results. It can't be undone.</p>
+      <p class="lhint" style="font-size:17px">This deletes your spell book, elements, library and results. It can't be undone.</p>
       <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo danger" type="button" data-erase>Erase everything</button><button class="ltext" type="button" data-mode="conjure">Keep my data</button></div>`;
   }else if(mode==="done"){
     const f=found||{};
@@ -1434,7 +1484,7 @@ function takeHTML(t,ctx){
       <div class="bars">${bars}</div>
       ${t.risk?`<p class="risk">Risk: ${esc(t.risk)}</p>`:""}
       ${ctx.example?"":`<div class="actions">
-        <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In vault":"Save to vault"}</button>
+        <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In library":"Save to library"}</button>
         ${ctx.vault?`<button class="btn ghost" data-act="copy" data-key="${t.key}" type="button">Copy</button><button class="btn quiet" data-act="unsave" data-key="${t.key}" type="button">Remove</button>`:`<button class="btn ghost" data-act="remix" data-key="${t.key}" type="button" aria-expanded="${open.has(t.key)}">${open.has(t.key)?"Close":(t.thread&&t.thread.length?"Continue":"Remix")}</button>`}
       </div>`}
       ${ctx.example||ctx.vault?"":`<div id="panel-${t.key}">${open.has(t.key)?deepHTML(t):""}</div>`}
@@ -1445,7 +1495,7 @@ function renderEngine(){
   if(!run){
     const p0=state.profile, thin0=!p0.archetype&&!p0.niche&&!p0.expertise&&!p0.brief;
     $("#results").innerHTML=(thin0?`<p class="notice">Ideas will be more detailed once Handalf knows about you and your brand. <button class="btn ghost" data-setup type="button">Add your brand</button></p>`:"")
-      +`<div class="empty"><strong>Ready for a new topic</strong>Type an idea above and press Find outliers. Your vault${state.vault.length?` still holds ${state.vault.length} saved take${state.vault.length===1?"":"s"}`:" is ready for whatever you keep"}.</div>`;
+      +`<div class="empty"><strong>Ready for a new topic</strong>Type an idea above and press Find outliers. Your library${state.vault.length?` still holds ${state.vault.length} saved take${state.vault.length===1?"":"s"}`:" is ready for whatever you keep"}.</div>`;
     return;
   }
   const takes=(run.takes||[]).map(t=>t.key?t:{...t,key:"ex"+Math.random()});
@@ -1671,11 +1721,11 @@ function brandBook(){
 }
 function brandOpen(){
   const p=state.profile, A=p.archetype&&ARCH[p.archetype], kv=(k,v)=>v?`<p class="kv"><b>${k}:</b> ${esc(v)}</p>`:"";
-  return `<div class="vopen-in"><p class="leyebrow">Your brand</p><h3 class="vopen-title">${esc(p.name||"Your brand")}</h3>
+  return `<div class="vopen-in"><p class="leyebrow">Your spell book</p><h3 class="vopen-title">${esc(p.name||"Your brand")}</h3>
     ${A?`<p><b style="color:var(--gold)">${esc(p.archetype)}</b>${p.archetype2?` with ${esc(p.archetype2)}`:""}. ${esc(A.style)}</p>`:`<p class="hint">Your story hasn't been written yet.</p>`}
     ${kv("Niche",p.niche)}${kv("Who it's for",p.audience)}${kv("Expertise",p.expertise)}${kv("Where you post",p.platforms)}${kv("Voice",p.voice)}
     <p class="kv"><b>Elements:</b> ${state.stances.length} in your bank</p>
-    <div class="actions"><button class="btn" type="button" data-vbrand="story">${A?"Reread your story":"Write your story"}</button>${A?`<button class="btn ghost" type="button" data-vbrand="quiz">Retake the quiz</button>`:""}<button class="btn ghost" type="button" data-vbrand="profile">Edit brand</button></div></div>`;
+    <div class="actions"><button class="btn" type="button" data-vbrand="story">${A?"Reread your story":"Write your story"}</button>${A?`<button class="btn ghost" type="button" data-vbrand="quiz">Retake the quiz</button>`:""}<button class="btn ghost" type="button" data-vbrand="profile">Edit spell book</button></div></div>`;
 }
 function shelf(title,meta,books,openHtml){
   return `<section class="shelf"><div class="col-head"><h3>${esc(title)}</h3>${meta?`<span class="label">${esc(meta)}</span>`:""}</div>
@@ -1690,7 +1740,7 @@ function renderVault(){
   const v=state.vault;
   $("#n-vault").textContent=v.length?v.length:"";
   document.querySelectorAll("[data-vgroup]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.vgroup===vgroup));
-  let html=shelf("Your brand","",brandBook(),openPanel(["__brand"]));
+  let html=shelf("Your spell book","",brandBook(),openPanel(["__brand"]));
   if(!v.length){$("#vault-list").innerHTML=html+`<div class="empty"><strong>No takes on the shelves yet</strong>Save takes from an Alchemy run. Each one becomes a book here that you can plan as a single post or a series.</div>`;return}
   if(vgroup==="idea"){
     const groups=new Map();
@@ -1781,7 +1831,7 @@ function inView(v,view){return view==="all"||exMedia(v).includes(view)}
 function genCount(sel){let n=0;sel.forEach(v=>exMedia(v).forEach(m=>{const o=v.outlines&&v.outlines[m];if(!o)return;(o.episodes||[o]).forEach(x=>{n+=((x&&x.images)||[]).length+((x&&x.shots)||[]).length})}));return n}
 function renderExport(){
   const el=$("#export-body"), items=exItems();
-  if(!items.length){el.innerHTML=`<div class="empty"><strong>Nothing to export yet</strong>Save takes to your vault from an engine run, plan them as singles or series, then come back here to outline and export them.</div><button class="btn" type="button" data-goengine style="justify-self:start">Go to Alchemy</button>`;return}
+  if(!items.length){el.innerHTML=`<div class="empty"><strong>Nothing to export yet</strong>Save takes to your library from an Alchemy run, plan them as singles or series, then come back here to outline and export them.</div><button class="btn" type="button" data-goengine style="justify-self:start">Go to Alchemy</button>`;return}
   const sel=items.filter(v=>v.exportOn!==false), need=pendingVersions(sel);
   const counts={}; MKEYS.forEach(m=>counts[m]=sel.filter(v=>exMedia(v).includes(m)).length);
   if(exView!=="all"&&!counts[exView]) exView="all";
@@ -2047,17 +2097,10 @@ function renderSettings(){
   const row=(t,v,sub,act)=>`<div class="setrow"><h3>${t}</h3><div class="val"><b>${v}</b>${sub?`<p>${sub}</p>`:""}${act?`<div class="act">${act}</div>`:""}</div></div>`;
   const syncLine=syncCopy();
   $("#settings-body").innerHTML=`<div class="sets">
-    <p class="setgroup">Your profile sources</p>
-    ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
-    ${row("Your bio",src||p.brief?"Added":"Not added",src?`Read ${when(src.at)}. Add a new one any time to refresh it.`:p.brief?"Saved as your brand brief.":"Paste a bio, brand brief or media kit text and Handalf learns your brand from it.",`<button class="btn" type="button" data-set="bio">${src||p.brief?"Add a new bio":"Add a bio"}</button>`)}
-    ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn" type="button" data-set="stances">Manage elements</button>`)}
-    ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn" type="button" data-set="profile">Edit brand</button>`)}
-    <p class="setgroup">App</p>
-    ${row("Edition",SKINS[skin]||"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin==="leather"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button><button type="button" data-skin="chalk" aria-pressed="${skin==="chalk"}">Chalkboard</button></div>`)}
-    ${row("Your story","The storybook",answers().some(x=>x!=null)?"Reread the story you wrote with Handalf: your quiz answers, your archetype and what you know.":"Handalf's opening story, where you answer the brand quiz.",`<button class="btn" type="button" data-set="intro">${answers().some(x=>x!=null)?"Reread my story":"Open the storybook"}</button>`)}
+    <p class="setgroup">Your story</p>
+    ${row("Brand story",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not written yet",A?esc(A.style)+(p.quizAt?` Written ${when(p.quizAt)}.`:""):"Handalf's storybook, where you answer the brand quiz and learn your archetype.",`${answers().some(x=>x!=null)?`<button class="btn" type="button" data-set="intro">Reread my story</button>`:""}<button class="btn${answers().some(x=>x!=null)?" ghost":""}" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
+    <p class="setgroup">Your account</p>
     <div class="setrow"><h3>Where your work is saved</h3><div class="val"><b id="sync-val">${esc(syncLine[0])}</b><p id="sync-sub">${esc(syncLine[1])}</p></div></div>
-    ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn" type="button" data-set="vault">Open vault</button>`)}
-    ${row("Erase everything","Start from zero","Deletes your brand, stances, vault and results.",`<button class="btn ghost" type="button" data-set="erase" style="color:var(--risk);border-color:var(--risk)">Erase</button>`)}
   </div>`;
 }
 /* tap diagnostics, saved privately to the viewer's own data so problems can be traced */
@@ -2197,14 +2240,16 @@ function bookTurn(dir,to){
   if(book.pages[book.i]==="reveal"&&dir>0&&book.pick){ state.profile.archetype=book.pick.primary; state.profile.archetype2=book.pick.secondary||""; persist("profile"); }
   const anim=!matchMedia("(prefers-reduced-motion: reduce)").matches, pg=$(".ipage");
   pg.querySelectorAll(".pageleaf,.pageunder").forEach(x=>x.remove());
-  let under=null;
+  pg.querySelectorAll(".bendwrap").forEach(x=>x.remove());
+  let under=null; const rect={left:0,top:pg.scrollTop,width:pg.clientWidth,height:pg.clientHeight};
+  const pageOf=parts=>{const d=document.createElement("div"); d.className="bpage"; d.append(...parts); return d};
   if(anim){
-    const old=bookClone();
-    if(dir>0){ const leaf=document.createElement("div"); leaf.className="pageleaf fwd"; leaf.setAttribute("aria-hidden","true"); leaf.style.top=pg.scrollTop+"px"; leaf.append(...old); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760) }
-    else { under=document.createElement("div"); under.className="pageunder"; under.setAttribute("aria-hidden","true"); under.style.top=pg.scrollTop+"px"; under.append(...old); pg.appendChild(under) }
+    const old=pageOf(bookClone());
+    if(dir>0) bendLeaf(()=>old.cloneNode(true),pg,rect,1);
+    else { under=document.createElement("div"); under.className="pageunder"; under.setAttribute("aria-hidden","true"); under.style.top=pg.scrollTop+"px"; under.append(old); pg.appendChild(under) }
   }
   book.i=ni; book.showGrid=false; renderBook();
-  if(under){ const leaf=document.createElement("div"); leaf.className="pageleaf back"; leaf.setAttribute("aria-hidden","true"); leaf.append(...bookClone()); pg.appendChild(leaf); setTimeout(()=>{leaf.remove();under.remove()},760) }
+  if(under){ const nw=pageOf(bookClone()); bendLeaf(()=>nw.cloneNode(true),pg,rect,-1,()=>under.remove()) }
 }
 function openBook(mode){
   const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
