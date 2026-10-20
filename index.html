@@ -287,13 +287,33 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lfound li{padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px}
 .lfile{color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .ldrop.over{background:rgba(217,180,94,.08)}
-.modes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
+.modes{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
 .mode{background:none;border:0;border-left:1px solid var(--rule);border-radius:0;padding:18px 8px;display:grid;justify-items:center;align-content:start;gap:8px;color:var(--mute);cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.05em;text-align:center;line-height:1.25}
-.mode:first-child{border-left:0}
+.mode:first-of-type{border-left:0}
 .mode svg{width:30px;height:30px}
 .mode:hover{color:var(--gold-hi)}
 .mode[aria-pressed="true"]{color:var(--gold);box-shadow:inset 0 -3px 0 var(--gold)}
 .mode.danger:hover,.mode.danger[aria-pressed="true"]{color:var(--risk);box-shadow:inset 0 -3px 0 var(--risk)}
+
+/* Handalf perched on the mode bar */
+.perch{position:absolute;right:2%;bottom:100%;width:clamp(120px,16vw,210px);margin-bottom:-3px;color:var(--ink);pointer-events:none}
+.perch svg{display:block;width:100%;height:auto;overflow:visible}
+.perch .head{transform-box:view-box;transform-origin:98px 120px;transform:rotate(var(--tilt,0deg));transition:transform .45s ease}
+.perch .arm{transform-box:view-box;transform-origin:130px 114px}
+.perch .spark{transform-box:fill-box;transform-origin:center;animation:twinkle 1.8s ease-in-out infinite}
+.perch .spark2{animation-delay:.6s}
+.perch .burst *{opacity:0;transform-box:fill-box;transform-origin:center}
+.perch.waving .arm{animation:wave .9s ease-in-out}
+.perch.waving .b1{animation:fly1 .9s ease-out .3s both}
+.perch.waving .b2{animation:fly2 .9s ease-out .38s both}
+.perch.waving .b3{animation:fly3 .9s ease-out .45s both}
+@keyframes wave{0%{transform:rotate(0)}25%{transform:rotate(-34deg)}55%{transform:rotate(14deg)}80%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
+@keyframes fly1{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(-170px,-60px) scale(2.2)}}
+@keyframes fly2{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(-130px,20px) scale(1.8)}}
+@keyframes fly3{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(-210px,-25px) scale(1.6)}}
+.lpanel.late{animation-delay:.38s}
+.lpanel.late .lopts li{animation:lin .4s ease both;animation-delay:calc(.55s + var(--i,0)*.09s)}
+@media (min-width:861px){.lpanel{max-width:min(920px,calc(100% - 250px))}}
 
 /* deepen panel */
 .deep{margin-top:14px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px;display:grid;gap:10px}
@@ -311,6 +331,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
 @media (max-width:860px){
   .results,.split,.ways3{grid-template-columns:1fr}
+  .modes{margin-top:110px}
   .mast{grid-template-columns:auto 1fr}
   .tag{grid-column:1/-1;justify-self:start}
 }
@@ -326,6 +347,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .mode{font-size:10.5px;padding:14px 2px;letter-spacing:.02em}
   .mode svg{width:24px;height:24px}
   .lwrap{min-height:0}
+  .modes{margin-top:96px}
+  .perch{width:118px;right:0}
   .status{display:none}
   .vcard{grid-template-columns:1fr;gap:8px}
   .vcard .scorecol{display:flex;align-items:baseline;gap:10px}
@@ -343,7 +366,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
   #reset-btn{margin-left:auto}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin{animation:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.lpanel.late .lopts li{animation:none!important}}
 </style>
 
 <header class="band">
@@ -627,6 +650,39 @@ const OWL=`<svg class="owl" viewBox="0 0 160 182" role="img" aria-label="Handalf
  <path class="gold spark" fill="currentColor" d="M149 54l2.6 8.4 8.4 2.6-8.4 2.6-2.6 8.4-2.6-8.4-8.4-2.6 8.4-2.6z"/>
  <circle class="gold spark spark2" fill="currentColor" cx="136" cy="56" r="2.6"/>
 </svg>`;
+const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, perched on a branch, holding his wand">
+ <path d="M0 176C60 172 140 174 200 170" fill="none" stroke="var(--gold)" stroke-width="3.5" stroke-linecap="round"/>
+ <path d="M166 171c6-10 16-12 22-10c-4 8-12 12-22 10z" fill="var(--gold)"/>
+ <path d="M30 175c-4-8-12-11-18-10c3 7 10 11 18 10z" fill="var(--gold)" opacity=".8"/>
+ <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M64 96C52 124 58 164 98 168C138 164 144 124 132 96" fill="var(--sheet)"/>
+  <path d="M85 128q6 5 13 0q6 5 13 0M81 143q8 5 17 0q8 5 17 0" opacity=".65"/>
+  <path d="M67 108C59 124 62 145 76 156"/>
+  <path d="M88 168v8M95 168v8M103 168v8M110 168v8" stroke="var(--gold)"/>
+ </g>
+ <g class="head">
+  <ellipse cx="98" cy="92" rx="39" ry="31" fill="var(--sheet)" stroke="currentColor" stroke-width="3"/>
+  <circle cx="82" cy="92" r="13" fill="currentColor"/><circle cx="114" cy="92" r="13" fill="currentColor"/>
+  <circle cx="84" cy="94" r="6" fill="var(--paper)"/><circle cx="112" cy="94" r="6" fill="var(--paper)"/>
+  <circle cx="86" cy="91.5" r="1.8" fill="currentColor"/><circle cx="114" cy="91.5" r="1.8" fill="currentColor"/>
+  <path fill="var(--gold)" d="M92 103h12l-6 10z"/>
+  <path fill="var(--gold)" d="M56 68C78 59 118 59 140 68C120 75 76 75 56 68Z"/>
+  <path fill="var(--gold)" d="M74 66C80 47 89 28 106 13C116 6 128 8 132 15C123 13 116 17 114 26C116 40 119 53 123 66Z"/>
+  <path fill="var(--band)" d="M100 40l1.8 4.2 4.2 1.8-4.2 1.8-1.8 4.2-1.8-4.2-4.2-1.8 4.2-1.8z"/>
+ </g>
+ <g class="arm">
+  <path d="M133 120 168 72" stroke="var(--gold)" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M128 106C144 106 154 116 147 128C140 135 128 131 123 122" fill="var(--sheet)" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="spark" fill="var(--gold)" d="M169 54l2.6 8.4 8.4 2.6-8.4 2.6-2.6 8.4-2.6-8.4-8.4-2.6 8.4-2.6z"/>
+  <circle class="spark spark2" fill="var(--gold)" cx="156" cy="56" r="2.6"/>
+ </g>
+ <g class="burst" fill="var(--gold)">
+  <path class="b1" d="M169 60l1.6 4.4 4.4 1.6-4.4 1.6-1.6 4.4-1.6-4.4-4.4-1.6 4.4-1.6z"/>
+  <path class="b2" d="M169 60l1.2 3.4 3.4 1.2-3.4 1.2-1.2 3.4-1.2-3.4-3.4-1.2 3.4-1.2z"/>
+  <circle class="b3" cx="169" cy="66" r="2.4"/>
+ </g>
+</svg>`;
+let waveNext=true, perchTilt=0;
 const TILT=[-7,5,-3,7,-5,3,0,0];
 const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["link","Link your LLM",ICON.link],["upload","Upload a prompt",ICON.page],["erase","Erase everything",ICON.reset]];
 let mode="conjure", llm="ChatGPT", found=null, flash="", intro=false, askSeed=0, animIn=false;
@@ -664,22 +720,23 @@ Then list 5 to 15 opinions I hold that go against the common view in my field. F
 
 Only use what you actually know about me. Write "unknown" where you don't know.`;
 function owlHead(eyebrow,q,n){
-  return `<div class="lquiz"><div style="--tilt:${TILT[n]||0}deg">${OWL}</div><div style="min-width:0;display:grid;gap:10px"><p class="leyebrow">${eyebrow}</p><h2 class="lq sm">${esc(q)}</h2></div></div>`;
+  perchTilt=TILT[n]||0;
+  return `<div style="min-width:0;display:grid;gap:10px"><p class="leyebrow">${eyebrow}</p><h2 class="lq sm">${esc(q)}</h2></div>`;
 }
 function quizPanel(){
   const total=QUIZ.length+2, bar=n=>`<div class="lbar"><b style="width:${n/total*100}%"></b></div>`;
   if(qi<0){
     return `${owlHead("Handalf offers a quiz",say("quiz"),rnd(6))}
       <ol class="lopts">
-        <li><button type="button" data-qstart><span class="lk">✦</span><span>Yes, ask away</span></button></li>
-        <li><button type="button" data-qnav="skip"><span class="lk">✦</span><span>I already know my archetype</span></button></li>
-        <li><button type="button" data-mode="conjure"><span class="lk">✦</span><span>Not now, let's conjure</span></button></li>
+        <li style="--i:0"><button type="button" data-qstart><span class="lk">✦</span><span>Yes, ask away</span></button></li>
+        <li style="--i:1"><button type="button" data-qnav="skip"><span class="lk">✦</span><span>I already know my archetype</span></button></li>
+        <li style="--i:2"><button type="button" data-mode="conjure"><span class="lk">✦</span><span>Not now, let's conjure</span></button></li>
       </ol>`;
   }
   if(qi<QUIZ.length){
     const Q=QUIZ[qi];
     return `${owlHead(`${ASKS[(qi+askSeed)%ASKS.length]} · ${qi+1} of ${QUIZ.length}`,Q.q,qi)}${bar(qi+1)}
-      <ol class="lopts">${Q.o.map((o,i)=>`<li><button type="button" data-q="${i}" aria-pressed="${qans[qi]===i}"><span class="lk">${"ABCD"[i]}</span><span>${esc(o[0])}</span></button></li>`).join("")}</ol>
+      <ol class="lopts">${Q.o.map((o,i)=>`<li style="--i:${i}"><button type="button" data-q="${i}" aria-pressed="${qans[qi]===i}"><span class="lk">${"ABCD"[i]}</span><span>${esc(o[0])}</span></button></li>`).join("")}</ol>
       <div class="lnav"><button class="ltext" type="button" data-qnav="back">Back</button><button class="ltext" type="button" data-qnav="skip">I already know my archetype</button></div>`;
   }
   if(qi===QUIZ.length){
@@ -749,12 +806,12 @@ function renderStart(){
       <p class="lhint">You can edit any of it in the Brand tab.</p>
       <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button><button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine with the quiz":"Take the brand quiz"}</button></div>`;
   }
-  const active=mode==="done"?"":mode; const wasAnim=animIn; animIn=false;
-  $("#quiz").innerHTML=`<div class="lpanel${wasAnim?" lin":""}">${panel}</div>
-    <nav class="modes" aria-label="Ways to start">${MODES.map(([k,l,ic])=>`<button type="button" class="mode${k==="erase"?" danger":""}" data-mode="${k}" aria-pressed="${active===k}">${ic}<span>${l}</span></button>`).join("")}</nav>`;
+  const active=mode==="done"?"":mode; const wasAnim=animIn; animIn=false; const wv=waveNext; waveNext=false; if(!(mode==="quiz"&&qi>=0)) perchTilt=0;
+  $("#quiz").innerHTML=`<div class="lpanel${wasAnim||wv?" lin":""}${wv?" late":""}">${panel}</div>
+    <nav class="modes" aria-label="Ways to start"><div class="perch${wv?" waving":""}" style="--tilt:${perchTilt}deg" aria-hidden="true">${PERCH}</div>${MODES.map(([k,l,ic])=>`<button type="button" class="mode${k==="erase"?" danger":""}" data-mode="${k}" aria-pressed="${active===k}">${ic}<span>${l}</span></button>`).join("")}</nav>`;
 }
 function toLanding(){const tp=$("#v-start").getBoundingClientRect().top;if(tp<0)window.scrollBy(0,tp-8)}
-function setMode(k){ mode=k; intro=false; if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
+function setMode(k){ mode=k; intro=false; waveNext=true; if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
 function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
 function openSetup(k){mode=k||"quiz";intro=false;if(mode==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}show("start")}
 /* idle rotation: the dialogue moves on by itself, at random, while nobody is using it */
@@ -770,7 +827,7 @@ function rotatable(){
 function rotate(){
   const pool=["conjure","quiz","link","upload"].filter(k=>k!==mode), next=pool[rnd(pool.length)];
   pidx[next]=rnd(PHR[next].length,pidx[next]);
-  const el=$("#quiz .lpanel"), go=()=>{ mode=next; intro=next==="link"||next==="upload"; if(next==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} animIn=true; renderStart(); };
+  const el=$("#quiz .lpanel"), go=()=>{ mode=next; intro=next==="link"||next==="upload"; if(next==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} waveNext=true; renderStart(); };
   if(el&&!matchMedia("(prefers-reduced-motion: reduce)").matches){el.classList.add("lout");setTimeout(go,280)} else go();
   lastAct=Date.now();
 }
@@ -832,17 +889,17 @@ $("#quiz").addEventListener("submit",e=>{
 $("#quiz").addEventListener("click",async e=>{
   const m=e.target.closest("[data-mode]"); if(m) return setMode(m.dataset.mode);
   if(e.target.closest("[data-golast]")) return show("engine");
-  if(e.target.closest("[data-qstart]")){qi=0;renderStart();toLanding();return}
+  if(e.target.closest("[data-qstart]")){qi=0;waveNext=true;renderStart();toLanding();return}
   const fu=e.target.closest("[data-full]"); if(fu){intro=false;renderStart();return}
-  const o=e.target.closest("[data-q]"); if(o){qans[qi]=+o.dataset.q;qi++;qpick=null;renderStart();toLanding();return}
+  const o=e.target.closest("[data-q]"); if(o){qans[qi]=+o.dataset.q;qi++;qpick=null;waveNext=true;renderStart();toLanding();return}
   const a=e.target.closest("[data-arch]");
   if(a){const k=a.dataset.arch;if(qpick.primary!==k){qpick.secondary=qpick.primary;qpick.primary=k;renderStart()}return}
   const n=e.target.closest("[data-qnav]");
   if(n){const act=n.dataset.qnav;
-    if(act==="back"){qi=Math.max(-1,qi-1);renderStart()}
+    if(act==="back"){qi=Math.max(-1,qi-1);waveNext=true;renderStart()}
     toLanding();
-    if(act==="skip"){qi=QUIZ.length;qans=[];qpick={primary:state.profile.archetype||"Creator",secondary:state.profile.archetype2||""};renderStart()}
-    if(act==="next"){state.profile.archetype=qpick.primary;state.profile.archetype2=qpick.secondary||"";persist("profile");qi++;renderStart()}
+    if(act==="skip"){qi=QUIZ.length;qans=[];qpick={primary:state.profile.archetype||"Creator",secondary:state.profile.archetype2||""};waveNext=true;renderStart()}
+    if(act==="next"){state.profile.archetype=qpick.primary;state.profile.archetype2=qpick.secondary||"";persist("profile");qi++;waveNext=true;renderStart()}
     if(act==="finish"){
       [["niche","q-niche"],["audience","q-audience"],["expertise","q-expertise"],["platforms","q-platforms"]].forEach(([k,id])=>state.profile[k]=$("#"+id).value.trim());
       state.profile.onboarded=true; persist("profile"); renderProfile(); renderEngine();
