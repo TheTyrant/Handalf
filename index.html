@@ -34,7 +34,7 @@
   color-scheme:dark;
 }
 /* leather bound: leather covers, cream pages with deep gray ink */
-:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx{
+:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx,:root:not([data-skin]) .capbox{
   --paper:#F4ECDA; --sheet:#FBF6EA; --ink:#2F2F2F; --mute:#655E54; --rule:#CDBE9C;
   --gold:#8A6620; --gold-hi:#6C4F15; --on-gold:#FFF8EA;
   --ultra:#3D5E8C; --ultra-soft:#E2E7EF; --copper:#8A6620; --copper-soft:#EEE2C6;
@@ -115,6 +115,14 @@ button,input,textarea,select{font:inherit;color:inherit}
 @keyframes turnF{0%{transform:perspective(1500px) translateZ(0) rotateY(0)}45%{transform:perspective(1500px) translateZ(90px) rotateY(-55deg)}100%{transform:perspective(1500px) translateZ(0) rotateY(-112deg)}}
 @keyframes turnIn{0%{transform:perspective(1500px) translateZ(0) rotateY(-112deg)}55%{transform:perspective(1500px) translateZ(90px) rotateY(-55deg)}100%{transform:perspective(1500px) translateZ(0) rotateY(0)}}
 .pageleaf.fx{position:fixed;inset:auto;z-index:55;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.capbox{position:fixed;z-index:-5;overflow:hidden;pointer-events:none}
+.cap-stage{background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
+.cap-book{background-color:var(--sheet);background-image:var(--noise);background-size:200px 200px}
+.cap-book .bpage{display:grid;grid-template-rows:auto 1fr}
+.glpage{position:fixed;left:0;top:0;pointer-events:none;display:none}
+.glpage.on{display:block}
+.fabric{position:fixed;left:0;z-index:62;pointer-events:none}
+html.fabric-on .ribbon-clip{display:none}
 .pageunder{position:fixed;z-index:54;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px}
 .ipage .pageunder{position:absolute;inset:0;z-index:2;display:grid;grid-template-rows:auto 1fr;background-color:var(--sheet)}
 @keyframes shade{0%{opacity:0}100%{opacity:1}}
@@ -858,7 +866,259 @@ function turnPage(from,to,dir){
   return ()=>{ const leaf=fxBox("pageleaf fx back"), nw=cloneScroller(); leaf.appendChild(nw); document.body.appendChild(leaf); nw.scrollTop=$("#scroller").scrollTop;
     setTimeout(()=>{leaf.remove();under.remove()},760) };
 }
+/* ---------- paper: real page curls with Three.js, snapshots cached by fingerprint ---------- */
+const paper={ready:false,busy:false,cache:new Map(),gl:null};
+const RM=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement("script");s.src=src;s.async=true;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+function hashStr(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
+function fpView(){const sc=$("#scroller");return hashStr(sc.innerHTML)+":"+sc.scrollTop+":"+skin+":"+innerWidth+"x"+innerHeight}
+function fpBook(){return hashStr($("#itop").innerHTML+$("#ipage-in").innerHTML)+":"+$(".ipage").scrollTop+":"+skin+":"+innerWidth+"x"+innerHeight}
+function capBox(rect,child,bg){
+  const d=document.createElement("div"); d.className="capbox"; d.setAttribute("aria-hidden","true");
+  Object.assign(d.style,{left:rect.left+"px",top:rect.top+"px",width:rect.width+"px",height:rect.height+"px"});
+  if(bg) d.classList.add(bg); d.appendChild(child); document.body.appendChild(d); return d;
+}
+/* html2canvas can't read color-mix() results, so rewrite them as rgba on the clone */
+const COLOR_PROPS=["color","background-color","border-top-color","border-right-color","border-bottom-color","border-left-color","outline-color","text-decoration-color","fill","stroke","box-shadow","background-image","caret-color","column-rule-color"];
+function cssColorFix(v){
+  return v.replace(/color\(srgb\s+([\d.e+-]+)\s+([\d.e+-]+)\s+([\d.e+-]+)(?:\s*\/\s*([\d.e+-]+%?))?\)/g,(m,r,g,b,a)=>{
+    const c=x=>Math.round(Math.max(0,Math.min(1,parseFloat(x)))*255); let al=a==null?1:(a.endsWith("%")?parseFloat(a)/100:parseFloat(a));
+    return `rgba(${c(r)},${c(g)},${c(b)},${al})`});
+}
+function fixColors(doc,root){
+  const win=doc.defaultView, all=[root,...root.querySelectorAll("*")];
+  for(const n of all){ const cs=win.getComputedStyle(n);
+    for(const k of COLOR_PROPS){ const v=cs.getPropertyValue(k); if(v&&v.includes("color(")) n.style.setProperty(k,cssColorFix(v),"important") } }
+}
+async function snap(el,rect){
+  const scale=Math.min(window.devicePixelRatio||1,1.5);
+  return html2canvas(el,{onclone:fixColors,backgroundColor:null,scale,logging:false,useCORS:true,x:rect.left,y:rect.top,width:rect.width,height:rect.height,windowWidth:innerWidth,windowHeight:innerHeight,scrollX:0,scrollY:0});
+}
+function viewClone(){
+  const sc=$("#scroller"), st=sc.scrollTop, c=cloneScroller();
+  c.style.cssText="position:absolute;left:0;top:0;width:100%;overflow:visible;height:auto;transform:translateY("+(-st)+"px)";
+  return c;
+}
+async function captureView(){
+  const r=$("#stage").getBoundingClientRect(), box=capBox(r,viewClone(),"cap-stage");
+  try{ return await snap(box,r) } finally { box.remove() }
+}
+function bookCloneEl(){
+  const pg=$(".ipage"), d=document.createElement("div"); d.className="bpage";
+  const [top,c]=bookClone(); d.append(top,c); d.style.cssText="position:absolute;left:0;top:"+(-pg.scrollTop)+"px;width:100%;min-height:100%"; return d;
+}
+async function captureBook(){
+  const r=$(".ipage").getBoundingClientRect(), box=capBox(r,bookCloneEl(),"cap-book");
+  try{ return await snap(box,r) } finally { box.remove() }
+}
+/* pre-capture the page you're on while you read, so the next turn starts at once */
+let preT=null;
+function schedulePre(){
+  clearTimeout(preT); if(!paper.ready) return;
+  preT=setTimeout(()=>{
+    const run=async()=>{
+      if(paper.busy||document.hidden) return;
+      const a=document.activeElement; if(a&&a.matches&&a.matches("input,textarea")) return;
+      try{
+        if(!$("#intro").hidden){ const fp=fpBook(); const c=paper.cache.get("book"); if(!c||c.fp!==fp){ const cv=await captureBook(); if(!paper.busy&&fpBook()===fp) paper.cache.set("book",{fp,cv}) } }
+        else { const k=view, fp=fpView(), c=paper.cache.get(k); if(!c||c.fp!==fp){ const cv=await captureView(); if(!paper.busy&&view===k&&fpView()===fp) paper.cache.set(k,{fp,cv}) } }
+      }catch(e){ logDiag&&logDiag({err:"precapture: "+(e&&e.message||e)}) }
+    };
+    (window.requestIdleCallback||setTimeout)(run,{timeout:1500});
+  },700);
+}
+/* the curling sheet */
+function glInit(){
+  const cv=document.createElement("canvas"); cv.className="glpage"; cv.setAttribute("aria-hidden","true"); document.body.appendChild(cv);
+  const renderer=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true,premultipliedAlpha:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(12,1,1,40000);
+  const SX=56,SY=18, geo=new THREE.BufferGeometry(), n=(SX+1)*(SY+1);
+  const pos=new Float32Array(n*3), uv=new Float32Array(n*2), idx=[];
+  for(let j=0;j<=SY;j++)for(let i=0;i<=SX;i++){const k=j*(SX+1)+i; uv[k*2]=i/SX; uv[k*2+1]=1-j/SY}
+  for(let j=0;j<SY;j++)for(let i=0;i<SX;i++){const a=j*(SX+1)+i,b=a+1,c=a+SX+1,d=c+1; idx.push(a,c,b,b,c,d)}
+  geo.setIndex(idx); geo.setAttribute("position",new THREE.BufferAttribute(pos,3)); geo.setAttribute("uv",new THREE.BufferAttribute(uv,2));
+  const mat=new THREE.ShaderMaterial({side:THREE.DoubleSide,transparent:true,uniforms:{map:{value:null},back:{value:new THREE.Color("#f4ecda")},alpha:{value:1}},
+    vertexShader:`varying vec2 vUv; varying vec3 vN; void main(){ vUv=uv; vN=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader:`uniform sampler2D map; uniform vec3 back; uniform float alpha; varying vec2 vUv; varying vec3 vN;
+      void main(){ vec3 n=normalize(vN); if(!gl_FrontFacing) n=-n; vec3 L=normalize(vec3(-0.35,0.45,1.0)); float d=max(dot(n,L),0.0);
+        float light=0.62+0.38*d; float spec=pow(max(dot(reflect(-L,n),vec3(0,0,1)),0.0),24.0)*0.12;
+        vec4 tx=texture2D(map,vUv); float ink=dot(tx.rgb,vec3(.3,.59,.11)); vec4 c = gl_FrontFacing ? vec4(mix(back,tx.rgb,tx.a),1.0) : vec4(mix(back,back*ink,0.10)*(0.93+0.07*vUv.y),1.0);
+        gl_FragColor=vec4(c.rgb*light+spec,c.a*alpha); }`});
+  const mesh=new THREE.Mesh(geo,mat); scene.add(mesh);
+  paper.gl={cv,renderer,scene,camera,geo,pos,mesh,mat,SX,SY};
+}
+function glSize(){
+  const g=paper.gl, W=innerWidth, H=innerHeight;
+  g.renderer.setSize(W,H,false); g.cv.style.width=W+"px"; g.cv.style.height=H+"px";
+  g.camera.aspect=W/H; g.camera.position.set(0,0,(H/2)/Math.tan(THREE.MathUtils.degToRad(g.camera.fov/2))); g.camera.lookAt(0,0,0); g.camera.updateProjectionMatrix();
+}
+function curl(rect,p,dir){
+  // p: 0 = flat, 1 = fully turned over the left edge. Fold line sweeps right to left, top corner leads.
+  const g=paper.gl, W=rect.width, H=rect.height, s=Math.sin(Math.PI*p);
+  const r=Math.min(110,Math.max(30,W*0.07))*(0.5+s), tilt=Math.min(0.09,60/H)*s;
+  const F=(W+H*tilt)*(1-p) - (Math.PI*r+H*tilt)*p;
+  const ox=rect.left-innerWidth/2, oy=innerHeight/2-rect.top;
+  const nl=Math.hypot(1,tilt), nx=1/nl, ny=tilt/nl;
+  for(let j=0;j<=g.SY;j++){const y=H*j/g.SY, f=F+tilt*(H-y);
+    for(let i=0;i<=g.SX;i++){const x=W*i/g.SX, k=(j*(g.SX+1)+i)*3; let X=x,Y=y,Z=0;
+      const d=(x-f)*nx;
+      if(d>0){const fx=x-d*nx, fy=y-d*ny; let m;
+        if(d<=Math.PI*r){const a=d/r; m=r*Math.sin(a); Z=r*(1-Math.cos(a))} else {m=-(d-Math.PI*r); Z=2*r}
+        X=fx+m*nx; Y=fy+m*ny}
+      g.pos[k]=ox+X; g.pos[k+1]=oy-Y; g.pos[k+2]=Z+s*10;}}
+  g.geo.attributes.position.needsUpdate=true; g.geo.computeVertexNormals();
+}
+function glTurn(img,rect,dir,{z=59,onFirst,onDone}={}){
+  const g=paper.gl; glSize(); g.cv.style.zIndex=z;
+  const tex=new THREE.CanvasTexture(img); tex.minFilter=THREE.LinearFilter; tex.generateMipmaps=false;
+  if(g.mat.uniforms.map.value) g.mat.uniforms.map.value.dispose();
+  g.mat.uniforms.map.value=tex;
+  const bg=getComputedStyle(document.querySelector(rect.book?".ipage":"#stage")).backgroundColor; try{g.mat.uniforms.back.value.set(bg.startsWith("rgb")?new THREE.Color(bg):new THREE.Color("#f4ecda"))}catch(e){}
+  g.mat.uniforms.alpha.value=1;
+  const t0=performance.now(), ms=paper.ms||1000, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; let first=true;
+  g.cv.classList.add("on"); paper.busy=true; ribbonImpulse(dir);
+  return new Promise(res=>{
+    function frame(now){
+      const t=Math.min(1,(now-t0)/ms), e=ease(t), p=dir>0?e:1-e;
+      curl(rect,p,dir);
+      g.mat.uniforms.alpha.value = dir>0 ? (t>.86?1-(t-.86)/.14:1) : (t<.12?t/.12:1);
+      g.renderer.render(g.scene,g.camera);
+      if(first){first=false; onFirst&&onFirst()}
+      if(t<1) requestAnimationFrame(frame);
+      else { g.cv.classList.remove("on"); g.renderer.clear(); paper.busy=false; onDone&&onDone(); res(); schedulePre() }
+    }
+    requestAnimationFrame(frame);
+  });
+}
+function stageRect(){const r=$("#stage").getBoundingClientRect();return {left:r.left,top:r.top,width:r.width,height:r.height}}
+/* view turns: returns the finish step that runs after the new view is rendered */
+function paperTurnView(from,to,dir){
+  const fwd=dir!=null?dir>0:(ORDER[to]??0)>=(ORDER[from]??0), rect=stageRect();
+  document.querySelectorAll(".pageunder.stagefx").forEach(x=>x.remove());
+  const fpOld=fpView(), cached=paper.cache.get(from);
+  const over=fxBox("pageunder"), old=cloneScroller(); over.appendChild(old); document.body.appendChild(over); old.scrollTop=$("#scroller").scrollTop;
+  paper.busy=true;
+  return async()=>{
+    try{
+      if(fwd){
+        let img=cached&&cached.fp===fpOld?cached.cv:null;
+        if(!img){ const box=capBox(rect,viewClone2(old),"cap-stage"); try{img=await snap(box,rect)}finally{box.remove()} paper.cache.set(from,{fp:fpOld,cv:img}) }
+        await glTurn(img,rect,1,{onFirst:()=>over.remove()});
+      }else{
+        const fpNew=fpView(), c=paper.cache.get(to); let img=c&&c.fp===fpNew?c.cv:null;
+        if(!img){ img=await captureView(); paper.cache.set(to,{fp:fpNew,cv:img}) }
+        await glTurn(img,rect,-1,{onDone:()=>over.remove()});
+      }
+    }catch(e){ over.remove(); paper.busy=false; logDiag&&logDiag({err:"turn: "+(e&&e.message||e)}) }
+  };
+}
+function viewClone2(oldScroller){ const c=oldScroller.cloneNode(true), st=oldScroller.scrollTop; c.style.cssText="position:absolute;left:0;top:0;width:100%;overflow:visible;height:auto;transform:translateY("+(-st)+"px)"; return c }
+/* book turns */
+async function paperBookTurn(dir,apply){
+  const pg=$(".ipage"), r=pg.getBoundingClientRect(), rect={left:r.left,top:r.top,width:r.width,height:r.height,book:true};
+  const fpOld=fpBook(), c=paper.cache.get("book");
+  const over=document.createElement("div"); over.className="pageunder"; over.setAttribute("aria-hidden","true"); over.style.top=pg.scrollTop+"px";
+  const pd=document.createElement("div"); pd.className="bpage"; pd.append(...bookClone()); over.appendChild(pd); pg.appendChild(over);
+  paper.busy=true;
+  try{
+    if(dir>0){
+      let img=c&&c.fp===fpOld?c.cv:null;
+      if(!img){ const box=capBox(rect,bookCloneEl(),"cap-book"); try{img=await snap(box,rect)}finally{box.remove()} }
+      apply();
+      await glTurn(img,rect,1,{z:65,onFirst:()=>over.remove()});
+    }else{
+      apply(); const img=await captureBook();
+      await glTurn(img,rect,-1,{z:65,onDone:()=>over.remove()});
+    }
+  }catch(e){ over.remove(); paper.busy=false; logDiag&&logDiag({err:"book turn: "+(e&&e.message||e)}) }
+}
+async function paperBoot(){
+  if(RM()) return;
+  try{
+    await Promise.all([loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"),loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js")]);
+    glInit(); glSize(); paper.ready=true; schedulePre();
+    addEventListener("resize",()=>{paper.cache.clear(); if(!paper.busy) glSize()});
+    $("#scroller").addEventListener("scroll",schedulePre,{passive:true});
+    new MutationObserver(schedulePre).observe($("#scroller"),{subtree:true,childList:true,characterData:true,attributes:true});
+  }catch(e){ paper.ready=false; logDiag&&logDiag({err:"paper load: "+(e&&e.message||e)}) }
+}
+
+/* ---------- fabric bookmark: a small cloth simulation hanging from the active tab ---------- */
+const fab={cv:null,ctx:null,pts:[],R:10,len:0,target:0,ax:0,aw:0,tx:0,tw:0,on:false,running:false,still:0,impulse:0,impT:0,colors:{fill:"#d9b45e",line:"#000"}};
+function fabInit(){
+  if(RM()) return false;
+  const cv=document.createElement("canvas"); cv.className="fabric"; cv.setAttribute("aria-hidden","true"); document.body.appendChild(cv);
+  fab.cv=cv; fab.ctx=cv.getContext("2d"); document.documentElement.classList.add("fabric-on");
+  addEventListener("resize",()=>{fabSize();fabWake()}); fabSize(); return true;
+}
+function fabSize(){const d=Math.min(window.devicePixelRatio||1,2);fab.cv.width=innerWidth*d;fab.cv.height=160*d;fab.cv.style.width=innerWidth+"px";fab.cv.style.height="160px";fab.ctx.setTransform(d,0,0,d,0,0);fab.dpr=d}
+function fabColors(){const cs=getComputedStyle(document.documentElement);fab.colors.fill=cs.getPropertyValue("--gold").trim()||"#d9b45e";fab.colors.line=cs.getPropertyValue("--on-gold").trim()||"#2a170c"}
+function fabTarget(v){
+  if(!fab.cv) return false;
+  const btn=document.querySelector(`.nav [data-view="${v}"]`), band=document.querySelector(".band").getBoundingClientRect();
+  fab.cv.style.top=(band.bottom-1)+"px";
+  if(!btn){fab.target=0;fabWake();return true}
+  const b=btn.getBoundingClientRect(); fab.tx=b.left; fab.tw=b.width; fab.target=48;
+  if(!fab.pts.length||fab.len<1){fab.ax=fab.tx;fab.aw=fab.tw;fabReset()}
+  fabColors(); fabWake(); return true;
+}
+function fabReset(){fab.pts=[];for(let r=0;r<fab.R;r++)for(let c=0;c<2;c++){const x=fab.ax+c*fab.aw,y=0;fab.pts.push({x,y,px:x,py:y})}}
+function ribbonImpulse(dir){fab.impulse=dir;fab.impT=performance.now();fabWake()}
+function fabWake(){if(fab.cv&&!fab.running){fab.running=true;fab.still=0;requestAnimationFrame(fabStep)}}
+function fabStep(now){
+  const P=fab.pts, R=fab.R; if(!P.length){fab.running=false;return}
+  fab.ax+=(fab.tx-fab.ax)*0.14; fab.aw+=(fab.tw-fab.aw)*0.14; fab.len+=(fab.target-fab.len)*0.12;
+  const L=Math.max(0.01,fab.len/(R-1)), w=fab.aw;
+  const imp=fab.impulse?Math.sin(Math.min(1,(now-fab.impT)/1000)*Math.PI):0; if(now-fab.impT>1000) fab.impulse=0;
+  let mv=0;
+  for(let r=1;r<R;r++)for(let c=0;c<2;c++){const p=P[r*2+c], vx=(p.x-p.px)*0.975, vy=(p.y-p.py)*0.975; p.px=p.x; p.py=p.y;
+    p.x+=vx+(fab.impulse? -fab.impulse*imp*0.9*(r/R):0); p.y+=vy+0.55; mv=Math.max(mv,Math.abs(vx)+Math.abs(vy))}
+  for(let c=0;c<2;c++){const p=P[c]; p.x=p.px=fab.ax+c*w; p.y=p.py=0}
+  const link=(a,b,rest,k)=>{const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1e-4,diff=(d-rest)/d*k; const ax=a===P[0]||a===P[1];
+    if(ax){b.x-=dx*diff;b.y-=dy*diff}else{a.x+=dx*diff*.5;a.y+=dy*diff*.5;b.x-=dx*diff*.5;b.y-=dy*diff*.5}};
+  for(let it=0;it<8;it++){
+    for(let r=1;r<R;r++){link(P[(r-1)*2],P[r*2],L,1);link(P[(r-1)*2+1],P[r*2+1],L,1);link(P[r*2],P[r*2+1],w,.7);
+      link(P[(r-1)*2],P[r*2+1],Math.hypot(w,L),.35);link(P[(r-1)*2+1],P[r*2],Math.hypot(w,L),.35)}
+    for(let r=1;r<R;r++)for(let c=0;c<2;c++){const p=P[r*2+c]; if(p.y<0)p.y=0}
+  }
+  fabDraw();
+  const settled=Math.abs(fab.tx-fab.ax)<.3&&Math.abs(fab.tw-fab.aw)<.3&&Math.abs(fab.target-fab.len)<.3&&mv<.03&&!fab.impulse;
+  fab.still=settled?fab.still+1:0;
+  if(fab.still<40) requestAnimationFrame(fabStep); else fab.running=false;
+}
+function fabDraw(){
+  const ctx=fab.ctx, P=fab.pts, R=fab.R; ctx.clearRect(0,0,innerWidth,160); if(fab.len<.5||!$("#intro").hidden) return;
+  const notch=Math.min(18,fab.len*0.38);
+  const l=i=>P[i*2], r=i=>P[i*2+1];
+  const c=r(R-1),d=l(R-1),mx=(c.x+d.x)/2,my=(c.y+d.y)/2,ux=(l(R-2).x+r(R-2).x)/2-mx,uy=(l(R-2).y+r(R-2).y)/2-my,ul=Math.hypot(ux,uy)||1;
+  const outline=()=>{ctx.beginPath(); ctx.moveTo(l(0).x,l(0).y); for(let i=1;i<R;i++) ctx.lineTo(l(i).x,l(i).y);
+    ctx.lineTo(mx+ux/ul*notch,my+uy/ul*notch); for(let i=R-1;i>=0;i--) ctx.lineTo(r(i).x,r(i).y); ctx.closePath()};
+  ctx.save(); outline(); ctx.shadowColor="rgba(0,0,0,.28)"; ctx.shadowBlur=6; ctx.shadowOffsetY=2; ctx.fillStyle=fab.colors.fill; ctx.fill(); ctx.restore();
+  ctx.save(); outline(); ctx.clip();
+  // shading along the length: folds where the ribbon narrows, light where it leans toward the viewer
+  const top={x:(l(0).x+r(0).x)/2,y:(l(0).y+r(0).y)/2}, end={x:mx,y:my};
+  const g=ctx.createLinearGradient(top.x,top.y,end.x,end.y+.01);
+  for(let i=0;i<R-1;i++){const a=l(i),b=r(i),cc=r(i+1),dd=l(i+1), wNow=(Math.hypot(b.x-a.x,b.y-a.y)+Math.hypot(cc.x-dd.x,cc.y-dd.y))/2;
+    const fold=Math.max(0,1-wNow/Math.max(1,fab.aw)), lean=((dd.x+cc.x)-(a.x+b.x))/2/Math.max(1,fab.len/(R-1));
+    const sh=Math.min(.42,fold*.55+Math.max(0,-lean)*.08), hi=Math.min(.16,Math.max(0,lean)*.06);
+    g.addColorStop(Math.min(1,(i+.5)/(R-1)), sh>hi?`rgba(0,0,0,${sh})`:`rgba(255,255,255,${hi})`)}
+  ctx.fillStyle=g; ctx.fillRect(Math.min(top.x,end.x)-60,0,Math.abs(end.x-top.x)+120,160);
+  // across the width: rounded sheen, darker selvedges
+  const w0=l(0), w1=r(0), sg=ctx.createLinearGradient(w0.x,0,w1.x,0);
+  sg.addColorStop(0,"rgba(0,0,0,.22)"); sg.addColorStop(.18,"rgba(0,0,0,0)"); sg.addColorStop(.42,"rgba(255,255,255,.14)"); sg.addColorStop(.6,"rgba(255,255,255,0)"); sg.addColorStop(.85,"rgba(0,0,0,.06)"); sg.addColorStop(1,"rgba(0,0,0,.24)");
+  ctx.fillStyle=sg; ctx.fillRect(Math.min(w0.x,end.x)-60,0,Math.abs(w1.x-w0.x)+Math.abs(end.x-w0.x)+120,160);
+  // grosgrain weave: fine ribs across the width
+  ctx.globalAlpha=.07; ctx.strokeStyle="#000"; ctx.lineWidth=.6;
+  for(let i=0;i<R-1;i++){for(let k=0;k<4;k++){const t=k/4, a=l(i),b=r(i),cc=r(i+1),dd=l(i+1);
+    const x0=a.x+(dd.x-a.x)*t, y0=a.y+(dd.y-a.y)*t, x1=b.x+(cc.x-b.x)*t, y1=b.y+(cc.y-b.y)*t;
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke()}}
+  ctx.globalAlpha=1; ctx.restore();
+  outline(); ctx.strokeStyle=fab.colors.line; ctx.globalAlpha=.35; ctx.lineWidth=1.2; ctx.stroke(); ctx.globalAlpha=1;
+}
+
 function placeRibbon(v){
+  if(fab.cv){ fabTarget(v); return }
   const r=$("#ribbon"); if(!r) return;
   const btn=document.querySelector(`.nav [data-view="${v}"]`);
   if(!btn){r.classList.remove("on");r.dataset.v="";return}
@@ -873,7 +1133,7 @@ function placeRibbon(v){
 addEventListener("resize",()=>placeRibbon(view));
 document.querySelector(".nav").addEventListener("scroll",()=>placeRibbon(view),{passive:true});
 function show(v,dir){
-  const fin=booted&&(v!==view||dir!=null)?turnPage(view,v,dir):null;
+  const fin=booted&&(v!==view||dir!=null)?(paper.ready&&!paper.busy?paperTurnView(view,v,dir):turnPage(view,v,dir)):null;
   view=v;
   document.querySelectorAll(".nav [data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
   ["start","engine","stances","profile","vault","export","settings"].forEach(x=>$("#v-"+x).hidden=x!==v);
@@ -884,6 +1144,7 @@ function show(v,dir){
   const sc=document.getElementById("scroller"); if(sc) sc.scrollTop=0;
   placeRibbon(v);
   if(fin) fin();
+  schedulePre();
   try{history.replaceState(null,"","#"+v)}catch(e){}
 }
 
@@ -2026,6 +2287,7 @@ $("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexpo
 /* ---------- look: Leather or black and white ---------- */
 const SKINS={leather:"Leather bound",ink:"Paperback",chalk:"Chalkboard"}, NEXT={leather:"ink",ink:"chalk",chalk:"leather"};
 function applySkin(k){
+  if(typeof paper!=="undefined"){ paper.cache.clear(); if(fab.cv){ setTimeout(()=>{fabColors();fabDraw()},0) } }
   if(!SKINS[k]) k="leather";
   if(k==="leather") document.documentElement.removeAttribute("data-skin"); else document.documentElement.setAttribute("data-skin",k);
   $("#edition").innerHTML=`<span class="ed-arrow">◂ </span><span class="ed-name">${SKINS[k]}</span><span class="ed-hint"> · tap book<span class="ed-more"> to change style</span></span>`;
@@ -2176,7 +2438,7 @@ function renderBook(){
   el.innerHTML=bookHTML(key);
   el.dataset.kind=NARRATIVE.has(key)?"narrative":"choice";
   el.classList.remove("fresh"); void el.offsetWidth; el.classList.add("fresh");
-  $("#ibook").dataset.key=key;
+  $("#ibook").dataset.key=key; if(typeof schedulePre==="function") schedulePre();
   $(".ipage").scrollTop=0;
   const ink=el.querySelector("[data-ink].new"); if(ink) ink.classList.add("write");
 }
@@ -2188,6 +2450,7 @@ function bookClone(){
 function bookTurn(dir,to){
   const ni=to!=null?to:book.i+dir; if(ni<0||ni>=book.pages.length) return;
   if(book.pages[book.i]==="reveal"&&dir>0&&book.pick){ state.profile.archetype=book.pick.primary; state.profile.archetype2=book.pick.secondary||""; persist("profile"); }
+  if(paper.ready&&!paper.busy){ paperBookTurn(dir,()=>{book.i=ni; book.showGrid=false; renderBook()}); return }
   const anim=!matchMedia("(prefers-reduced-motion: reduce)").matches, pg=$(".ipage");
   pg.querySelectorAll(".pageleaf,.pageunder").forEach(x=>x.remove());
   let under=null;
@@ -2214,6 +2477,7 @@ function openBook(mode){
 function playIntro(){openBook(state.profile.quiz&&answers().some(x=>x!=null)?"story":"first")}
 function playBrandStory(){openBook(answers().some(x=>x!=null)?"story":"quiz")}
 function endIntro(){
+  setTimeout(()=>{ if(fab.cv){ fabTarget(view) } },650);
   const o=$("#intro"); if(o.hidden) return; introTimers.forEach(clearTimeout);
   o.classList.add("out"); setTimeout(()=>{o.hidden=true},600);
   try{localStorage.setItem("handalf.intro","1")}catch(e){}
@@ -2286,6 +2550,8 @@ function boot(){
   else {mode="conjure";show("start")}
 }
 boot(); booted=true;
+if(fabInit()) fabTarget(view);
+setTimeout(paperBoot,1200);
 { let seen=!!state.profile.introSeen; try{seen=seen||localStorage.getItem("handalf.intro")==="1"}catch(e){} if(!seen) openBook("first"); }
 initRuntime().then(()=>{ if(view==="start"&&!touched) renderStart(); });
 })();
