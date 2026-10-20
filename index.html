@@ -44,7 +44,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 
 /* masthead */
 .band{background-color:var(--band);background-image:var(--noise);background-size:200px 200px;color:var(--band-fg);border-bottom:1px solid var(--gold)}
-.mast{display:grid;grid-template-columns:auto auto 1fr;gap:20px;align-items:center;padding-block:16px 14px}
+.mast{position:relative;display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:20px 28px;align-items:center;padding-block:16px 14px;padding-right:56px}
 .logo-btn{background:none;border:0;padding:0;border-radius:0;cursor:pointer;line-height:0;transition:transform .25s ease}
 .logo-btn:hover{transform:rotate(-4deg) translateY(-2px)}
 .logo-btn:focus-visible{outline:2px solid var(--gold-hi);outline-offset:4px}
@@ -56,7 +56,15 @@ button,input,textarea,select{font:inherit;color:inherit}
 .mark span{color:var(--copper)}
 :root[data-skin="ink"] .mark span{color:#6E6E6E}
 .tagline{font-family:var(--f-title);font-weight:600;font-size:clamp(14px,1.5vw,18px);letter-spacing:.06em;color:var(--gold);margin:4px 0 0}
-.tagsub{justify-self:end;align-self:end;max-width:36ch;font-size:14px;color:var(--mute);margin:0 0 4px;text-wrap:balance;text-align:left}
+.tagsub{justify-self:start;align-self:end;max-width:36ch;font-size:14px;color:var(--mute);margin:0 0 4px;text-wrap:balance;text-align:left;padding-left:28px;border-left:1px solid var(--rule)}
+.gear{position:absolute;top:16px;right:0;width:40px;height:40px;background:none;border:0;padding:0;border-radius:50%;cursor:pointer;color:var(--gold)}
+.gear svg{width:100%;height:100%;display:block;transition:transform .6s cubic-bezier(.3,.7,.3,1)}
+.gear .petals ellipse{fill:none;stroke:currentColor;stroke-width:1.6}
+.gear .ring{fill:var(--band);stroke:currentColor;stroke-width:1.6}
+.gear .core{fill:currentColor}
+.gear:hover svg,.gear[aria-pressed="true"] svg{transform:rotate(45deg)}
+.gear:hover{color:var(--gold-hi)}
+.gear:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
 .nav{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-block:0}
 .nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--gold) 62%,transparent);border-bottom:3px solid transparent}
 .nav button:hover{color:var(--gold-hi)}
@@ -318,7 +326,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
 /* Handalf perched on the mode bar */
 .ltop{display:grid;align-content:start}
-.perchrow{display:flex;align-items:flex-end;margin:0 0 62px;justify-self:start}
+.perchrow{display:flex;align-items:flex-end;margin:0 0 21px;justify-self:start}
 .perch{flex:none;width:clamp(118px,13vw,170px);color:var(--ink);pointer-events:none}
 .sprout{display:flex;align-items:center;gap:4px;margin:0 0 calc(clamp(118px,13vw,170px)*.042 - 7px) -2px;font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
 .sprout .leaf{width:22px;height:14px;flex:none;transform-origin:0 70%}
@@ -344,6 +352,16 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lpanel.late{animation-delay:.38s}
 .lpanel.late .lopts li{animation:lin .4s ease both;animation-delay:calc(.55s + var(--i,0)*.09s)}
 
+/* settings */
+.sets{display:grid;max-width:880px;border-top:2px solid var(--gold)}
+.setrow{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:18px 0;border-bottom:1px solid var(--rule)}
+.setrow h3{font-size:17px}
+.setrow .val{min-width:0}
+.setrow .val b{font-family:var(--f-head);font-size:19px;font-weight:600;color:var(--gold)}
+.setrow .val p{color:var(--mute);font-size:14px;margin-top:2px;max-width:60ch}
+.setrow .act{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.setgroup{font-family:var(--f-title);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);padding:26px 0 6px;border-bottom:1px solid var(--rule)}
+
 /* deepen panel */
 .deep{margin-top:14px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px;display:grid;gap:10px}
 .deep textarea{min-height:84px;background:var(--paper)}
@@ -361,12 +379,14 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 @media (max-width:860px){
   .results,.split,.ways3{grid-template-columns:1fr}
   .mast{grid-template-columns:auto 1fr}
-  .tagsub{grid-column:1/-1;justify-self:start;align-self:start;text-align:left;margin:0}
+  .tagsub{grid-column:1/-1;justify-self:start;align-self:start;text-align:left;margin:0;padding-left:0;border-left:0}
 }
 @media (max-width:520px){
   .run{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
   .opts,.result,.ways{grid-template-columns:1fr}
+  .setrow{grid-template-columns:1fr}
+  .setrow .act{justify-content:flex-start}
   .lgrid,.larch{grid-template-columns:1fr}
   .lquiz{gap:14px}
   .owl{width:78px}
@@ -374,10 +394,11 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .lrow .lbtn{border-left:0;border-top:1px solid var(--rule);margin:0;padding:14px 0;text-align:left}
   .mode{font-size:10.5px;padding:14px 2px;letter-spacing:.02em}
   .mode svg{width:24px;height:24px}
-  .perchrow{margin-bottom:52px}
+  .perchrow{margin-bottom:18px}
   .perch{width:110px}
   .sprout{font-size:11px;letter-spacing:.1em;margin-bottom:-2.4px}
-  .status{display:none}
+  .gear{top:12px;width:34px;height:34px}
+  .mast{padding-right:44px}
   .mast{padding-block:14px 10px;gap:12px}
   .logo{width:46px}
   .edition{font-size:9.5px;letter-spacing:.1em}
@@ -434,6 +455,18 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <p class="tagline">Find the magic in your stories.</p>
       </div>
       <p class="tagsub">Find the take only you can make, measured against the crowd and backed by your own words.</p>
+      <button type="button" class="gear" id="gear-btn" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <g class="petals">
+            <ellipse cx="20" cy="8.2" rx="4.6" ry="7"/><ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(45 20 20)"/>
+            <ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(90 20 20)"/><ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(135 20 20)"/>
+            <ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(180 20 20)"/><ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(225 20 20)"/>
+            <ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(270 20 20)"/><ellipse cx="20" cy="8.2" rx="4.6" ry="7" transform="rotate(315 20 20)"/>
+          </g>
+          <circle cx="20" cy="20" r="8.6" class="ring"/>
+          <circle cx="20" cy="20" r="4.2" class="core"/>
+        </svg>
+      </button>
     </div>
     <nav class="nav" role="tablist">
       <button role="tab" data-view="engine" aria-selected="true">Engine</button>
@@ -441,7 +474,6 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="profile" aria-selected="false">Brand</button>
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Export</button>
-      <span class="status" id="status">Saved in this browser</span>
     </nav>
   </div>
 </header>
@@ -511,6 +543,12 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
     <p class="hint" id="profile-saved"></p>
   </section>
 
+  <!-- SETTINGS -->
+  <section class="view" id="v-settings" hidden>
+    <div><h2>Settings</h2><p class="lede">Everything Handalf knows about you and how it builds your profile. Change any of it here.</p></div>
+    <div id="settings-body"></div>
+  </section>
+
   <!-- EXPORT -->
   <section class="view" id="v-export" hidden>
     <div><h2>Export your plan</h2><p class="lede">The last step. Pick the concepts to include, choose text, audio or video for each, and Handalf outlines them into a plan you can follow yourself or hand to any AI as a prompt.</p></div>
@@ -561,7 +599,8 @@ const EXAMPLE={example:true,topic:"AI image tools and the future of illustrators
  ]};
 
 /* ---------- storage: per-account db when available, browser storage otherwise ---------- */
-let db=null, uid=null, sample=null, dl=null;
+let db=null, uid=null, sample=null, dl=null, sync="browser";
+function setSync(k){ sync=k; if(typeof view!=="undefined"&&view==="settings") renderSettings(); }
 const LS="handalf.v1";
 function lsLoad(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j)Object.assign(state,j)}catch(e){}}
 function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,last:state.last}))}catch(e){}}
@@ -579,8 +618,8 @@ function persist(key){
         : key==="vault"?{vault:state.vault}
         : {last:state.last};
       await db.doc("data/users/"+uid+"/"+key).set(JSON.parse(JSON.stringify(body)));
-      $("#status").textContent="Saved to your Claude account";
-    }catch(e){ if(e&&e.code==="quota_exceeded") showNotice("Account storage is full. Remove a few vault items or sources.",true); else $("#status").textContent="Account sync failed. Saved in this browser"; }
+      setSync("account");
+    }catch(e){ if(e&&e.code==="quota_exceeded") showNotice("Account storage is full. Remove a few vault items or sources.",true); else setSync("failed"); }
     finally{writing[key]=false}
   },600);
 }
@@ -601,7 +640,7 @@ async function initRuntime(){
             if(keys[i]==="vault"){ const dbv=Array.isArray(v.vault)?v.vault.map(x=>({...x})):[]; const have=new Set(dbv.map(x=>x.key)); const extra=state.vault.filter(x=>!have.has(x.key)); state.vault=dbv.concat(extra); if(extra.length) persist("vault"); }
             else Object.assign(state,JSON.parse(JSON.stringify(v)));
           } else if(hasLocal(keys[i])) persist(keys[i]); });
-        $("#status").textContent="Saved to your Claude account";
+        setSync("account");
         renderAll();
       }catch(e){db=null}
     }
@@ -615,7 +654,9 @@ let view="engine";
 function show(v){
   view=v;
   document.querySelectorAll(".nav [data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
-  ["start","engine","stances","profile","vault","export"].forEach(x=>$("#v-"+x).hidden=x!==v);
+  ["start","engine","stances","profile","vault","export","settings"].forEach(x=>$("#v-"+x).hidden=x!==v);
+  const gb=document.getElementById("gear-btn"); if(gb) gb.setAttribute("aria-pressed",String(v==="settings"));
+  if(v==="settings") renderSettings();
   if(v==="export") renderExport();
   if(v==="start") renderStart(); else if(typeof renderModes==="function") renderModes();
   const sc=document.getElementById("scroller"); if(sc) sc.scrollTop=0;
@@ -921,6 +962,7 @@ async function readProfile(text,source){
   const p=state.profile;
   if(!sample){
     p.brief=text.slice(0,8000); p.onboarded=true; persist("profile"); renderProfile();
+    p.linked={source,at:Date.now()}; persist("profile");
     found={source,parsed:false}; mode="done"; renderStart(); return;
   }
   const btn=$("[data-read]"); btn.disabled=true; btn.textContent="Reading…";
@@ -940,6 +982,7 @@ async function readProfile(text,source){
     });
     p.onboarded=true; persist("profile"); if(n) persist("stances");
     renderProfile(); renderStances(); renderEngine();
+    p.linked={source,at:Date.now()}; persist("profile");
     found={source,parsed:true,arch,arch2,fields,stances:n}; mode="done"; renderStart();
   }catch(e){
     btn.disabled=false; btn.textContent="Read my profile";
@@ -968,7 +1011,7 @@ $("#quiz").addEventListener("click",async e=>{
     if(act==="next"){state.profile.archetype=qpick.primary;state.profile.archetype2=qpick.secondary||"";persist("profile");qi++;waveNext=true;renderStart()}
     if(act==="finish"){
       [["niche","q-niche"],["audience","q-audience"],["expertise","q-expertise"],["platforms","q-platforms"]].forEach(([k,id])=>state.profile[k]=$("#"+id).value.trim());
-      state.profile.onboarded=true; persist("profile"); renderProfile(); renderEngine();
+      state.profile.onboarded=true; state.profile.quizAt=Date.now(); persist("profile"); renderProfile(); renderEngine();
       flash=`Saved. Takes will argue like a ${esc(state.profile.archetype||"creator")}.`; setMode("conjure");
     }
     return;
@@ -1682,7 +1725,43 @@ function applySkin(k){
 }
 let skin="leather"; try{skin=localStorage.getItem("handalf.skin")||"leather"}catch(e){}
 applySkin(skin);
-$("#skin-btn").addEventListener("click",()=>{skin=skin==="ink"?"leather":"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}});
+$("#skin-btn").addEventListener("click",()=>{skin=skin==="ink"?"leather":"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}if(view==="settings")renderSettings();});
+
+/* ---------- settings ---------- */
+const when=ts=>ts?new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";
+function renderSettings(){
+  const p=state.profile, A=p.archetype&&ARCH[p.archetype];
+  const filled=["name","niche","expertise","audience","platforms","voice","pillars","off"].filter(k=>String(p[k]||"").trim()).length;
+  const linked=p.linked&&/^Linked/.test(p.linked.source)?p.linked:null, uploaded=p.linked&&/Uploaded/.test(p.linked.source)?p.linked:null;
+  const row=(t,v,sub,act)=>`<div class="setrow"><h3>${t}</h3><div class="val"><b>${v}</b>${sub?`<p>${sub}</p>`:""}</div><div class="act">${act||""}</div></div>`;
+  const syncLine=sync==="account"?["Your Claude account","Your brand, stances, vault and last search follow you to any device where you open Handalf in Claude."]
+    :sync==="failed"?["This browser, for now","Saving to your Claude account didn't go through, so your work is kept in this browser. It will try again on your next change."]
+    :["This browser only","Open Handalf inside Claude to keep your work in your Claude account and see it on your other devices."];
+  $("#settings-body").innerHTML=`<div class="sets">
+    <p class="setgroup">Your profile sources</p>
+    ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn ghost" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
+    ${row("Linked LLM",linked?esc(linked.source.replace(/^Linked /,"")):"Not linked",linked?`Profile read ${when(linked.at)}. Link again any time to refresh it.`:"Let ChatGPT, Claude or Gemini describe your brand from what it already knows.",`<button class="btn ghost" type="button" data-set="link">${linked?"Link again":"Link your LLM"}</button>`)}
+    ${row("Uploaded prompt",uploaded||p.brief?"Uploaded":"None",uploaded?`Read ${when(uploaded.at)}.`:p.brief?"Saved as your brand brief.":"A brand brief, bio or custom instructions prompt.",`<button class="btn ghost" type="button" data-set="upload">${uploaded||p.brief?"Upload another":"Upload a prompt"}</button>`)}
+    ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn ghost" type="button" data-set="stances">Manage stances</button>`)}
+    ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn ghost" type="button" data-set="profile">Edit brand</button>`)}
+    <p class="setgroup">App</p>
+    ${row("Edition",document.documentElement.getAttribute("data-skin")==="ink"?"Paperback":"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin!=="ink"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button></div>`)}
+    ${row("Where your work is saved",syncLine[0],syncLine[1],"")}
+    ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn ghost" type="button" data-set="vault">Open vault</button>`)}
+    ${row("Erase everything","Start from zero","Deletes your brand, stances, vault and results.",`<button class="btn ghost" type="button" data-set="erase" style="color:var(--risk);border-color:var(--risk)">Erase</button>`)}
+  </div>`;
+}
+$("#settings-body").addEventListener("click",e=>{
+  const sk=e.target.closest("[data-skin]"); if(sk){skin=sk.dataset.skin;applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(err){}renderSettings();return}
+  const b=e.target.closest("[data-set]"); if(!b) return;
+  const k=b.dataset.set;
+  if(k==="quiz") return openSetup("quiz");
+  if(k==="link") return openSetup("link");
+  if(k==="upload") return openSetup("upload");
+  if(k==="erase") return openSetup("erase");
+  show(k);
+});
+$("#gear-btn").addEventListener("click",()=>show(view==="settings"?"start":"settings"));
 
 /* ---------- start over = landing ---------- */
 
@@ -1693,7 +1772,7 @@ lsLoad(); renderAll(); setRunAvail();
 const h=(location.hash||"").slice(1);
 let touched=false; document.addEventListener("click",()=>touched=true,{capture:true,once:true});
 function boot(){
-  if(["engine","stances","profile","vault","export"].includes(h)) show(h);
+  if(["engine","stances","profile","vault","export","settings"].includes(h)) show(h);
   else {mode="conjure";show("start")}
 }
 boot();
