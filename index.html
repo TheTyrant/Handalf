@@ -63,19 +63,37 @@ button,input,textarea,select{font:inherit;color:inherit}
 .gear:hover .bud-label,.gear[aria-pressed="true"] .bud-label{color:var(--gold)}
 .gear .rays{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 .gear .ring{fill:var(--band);stroke:currentColor;stroke-width:1.6}
-.gear .core{fill:currentColor}
-.gear:hover .flower,.gear[aria-pressed="true"] .flower{transform:rotate(30deg)}
+.gear .flower{overflow:visible}
+.gear .rays{transform-box:view-box;transform-origin:20px 20px;transition:transform .4s cubic-bezier(.3,1.7,.5,1)}
+.gear:hover .rays,.gear[aria-pressed="true"] .rays{transform:scale(1.24)}
 .gear:hover{color:var(--gold-hi)}
 .gear:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
 .nav{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-block:0}
 .nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--gold) 62%,transparent);border-bottom:3px solid transparent}
 .nav button:hover{color:var(--gold-hi)}
-.nav button[aria-selected="true"]{color:var(--gold);border-bottom-color:var(--gold)}
+.nav button[aria-selected="true"]{color:var(--gold);border-bottom-color:transparent}
 .nav .count{color:var(--copper);margin-left:6px}
 .status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
 
-#scroller{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:28px 40px}
-.band{flex:none}
+.stage{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden;perspective:2400px}
+#scroller,.leaf-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:28px 40px}
+.pageleaf{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;pointer-events:none;backface-visibility:hidden;will-change:transform}
+.pageleaf .leaf-sc{overflow:hidden}
+.pageleaf::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0}
+.pageleaf.fwd{transform-origin:0 50%;animation:turnF .72s cubic-bezier(.55,.05,.4,1) forwards}
+.pageleaf.back{transform-origin:100% 50%;animation:turnB .72s cubic-bezier(.55,.05,.4,1) forwards}
+.pageleaf.fwd::after{background:linear-gradient(90deg,transparent 30%,rgba(0,0,0,.45));animation:shade .72s ease-in forwards}
+.pageleaf.back::after{background:linear-gradient(270deg,transparent 30%,rgba(0,0,0,.45));animation:shade .72s ease-in forwards}
+@keyframes turnF{0%{transform:rotateY(0)}100%{transform:rotateY(-108deg)}}
+@keyframes turnB{0%{transform:rotateY(0)}100%{transform:rotateY(108deg)}}
+@keyframes shade{0%{opacity:0}100%{opacity:1}}
+.turned{animation:settle .72s ease-out}
+@keyframes settle{0%{filter:brightness(.82)}100%{filter:none}}
+.band{flex:none;position:relative;z-index:6}
+.band>.wrap{position:relative}
+.ribbon-clip{position:absolute;left:0;right:0;top:calc(100% + 1px);height:46px;overflow:hidden;pointer-events:none}
+.ribbon{position:absolute;top:0;left:0;width:16px;height:38px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% 100%,50% 76%,0 100%);transform:translateY(-102%);transition:transform .34s cubic-bezier(.3,.8,.4,1.2);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.ribbon.on{transform:translateY(0)}
 .foot{flex:none;background:var(--paper);background-image:var(--noise);background-size:200px 200px;padding-bottom:env(safe-area-inset-bottom,0px)}
 .view{display:grid;gap:24px}
 h2{color:var(--gold);font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1.05;margin:0;text-wrap:balance}
@@ -316,7 +334,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lfound li{padding:12px 0;border-bottom:1px solid var(--rule);font-size:16px}
 .lfile{color:var(--gold);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .ldrop.over{background:color-mix(in srgb,var(--gold) 8%,transparent)}
-.modes{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--gold)}
+.modes{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--gold)}
 .modes::before,.modes::after{content:"";position:absolute;top:-8px;width:15px;height:15px;background:var(--gold);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:twinkle 2.6s ease-in-out infinite}
 .modes::before{left:-7px}
 .modes::after{right:-7px;animation-delay:1.3s}
@@ -355,14 +373,47 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lpanel.late .lopts li{animation:lin .4s ease both;animation-delay:calc(.55s + var(--i,0)*.09s)}
 
 /* settings */
-.sets{display:grid;max-width:880px;border-top:2px solid var(--gold)}
-.setrow{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:18px 0;border-bottom:1px solid var(--rule)}
+.sets{display:grid;max-width:1100px;border-top:2px solid var(--gold)}
+.setrow{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:8px 40px;align-items:center;padding:22px 0;border-bottom:1px solid var(--rule)}
 .setrow h3{font-size:17px}
 .setrow .val{min-width:0}
 .setrow .val b{font-family:var(--f-head);font-size:19px;font-weight:600;color:var(--gold)}
-.setrow .val p{color:var(--mute);font-size:14px;margin-top:2px;max-width:60ch}
-.setrow .act{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.setrow .val p{color:var(--mute);font-size:15px;margin-top:4px;max-width:86ch}
+.setrow .act{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:14px}
 .setgroup{font-family:var(--f-title);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);padding:26px 0 6px;border-bottom:1px solid var(--rule)}
+
+/* first-run book opening */
+.intro{position:fixed;inset:0;z-index:60;background-color:var(--paper);transition:opacity .6s ease;overflow:hidden}
+.intro.out{opacity:0}
+.ibook{position:absolute;inset:0;perspective:2600px}
+.iskip{font-family:var(--f-title);font-weight:600;letter-spacing:.08em;font-size:15px}
+.ipage{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr;background-color:var(--sheet);background-image:var(--noise);background-size:200px 200px;box-shadow:inset 40px 0 50px -40px rgba(0,0,0,.35);overflow:auto}
+.itop{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 max(24px,env(safe-area-inset-right,0px)) 0 max(24px,env(safe-area-inset-left,0px));padding:max(18px,env(safe-area-inset-top,0px)) 0 14px;border-bottom:1px solid var(--rule)}
+.itop-mark{font-family:var(--f-display);color:var(--gold);font-size:22px;line-height:1}
+.ipage-in{align-self:center;justify-self:center;width:min(640px,100%);display:grid;gap:16px;padding:32px max(24px,env(safe-area-inset-left,0px))}
+.ipage-in p{font-size:clamp(16px,1.6vw,19px);color:var(--ink)}
+.ipage-in .lq.sm{font-size:clamp(28px,4.2vw,48px)}
+.ipage-in .btn{justify-self:start;margin-top:8px}
+.ipage-in>*{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+.ibook.read .ipage-in>*{opacity:1;transform:none}
+.ibook.read .ipage-in>*:nth-child(2){transition-delay:.2s}
+.ibook.read .ipage-in>*:nth-child(3){transition-delay:.6s}
+.ibook.read .ipage-in>*:nth-child(4){transition-delay:1s}
+.ibook.read .ipage-in>*:nth-child(5){transition-delay:1.4s}
+.icover{position:absolute;inset:0;z-index:2;transform-origin:0 50%;transform-style:preserve-3d;transition:transform 1.5s cubic-bezier(.6,.05,.3,1),opacity .5s ease 1s}
+.ibook.open .icover{transform:rotateY(-180deg);opacity:0;pointer-events:none}
+.iface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-content:center;justify-items:center;text-align:center;gap:14px}
+.ifront{background-color:var(--band);background-image:var(--noise);background-size:200px 200px;color:var(--gold)}
+.ifront::before{content:"";position:absolute;inset:max(22px,env(safe-area-inset-top,0px)) 22px 22px 40px;border:1px solid var(--gold);opacity:.7;pointer-events:none}
+.ifront::after{content:"";position:absolute;left:0;top:0;bottom:0;width:26px;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,0));pointer-events:none}
+.iskip-cover{position:absolute;top:max(36px,calc(env(safe-area-inset-top,0px) + 14px));right:40px;z-index:1}
+.iowl{width:clamp(110px,16vw,190px);height:auto}
+.ititle{font-family:var(--f-display);font-size:clamp(48px,9vw,110px);line-height:1;margin:0}
+.itag{font-family:var(--f-title);font-weight:600;font-size:clamp(13px,1.5vw,18px);letter-spacing:.08em;margin:0}
+.iback{transform:rotateY(180deg);background:var(--sheet);color:var(--mute)}
+.iowner-line{font-family:var(--f-head);font-style:italic;font-size:clamp(15px,1.6vw,19px);margin:0}
+.iowner{font-family:var(--f-display);color:var(--gold);font-size:clamp(28px,4vw,48px);margin:0;padding:0 18px 4px;border-bottom:1px solid var(--rule)}
+@media (prefers-reduced-motion:reduce){.ibook,.icover,.ipage-in>*{transition:none!important}}
 
 /* deepen panel */
 .deep{margin-top:14px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px;display:grid;gap:10px}
@@ -412,7 +463,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .nav::-webkit-scrollbar{display:none}
   .nav button{white-space:nowrap}
-  #scroller{padding-block:18px 28px}
+  #scroller,.leaf-sc{padding-block:18px 28px}
   .vcard{grid-template-columns:1fr;gap:8px}
   .vcard .scorecol{display:flex;align-items:baseline;gap:10px}
   .aday{grid-template-columns:1fr;gap:4px}
@@ -463,7 +514,6 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <svg class="flower" viewBox="0 0 40 40" aria-hidden="true">
           <path class="rays" d="M20.00 8.80L20.00 2.00M25.60 10.30L27.60 6.84M29.70 14.40L35.59 11.00M31.20 20.00L35.20 20.00M29.70 25.60L35.59 29.00M25.60 29.70L27.60 33.16M20.00 31.20L20.00 38.00M14.40 29.70L12.40 33.16M10.30 25.60L4.41 29.00M8.80 20.00L4.80 20.00M10.30 14.40L4.41 11.00M14.40 10.30L12.40 6.84"/>
           <circle cx="20" cy="20" r="8" class="ring"/>
-          <circle cx="20" cy="20" r="3.6" class="core"/>
         </svg>
         <span class="bud-label">Settings</span>
       </button>
@@ -475,10 +525,11 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Export</button>
     </nav>
+    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"></span></span>
   </div>
 </header>
 
-<main id="scroller"><div class="wrap">
+<div class="stage" id="stage"><main id="scroller" class="scroller"><div class="wrap">
   <!-- LANDING -->
   <section class="view landing" id="v-start" hidden>
     <div id="quiz" class="lwrap"></div>
@@ -561,9 +612,42 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Export plan</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
     <div id="vault-list"></div>
   </section>
-</div></main>
+</div></main></div>
 <footer class="foot"><div class="wrap"><nav class="modes" id="modes" aria-label="Ways to start"></nav></div></footer>
 
+<div class="intro" id="intro" hidden role="dialog" aria-label="Welcome to Handalf">
+  <div class="ibook" id="ibook">
+    <div class="ipage">
+      <div class="itop"><span class="itop-mark">Handalf</span><button class="ltext iskip" type="button" data-skip>Skip</button></div>
+      <div class="ipage-in">
+        <p class="leyebrow">Chapter one</p>
+        <h2 class="lq sm">Every creator has a take nobody else can make.</h2>
+        <p>I'm Handalf. I read the crowd, then I read you, and together we find the story only you can tell.</p>
+        <p>Tell me who you are, give me a topic, and we'll conjure something worth saying.</p>
+        <button class="btn" type="button" id="intro-go">Turn the page</button>
+      </div>
+    </div>
+    <div class="icover">
+      <div class="iface ifront">
+        <button class="ltext iskip iskip-cover" type="button" data-skip>Skip</button>
+        <svg class="iowl" viewBox="0 0 64 84" aria-hidden="true"><g transform="translate(-6 -10) scale(1.2)"><ellipse cx="32" cy="57" rx="18.5" ry="15" fill="var(--band)" stroke="var(--gold)" stroke-width="2.4"/>
+          <circle cx="24.5" cy="56.5" r="6.4" fill="var(--eye)" stroke="var(--gold)" stroke-width="1.6"/><circle cx="39.5" cy="56.5" r="6.4" fill="var(--eye)" stroke="var(--gold)" stroke-width="1.6"/>
+          <circle cx="25.5" cy="57.5" r="2.9" fill="var(--pupil)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--pupil)"/>
+          <path fill="var(--gold)" d="M29.2 63.2h5.6L32 68.4z"/>
+          <path fill="var(--gold)" d="M11.5 43.5C21 39.5 43 39.5 52.5 43.5C43 47 21 47 11.5 43.5Z"/>
+          <path fill="var(--gold)" d="M21 42.5C24 34 27.5 25 34.5 18C38.5 15 43.5 15.5 45.5 19C41.5 18 38.5 20 37.6 23.5C38.6 29.5 39.6 36 41.8 42.5Z"/>
+          <path fill="var(--band)" d="M31.5 31l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></g></svg>
+        <p class="ititle">Handalf</p>
+        <p class="itag">Find the magic in your stories.</p>
+      </div>
+      <div class="iface iback">
+        <p class="leyebrow">Ex libris</p>
+        <p class="iowner-line">This book belongs to</p>
+        <p class="iowner" id="intro-owner">you</p>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 (function(){
@@ -651,7 +735,34 @@ function hasLocal(k){return k==="profile"?Object.keys(state.profile).length:k===
 /* ---------- nav ---------- */
 document.querySelectorAll(".nav [data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
 let view="engine";
+const ORDER={start:0,engine:1,stances:2,profile:3,vault:4,export:5,settings:6};
+let booted=false;
+function turnPage(from,to){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const st=$("#stage"), sc=$("#scroller"); if(!st||!sc) return;
+  st.querySelectorAll(".pageleaf").forEach(x=>x.remove());
+  const leaf=document.createElement("div"); leaf.className="pageleaf "+((ORDER[to]??0)>=(ORDER[from]??0)?"fwd":"back"); leaf.setAttribute("aria-hidden","true");
+  const c=sc.cloneNode(true); c.removeAttribute("id"); c.className="leaf-sc"; c.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id"));
+  c.querySelectorAll("input,textarea,select,button,a").forEach(n=>{n.setAttribute("tabindex","-1");n.removeAttribute("name")});
+  leaf.appendChild(c); st.appendChild(leaf); c.scrollTop=sc.scrollTop;
+  sc.classList.remove("turned"); void sc.offsetWidth; sc.classList.add("turned");
+  setTimeout(()=>leaf.remove(),760);
+}
+function placeRibbon(v){
+  const r=$("#ribbon"); if(!r) return;
+  const btn=document.querySelector(`.nav [data-view="${v}"]`);
+  if(!btn){r.classList.remove("on");r.dataset.v="";return}
+  const wrap=r.closest(".wrap").getBoundingClientRect(), bb=btn.getBoundingClientRect();
+  const x=bb.left-wrap.left+(bb.width-14)/2-8;
+  const drop=()=>{r.style.left=x+"px";r.dataset.v=v;requestAnimationFrame(()=>r.classList.add("on"))};
+  if(r.classList.contains("on")&&r.dataset.v!==v){r.classList.remove("on");setTimeout(drop,300)}
+  else if(!r.classList.contains("on")) drop();
+  else r.style.left=x+"px";
+}
+addEventListener("resize",()=>placeRibbon(view));
+document.querySelector(".nav").addEventListener("scroll",()=>placeRibbon(view),{passive:true});
 function show(v){
+  if(booted&&v!==view) turnPage(view,v);
   view=v;
   document.querySelectorAll(".nav [data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
   ["start","engine","stances","profile","vault","export","settings"].forEach(x=>$("#v-"+x).hidden=x!==v);
@@ -660,6 +771,7 @@ function show(v){
   if(v==="export") renderExport();
   if(v==="start") renderStart(); else if(typeof renderModes==="function") renderModes();
   const sc=document.getElementById("scroller"); if(sc) sc.scrollTop=0;
+  placeRibbon(v);
   try{history.replaceState(null,"","#"+v)}catch(e){}
 }
 
@@ -772,16 +884,15 @@ const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, 
 </svg>`;
 let waveNext=true, perchTilt=0, ebText="";
 const TILT=[-7,5,-3,7,-5,3,0,0];
-const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["link","Link your LLM",ICON.link],["upload","Upload a prompt",ICON.page],["erase","Erase everything",ICON.reset]];
+const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["bio","Link LLM or bio",ICON.link],["erase","Erase everything",ICON.reset]];
 let mode="conjure", llm="ChatGPT", found=null, flash="", intro=false, askSeed=0, animIn=false;
 /* the landing talks: several ways to pose each question, picked at random */
 const PHR={
  conjure:["What are we talking about?","What's on your mind today?","What should we stir up?","Got an idea brewing?","Where should we point the wand?","What's the topic everyone's getting wrong?"],
  quiz:["Want to find your brand archetype? Six quick questions.","Shall I figure out how your brand argues? It takes six questions.","Hoo are you, as a brand? Give me six answers and I'll tell you.","I have six questions that reveal your archetype. Want them?"],
- link:["Does another AI know you better than I do?","Which assistant have you been talking to?","Want me to learn what your other AI knows about you?"],
- upload:["Got a bio or brief lying around?","Written anything about yourself lately?","Have a prompt that already describes you?"]
+ bio:["Does another AI know you better than I do?","Got a bio lying around?","Which assistant have you been talking to?","Written anything about yourself lately?"]
 };
-const pidx={conjure:0,quiz:0,link:0,upload:0};
+const pidx={conjure:0,quiz:0,bio:0};
 const say=k=>PHR[k][pidx[k]%PHR[k].length];
 const ASKS=["Handalf asks","Handalf wonders","Next from Handalf","Tell Handalf"];
 const rnd=(n,not)=>{let i;do{i=Math.floor(Math.random()*n)}while(n>1&&i===not);return i};
@@ -791,7 +902,7 @@ function tally(){
   qans.forEach((a,i)=>{ if(a==null) return; Object.entries(QUIZ[i].o[a][1]).forEach(([k,v])=>sc[k]+=v) });
   return Object.entries(sc).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
 }
-const LLMS={ChatGPT:"https://chatgpt.com/",Claude:"https://claude.ai/new",Gemini:"https://gemini.google.com/app",Other:""};
+const LLMS={ChatGPT:"https://chatgpt.com/",Claude:"https://claude.ai/new",Gemini:"https://gemini.google.com/app","Other LLM":"","My bio":""};
 const LINK_PROMPT=`I'm setting up a content strategy tool and want it to know me as a creator. Based on everything you know about me from our past conversations and your memory of me, write a profile with these sections:
 
 Name or brand
@@ -853,7 +964,7 @@ function renderStart(){
   const p=state.profile, thin=!p.archetype&&!p.niche&&!p.expertise&&!p.brief;
   let panel="";
   if(mode==="conjure"){
-    const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Take the brand quiz, link your LLM, or upload a prompt below."
+    const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Take the brand quiz, or link your LLM or upload a bio below."
       :`Shaped for ${p.name?esc(p.name)+", ":""}${p.archetype?`a ${esc(p.archetype)} brand`:"your brand"}${p.niche?` in ${esc(p.niche)}`:""}.`);
     flash="";
     ebText="Conjure";
@@ -863,28 +974,23 @@ function renderStart(){
       ${sample?"":`<p class="lhint">Conjuring runs on Claude, so open this page inside Claude to use it.</p>`}`;
   }else if(mode==="quiz"){
     panel=quizPanel();
-  }else if((mode==="link"||mode==="upload")&&intro){
-    ebText=mode==="link"?"Link your LLM":"Upload a prompt";
-    panel=`<h2 class="lq">${esc(say(mode))}</h2>
-      <p class="lhint" style="font-size:17px">${mode==="link"?"Handalf can read the profile ChatGPT, Claude or Gemini writes about you, and pull out your brand and the opinions you hold.":"A brand brief, a bio, media kit text or a custom instructions prompt. Handalf reads it and learns your brand."}</p>
-      <button class="lbtn solo" type="button" data-full="${mode}">${mode==="link"?"Link your LLM":"Upload a prompt"}</button>`;
-  }else if(mode==="link"){
-    const url=LLMS[llm];
-    ebText="Link your LLM";
-    panel=`<h2 class="lq sm">Which assistant knows you best?</h2>
+  }else if(mode==="bio"&&intro){
+    ebText="Link LLM or bio";
+    panel=`<h2 class="lq">${esc(say("bio"))}</h2>
+      <p class="lhint" style="font-size:17px">Handalf can read the profile your AI writes about you, or a bio you've written, and learn your brand and the opinions you hold.</p>
+      <button class="lbtn solo" type="button" data-full="bio">Link your LLM or upload a bio</button>`;
+  }else if(mode==="bio"){
+    const isBio=llm==="My bio", url=LLMS[llm], name=llm==="Other LLM"?"your assistant":llm;
+    ebText="Link LLM or bio";
+    panel=`<h2 class="lq sm">${isBio?"What have you written about yourself?":"Which assistant knows you best?"}</h2>
       <div class="llms">${Object.keys(LLMS).map(k=>`<button type="button" data-llm="${k}" aria-pressed="${llm===k}">${k}</button>`).join("")}</div>
-      <ol class="lsteps">
-        <li><span class="n">1</span><div><span class="leyebrow">Copy this prompt</span><pre class="lpre" id="link-prompt">${esc(LINK_PROMPT)}</pre><button class="lbtn solo" type="button" data-copy>Copy prompt</button></div></li>
-        <li><span class="n">2</span><div><span class="leyebrow">Paste it into ${llm==="Other"?"your assistant":esc(llm)}</span>${url?`<a class="ltext" href="${url}" target="_blank" rel="noopener">Open ${esc(llm)}</a>`:""}<p class="lhint">Works best with memory turned on in that app.</p></div></li>
-        <li><span class="n">3</span><div><label class="leyebrow" for="link-reply">Paste its answer here</label><textarea id="link-reply" placeholder="Paste the whole reply"></textarea><button class="lbtn solo" type="button" data-read="link">Read my profile</button><p class="lhint" id="read-hint"></p></div></li>
-      </ol>`;
-  }else if(mode==="upload"){
-    ebText="Upload a prompt";
-    panel=`<h2 class="lq sm">What have you written about yourself?</h2>
-      <p class="lhint">A brand brief, a bio, media kit text, or a custom instructions prompt. Paste it, or <label class="lfile" for="brief-file">choose a file</label> (.txt, .md or .json).</p>
+      ${isBio?`<p class="lhint">A bio, brand brief or media kit text. Paste it below, or <label class="lfile" for="brief-file">choose a file</label> (.txt, .md or .json).</p>`
+        :`<p class="lhint">Copy Handalf's prompt, paste it into ${esc(name)}${url?` (<a class="ltext" href="${url}" target="_blank" rel="noopener">open ${esc(llm)}</a>)`:""}, then paste its answer below. Works best with memory turned on in that app.</p>
+      <div class="lnav" style="justify-content:flex-start;gap:24px"><button class="lbtn solo" type="button" data-copy>Copy prompt</button><button class="ltext" type="button" data-peek>See the prompt</button></div>
+      <pre class="lpre" id="link-prompt" hidden>${esc(LINK_PROMPT)}</pre>`}
       <input id="brief-file" type="file" accept=".txt,.md,.json" hidden>
-      <div class="ldrop"><textarea id="brief-text" placeholder="Paste or drop your brief here"></textarea></div>
-      <button class="lbtn solo" type="button" data-read="upload">Read my profile</button><p class="lhint" id="read-hint"></p>`;
+      <div class="ldrop"><textarea id="bio-text" aria-label="${isBio?"Your bio":"Your assistant's answer"}" placeholder="${isBio?"Paste or drop your bio here":"Paste the answer here"}"></textarea></div>
+      <button class="lbtn solo" type="button" data-read>Read my profile</button><p class="lhint" id="read-hint"></p>`;
   }else if(mode==="erase"){
     ebText="Erase everything";
     panel=`<h2 class="lq sm">Start over from zero?</h2>
@@ -920,7 +1026,7 @@ $("#modes").addEventListener("click",e=>{
 });
 function setMode(k){ mode=k; intro=false; waveNext=true; if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
 function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
-function openSetup(k){mode=k||"quiz";intro=false;if(mode==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}show("start")}
+function openSetup(k){if(k==="link"||k==="upload"){if(k==="upload")llm="My bio";k="bio"}mode=k||"quiz";intro=false;if(mode==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}show("start")}
 /* idle rotation: the dialogue moves on by itself, at random, while nobody is using it */
 const ROT_MS=11250; let lastAct=Date.now(), hovering=false;
 function rotatable(){
@@ -928,13 +1034,14 @@ function rotatable(){
   const a=document.activeElement; if(a&&$("#quiz").contains(a)&&a.matches("input,textarea")) return false;
   if(mode==="conjure"){const t=$("#l-topic");return !(t&&t.value.trim())}
   if(mode==="quiz") return qi===-1;
-  if(mode==="link"||mode==="upload") return intro;
+  if(mode==="bio") return intro;
+  if(!$("#intro").hidden) return false;
   return false;
 }
 function rotate(){
-  const pool=["conjure","quiz","link","upload"].filter(k=>k!==mode), next=pool[rnd(pool.length)];
+  const pool=["conjure","quiz","bio"].filter(k=>k!==mode), next=pool[rnd(pool.length)];
   pidx[next]=rnd(PHR[next].length,pidx[next]);
-  const el=$("#quiz .lpanel"), go=()=>{ mode=next; intro=next==="link"||next==="upload"; if(next==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} waveNext=true; renderStart(); };
+  const el=$("#quiz .lpanel"), go=()=>{ mode=next; intro=next==="bio"; if(next==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} waveNext=true; renderStart(); };
   if(el&&!matchMedia("(prefers-reduced-motion: reduce)").matches){el.classList.add("lout");setTimeout(go,280)} else go();
   lastAct=Date.now();
 }
@@ -1016,11 +1123,12 @@ $("#quiz").addEventListener("click",async e=>{
     }
     return;
   }
-  const l=e.target.closest("[data-llm]"); if(l){llm=l.dataset.llm;const keep=$("#link-reply").value;renderStart();$("#link-reply").value=keep;return}
+  const l=e.target.closest("[data-llm]"); if(l){llm=l.dataset.llm;const keep=$("#bio-text").value;renderStart();$("#bio-text").value=keep;return}
+  if(e.target.closest("[data-peek]")){const pr=$("#link-prompt");pr.hidden=!pr.hidden;e.target.closest("[data-peek]").textContent=pr.hidden?"See the prompt":"Hide the prompt";return}
   const c=e.target.closest("[data-copy]");
-  if(c){try{await navigator.clipboard.writeText(LINK_PROMPT);c.textContent="Copied"}catch(err){const r=document.createRange();r.selectNodeContents($("#link-prompt"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r);c.textContent="Selected. Press copy on your keyboard"}return}
+  if(c){try{await navigator.clipboard.writeText(LINK_PROMPT);c.textContent="Copied"}catch(err){$("#link-prompt").hidden=false;const r=document.createRange();r.selectNodeContents($("#link-prompt"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r);c.textContent="Selected. Press copy on your keyboard"}return}
   const r=e.target.closest("[data-read]");
-  if(r){ if(r.dataset.read==="link") readProfile($("#link-reply").value,"Linked "+(llm==="Other"?"LLM":llm)); else readProfile($("#brief-text").value,"Uploaded prompt"); return }
+  if(r){ readProfile($("#bio-text").value, llm==="My bio"?"Uploaded bio":"Linked "+(llm==="Other LLM"?"LLM":llm)); return }
   if(e.target.closest("[data-erase]")){
     if(runCtl)runCtl.abort();
     state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;queue=[];open.clear();
@@ -1029,7 +1137,7 @@ $("#quiz").addEventListener("click",async e=>{
     flash="Everything was erased. This is a fresh start."; setMode("conjure");
   }
 });
-function loadBrief(f){const rd=new FileReader();rd.onload=()=>{$("#brief-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};rd.readAsText(f)}
+function loadBrief(f){const rd=new FileReader();rd.onload=()=>{$("#bio-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};rd.readAsText(f)}
 $("#quiz").addEventListener("change",e=>{if(e.target.id==="brief-file"&&e.target.files[0]){loadBrief(e.target.files[0]);e.target.value=""}});
 $("#quiz").addEventListener("dragover",e=>{const d=e.target.closest(".ldrop");if(d){e.preventDefault();d.classList.add("over")}});
 $("#quiz").addEventListener("dragleave",e=>{const d=e.target.closest(".ldrop");if(d)d.classList.remove("over")});
@@ -1400,7 +1508,7 @@ function renderProfile(){
   $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-retake>Retake quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`
     :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Take the brand quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`;
 }
-$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("link")});
+$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("bio")});
 pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
 
 /* ---------- vault planner ---------- */
@@ -1732,22 +1840,22 @@ const when=ts=>ts?new Date(ts).toLocaleDateString(undefined,{month:"short",day:"
 function renderSettings(){
   const p=state.profile, A=p.archetype&&ARCH[p.archetype];
   const filled=["name","niche","expertise","audience","platforms","voice","pillars","off"].filter(k=>String(p[k]||"").trim()).length;
-  const linked=p.linked&&/^Linked/.test(p.linked.source)?p.linked:null, uploaded=p.linked&&/Uploaded/.test(p.linked.source)?p.linked:null;
-  const row=(t,v,sub,act)=>`<div class="setrow"><h3>${t}</h3><div class="val"><b>${v}</b>${sub?`<p>${sub}</p>`:""}</div><div class="act">${act||""}</div></div>`;
+  const src=p.linked||null, srcName=src?(/^Linked /.test(src.source)?src.source.replace(/^Linked /,""):"Your bio"):"";
+  const row=(t,v,sub,act)=>`<div class="setrow"><h3>${t}</h3><div class="val"><b>${v}</b>${sub?`<p>${sub}</p>`:""}${act?`<div class="act">${act}</div>`:""}</div></div>`;
   const syncLine=sync==="account"?["Your Claude account","Your brand, stances, vault and last search follow you to any device where you open Handalf in Claude."]
     :sync==="failed"?["This browser, for now","Saving to your Claude account didn't go through, so your work is kept in this browser. It will try again on your next change."]
     :["This browser only","Open Handalf inside Claude to keep your work in your Claude account and see it on your other devices."];
   $("#settings-body").innerHTML=`<div class="sets">
     <p class="setgroup">Your profile sources</p>
-    ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn ghost" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
-    ${row("Linked LLM",linked?esc(linked.source.replace(/^Linked /,"")):"Not linked",linked?`Profile read ${when(linked.at)}. Link again any time to refresh it.`:"Let ChatGPT, Claude or Gemini describe your brand from what it already knows.",`<button class="btn ghost" type="button" data-set="link">${linked?"Link again":"Link your LLM"}</button>`)}
-    ${row("Uploaded prompt",uploaded||p.brief?"Uploaded":"None",uploaded?`Read ${when(uploaded.at)}.`:p.brief?"Saved as your brand brief.":"A brand brief, bio or custom instructions prompt.",`<button class="btn ghost" type="button" data-set="upload">${uploaded||p.brief?"Upload another":"Upload a prompt"}</button>`)}
-    ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn ghost" type="button" data-set="stances">Manage stances</button>`)}
-    ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn ghost" type="button" data-set="profile">Edit brand</button>`)}
+    ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
+    ${row("LLM or bio",src?esc(srcName):(p.brief?"Your bio":"Not added"),src?`Read ${when(src.at)}. Add again any time to refresh it.`:"Let ChatGPT, Claude or Gemini describe your brand from what it already knows, or upload a bio you've written.",`<button class="btn" type="button" data-set="bio">${src?"Add again":"Link LLM or upload bio"}</button>`)}
+    ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn" type="button" data-set="stances">Manage stances</button>`)}
+    ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn" type="button" data-set="profile">Edit brand</button>`)}
     <p class="setgroup">App</p>
     ${row("Edition",document.documentElement.getAttribute("data-skin")==="ink"?"Paperback":"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin!=="ink"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button></div>`)}
+    ${row("Opening story","The book opening","The short story Handalf tells on your first visit.",`<button class="btn" type="button" data-set="intro">Watch again</button>`)}
     ${row("Where your work is saved",syncLine[0],syncLine[1],"")}
-    ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn ghost" type="button" data-set="vault">Open vault</button>`)}
+    ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn" type="button" data-set="vault">Open vault</button>`)}
     ${row("Erase everything","Start from zero","Deletes your brand, stances, vault and results.",`<button class="btn ghost" type="button" data-set="erase" style="color:var(--risk);border-color:var(--risk)">Erase</button>`)}
   </div>`;
 }
@@ -1756,12 +1864,33 @@ $("#settings-body").addEventListener("click",e=>{
   const b=e.target.closest("[data-set]"); if(!b) return;
   const k=b.dataset.set;
   if(k==="quiz") return openSetup("quiz");
-  if(k==="link") return openSetup("link");
-  if(k==="upload") return openSetup("upload");
+  if(k==="bio") return openSetup("bio");
+  if(k==="intro") return playIntro();
   if(k==="erase") return openSetup("erase");
   show(k);
 });
 $("#gear-btn").addEventListener("click",()=>show(view==="settings"?"start":"settings"));
+
+/* ---------- first-run book opening ---------- */
+let introTimers=[];
+function playIntro(){
+  const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
+  bk.className="ibook"; o.classList.remove("out"); o.hidden=false;
+  $("#intro-owner").textContent=state.profile.name||"you";
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){bk.classList.add("open","read");$("#intro-go").focus();return}
+  introTimers.push(setTimeout(()=>bk.classList.add("open"),900));
+  introTimers.push(setTimeout(()=>{bk.classList.add("read");$("#intro-go").focus()},2300));
+}
+function endIntro(){
+  const o=$("#intro"); if(o.hidden) return; introTimers.forEach(clearTimeout);
+  o.classList.add("out"); setTimeout(()=>{o.hidden=true},600);
+  try{localStorage.setItem("handalf.intro","1")}catch(e){}
+  if(!state.profile.introSeen){state.profile.introSeen=true;persist("profile")}
+  lastAct=Date.now(); if(view==="start"){const i=$("#l-topic");if(i)i.focus()}
+}
+$("#intro-go").addEventListener("click",endIntro);
+$("#intro").addEventListener("click",e=>{if(e.target.closest("[data-skip]"))endIntro()});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#intro").hidden)endIntro()});
 
 /* ---------- start over = landing ---------- */
 
@@ -1775,7 +1904,8 @@ function boot(){
   if(["engine","stances","profile","vault","export","settings"].includes(h)) show(h);
   else {mode="conjure";show("start")}
 }
-boot();
+boot(); booted=true;
+{ let seen=!!state.profile.introSeen; try{seen=seen||localStorage.getItem("handalf.intro")==="1"}catch(e){} if(!seen) playIntro(); }
 initRuntime().then(()=>{ if(view==="start"&&!touched) renderStart(); });
 })();
 </script>
