@@ -16,14 +16,14 @@ Tagline: Find the magic in your stories.
 
 ## Current flow (v9, Oct 20, 2026)
 1. Landing page (also what Start over opens): "What are we talking about?" with Conjure content. An icon row switches the same space, one mode at a time, to the brand quiz (one question at a time with the wizard owl, 12 archetypes, then niche and expertise), link your LLM (copy a profile prompt into ChatGPT, Claude or Gemini and paste the answer back), upload a prompt or brief, or erase everything. Lines only, no pills or rounded boxes.
-2. Engine: topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
+2. Alchemy (the engine): topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
 3. Remix: add personal context or talk the take through with an interviewer; rebuilt takes cite stances pulled from that dialogue.
 4. Vault: no cap. Grouped by idea or by date. Each take is a single post with a date, or a 3 to 6 episode series with a start date and cadence.
-5. Export: pick concepts and choose one or more media per take (text, audio, video; several makes it mixed content with a version per medium). Each version gets an outline for its medium plus image prompts for image generators, and video versions get shot prompts for text-to-video tools. Filter by medium and download labeled Word docs: "Handalf video plan", "Handalf video prompt", and a "Shot and image prompts" pack.
+5. Conjurings (export): pick concepts and choose one or more media per take (text, audio, video; several makes it mixed content with a version per medium). Each version gets an outline for its medium plus image prompts for image generators, and video versions get shot prompts for text-to-video tools. Filter by medium and download labeled Word docs: "Handalf video plan", "Handalf video prompt", and a "Shot and image prompts" pack.
 6. Start over: new search, redo brand setup, or erase everything.
 
 ## Look
-Two editions, switched by tapping the book logo: Leather bound (brown leather with light monochrome noise, gold lines, gold serif tabs and headers) and Paperback (black and white paper and ink line art, a children's book for business people). Web app layout: header fixed at the top, the icon row fixed as a footer, only the middle scrolls. Uncial wordmark, Cinzel titles, EB Garamond content titles. Logo: a book with Handalf's face on the cover, drawn in the other edition's colors so it previews the switch. Handalf, full body, rests on a branch that runs off the left edge of the screen and waves his wand to bring in each question.
+Three editions, cycled by tapping the book logo: Leather bound (leather and gold header and footer around cream pages with deep gray text), Chalkboard (slate green, chalk white text, yellow chalk accents) and Paperback (black and white paper and ink line art, a children's book for business people). Web app layout: header fixed at the top, the icon row fixed as a footer, only the middle scrolls. Uncial wordmark, Cinzel titles, EB Garamond content titles. Logo: a book with Handalf's face on the cover, drawn in the other edition's colors so it previews the switch. Handalf, full body, rests on a branch that runs off the left edge of the screen and waves his wand to bring in each question.
 
 ## Tied to Claude today
 1. AI calls (engine, remix, interview, outlines) run on the viewer's Claude account. Standalone needs a small server holding an AI API key.

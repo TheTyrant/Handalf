@@ -21,13 +21,33 @@
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
   color-scheme:dark;
 }
+:root[data-skin="chalk"]{
+  --paper:#2A3934; --sheet:#32433D; --ink:#ECEAE2; --mute:#AEB8B1; --rule:#62736C;
+  --gold:#F1D46E; --gold-hi:#FFE58F; --on-gold:#22302B;
+  --ultra:#9FCBEA; --ultra-soft:#34495A; --copper:#F1D46E; --copper-soft:#3C4A3B;
+  --good:#A9DDB2; --risk:#F4A6A1; --band:#222E2A; --band-fg:#ECEAE2;
+  --eye:#ECEAE2; --pupil:#22302B;
+  --book-cover:#4A2C18; --book-page:#F2E9D8; --book-spine:#2E1B10; --book-line:#2E1B10; --book-face:#D9B45E; --book-eye:#F3E6CF; --book-pupil:#2E1B10;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+  color-scheme:dark;
+}
+/* leather bound: leather covers, cream pages with deep gray ink */
+:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage{
+  --paper:#F4ECDA; --sheet:#FBF6EA; --ink:#2F2F2F; --mute:#655E54; --rule:#CDBE9C;
+  --gold:#8A6620; --gold-hi:#6C4F15; --on-gold:#FFF8EA;
+  --ultra:#3D5E8C; --ultra-soft:#E2E7EF; --copper:#8A6620; --copper-soft:#EEE2C6;
+  --good:#2E7559; --risk:#A9332E; --band:#FBF6EA;
+  --eye:#FFFFFF; --pupil:#2F2F2F;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+  color-scheme:light; color:var(--ink);
+}
 :root[data-skin="ink"]{
   --paper:#F7F6F2; --sheet:#FFFFFF; --ink:#141414; --mute:#5A5A5A; --rule:#A3A3A3;
   --gold:#141414; --gold-hi:#000000; --on-gold:#FFFFFF;
   --ultra:#3A3A3A; --ultra-soft:#EDEDED; --copper:#141414; --copper-soft:#EFEFEF;
   --good:#2A2A2A; --risk:#141414; --band:#FFFFFF; --band-fg:#141414;
   --eye:#FFFFFF; --pupil:#141414;
-  --book-cover:#4A2C18; --book-page:#F2E9D8; --book-spine:#2E1B10; --book-line:#2E1B10; --book-face:#D9B45E; --book-eye:#F3E6CF; --book-pupil:#2E1B10;
+  --book-cover:#2B3A35; --book-page:#E9E7E1; --book-spine:#1E2925; --book-line:#141414; --book-face:#EDEBE3; --book-eye:#2B3A35; --book-pupil:#EDEBE3;
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
   color-scheme:light;
 }
@@ -50,6 +70,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .logo-btn:focus-visible{outline:2px solid var(--gold-hi);outline-offset:4px}
 .logo{width:70px;height:auto;display:block}
 .brand{display:grid;justify-items:start;text-align:left;gap:2px}
+.ed-hint{font-family:var(--f-head);font-weight:500;letter-spacing:.03em;color:var(--band-fg)}
 .edition{white-space:nowrap;font-family:var(--f-title);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 2px}
 .logo .gold{color:var(--copper)}
 .mark{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,8vw,92px);line-height:.95;letter-spacing:.01em;margin:0}
@@ -75,7 +96,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .nav .count{color:var(--copper);margin-left:6px}
 .status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
 
-.stage{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.stage{background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 #scroller,.leaf-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:28px 40px}
 .pageleaf{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;pointer-events:none;backface-visibility:hidden;will-change:transform}
 .pageleaf .leaf-sc{overflow:hidden}
@@ -92,8 +113,11 @@ button,input,textarea,select{font:inherit;color:inherit}
 @keyframes settle{0%{filter:brightness(.82)}100%{filter:none}}
 .band{flex:none;position:relative;z-index:6}
 .band>.wrap{position:relative}
-.ribbon-clip{position:absolute;left:0;right:0;top:calc(100% + 1px);height:46px;overflow:hidden;pointer-events:none}
-.ribbon{position:absolute;top:0;left:0;width:16px;height:38px;background:var(--gold);clip-path:polygon(0 0,100% 0,100% 100%,50% 76%,0 100%);transform:translateY(-102%);transition:transform .34s cubic-bezier(.3,.8,.4,1.2);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.ribbon-clip{position:absolute;left:0;right:0;top:100%;height:60px;overflow:hidden;pointer-events:none}
+.ribbon{position:absolute;top:0;left:0;width:110px;height:44px;transform:translateY(-118%);transition:transform .34s cubic-bezier(.3,.8,.4,1.2),width .2s ease;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}
+.ribbon svg{display:block;width:100%;height:100%;overflow:visible}
+.rb-fill{fill:var(--band)}
+.rb-line{fill:none;stroke:var(--rule);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linejoin:miter}
 .ribbon.on{transform:translateY(0)}
 .foot{flex:none;background:var(--paper);background-image:var(--noise);background-size:200px 200px;padding-bottom:env(safe-area-inset-bottom,0px)}
 .view{display:grid;gap:24px}
@@ -474,6 +498,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .logo{width:46px}
   .edition{font-size:9.5px;letter-spacing:.1em}
   .tagline{font-size:12px}
+  .ed-more{display:none}
   .mark{font-size:40px}
   .tagsub{display:none}
   .nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
@@ -521,7 +546,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       </svg>
       </button>
       <div class="brand">
-        <p class="edition" id="edition"><span class="ed-name">Leather bound</span><span class="ed-hint"> · tap the book</span></p>
+        <p class="edition" id="edition"><span class="ed-arrow">◂ </span><span class="ed-name">Leather bound</span><span class="ed-hint"> · tap book<span class="ed-more"> to change style</span></span></p>
         <h1 class="mark">Hand<span>alf</span></h1>
         <p class="tagline">Find the magic in your stories.</p>
       </div>
@@ -535,13 +560,13 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       </button>
     </div>
     <nav class="nav" role="tablist">
-      <button role="tab" data-view="engine" aria-selected="true">Engine</button>
-      <button role="tab" data-view="stances" aria-selected="false">Stances<span class="count" id="n-stances"></span></button>
+      <button role="tab" data-view="engine" aria-selected="true">Alchemy</button>
+      <button role="tab" data-view="stances" aria-selected="false">Elements<span class="count" id="n-stances"></span></button>
       <button role="tab" data-view="profile" aria-selected="false">Brand</button>
       <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
-      <button role="tab" data-view="export" aria-selected="false">Export</button>
+      <button role="tab" data-view="export" aria-selected="false">Conjurings</button>
     </nav>
-    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"></span></span>
+    <span class="ribbon-clip" aria-hidden="true"><span class="ribbon" id="ribbon"><svg viewBox="0 0 100 44" preserveAspectRatio="none"><path class="rb-fill" d="M0 0V44L50 26L100 44V0Z"/><path class="rb-line" d="M0 0V44L50 26L100 44V0"/></svg></span></span>
   </div>
 </header>
 
@@ -564,7 +589,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- STANCES -->
   <section class="view" id="v-stances" hidden>
-    <div><h2>Your stances</h2><p class="lede">Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
+    <div><h2>Your elements</h2><p class="lede">Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
     <div class="split">
       <div class="panel">
         <span class="label">Add conversations</span>
@@ -582,7 +607,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <p class="hint" id="mine-hint">Your messages are queued here and only sent to Claude when you press Mine stances.</p>
       </div>
       <div>
-        <div class="col-head"><h3>Stance bank</h3><span class="label" id="stance-meta"></span></div>
+        <div class="col-head"><h3>Element bank</h3><span class="label" id="stance-meta"></span></div>
         <div class="add" style="margin:10px 0">
           <input id="add-stance" placeholder="Add a stance by hand: I think…" aria-label="Stance">
           <input id="add-against" placeholder="Against what consensus?" aria-label="Against">
@@ -618,14 +643,14 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- EXPORT -->
   <section class="view" id="v-export" hidden>
-    <div><h2>Export your plan</h2><p class="lede">The last step. Pick the concepts to include, choose text, audio or video for each, and Handalf outlines them into a plan you can follow yourself or hand to any AI as a prompt.</p></div>
+    <div><h2>Conjurings</h2><p class="lede">The last step. Pick the concepts to include, choose text, audio or video for each, and Handalf outlines them into a plan you can follow yourself or hand to any AI as a prompt.</p></div>
     <div id="export-body"></div>
   </section>
 
   <!-- VAULT -->
   <section class="view" id="v-vault" hidden>
     <div class="vhead"><div><h2>Vault</h2><p class="lede">Takes you kept. Plan each one as a single post or a series, give it a date, and see what's coming up.</p></div>
-      <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Export plan</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
+      <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Conjurings</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
     <div id="vault-list"></div>
   </section>
 </div></main></div>
@@ -773,7 +798,8 @@ function placeRibbon(v){
   const btn=document.querySelector(`.nav [data-view="${v}"]`);
   if(!btn){r.classList.remove("on");r.dataset.v="";return}
   const wrap=r.closest(".wrap").getBoundingClientRect(), bb=btn.getBoundingClientRect();
-  const x=bb.left-wrap.left+(bb.width-14)/2-8;
+  const pad=parseFloat(getComputedStyle(btn).paddingRight)||0, lw=bb.width-pad, w=lw+20, x=bb.left-wrap.left-10;
+  r.style.width=w+"px";
   const drop=()=>{r.style.left=x+"px";r.dataset.v=v;requestAnimationFrame(()=>r.classList.add("on"))};
   if(r.classList.contains("on")&&r.dataset.v!==v){r.classList.remove("on");setTimeout(drop,300)}
   else if(!r.classList.contains("on")) drop();
@@ -985,7 +1011,7 @@ function renderStart(){
   let panel="";
   if(mode==="conjure"){
     const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Take the brand quiz, or link your LLM or upload a bio below."
-      :`Shaped for ${p.name?esc(p.name)+", ":""}${p.archetype?`a ${esc(p.archetype)} brand`:"your brand"}${p.niche?` in ${esc(p.niche)}`:""}.`);
+      :`Shaped for ${p.name?esc(p.name)+", ":""}${p.archetype?`${/^[AEIOU]/.test(p.archetype)?"an":"a"} ${esc(p.archetype)} brand`:"your brand"}${p.niche?` in ${esc(p.niche)}`:""}.`);
     flash="";
     ebText="Conjure";
     panel=`<h2 class="lq">${esc(say("conjure"))}</h2>
@@ -1139,7 +1165,7 @@ $("#quiz").addEventListener("click",async e=>{
     if(act==="finish"){
       [["niche","q-niche"],["audience","q-audience"],["expertise","q-expertise"],["platforms","q-platforms"]].forEach(([k,id])=>state.profile[k]=$("#"+id).value.trim());
       state.profile.onboarded=true; state.profile.quizAt=Date.now(); persist("profile"); renderProfile(); renderEngine();
-      flash=`Saved. Takes will argue like a ${esc(state.profile.archetype||"creator")}.`; setMode("conjure");
+      flash=`Saved. Takes will argue like ${/^[AEIOU]/.test(state.profile.archetype||"")?"an":"a"} ${esc(state.profile.archetype||"creator")}.`; setMode("conjure");
     }
     return;
   }
@@ -1657,7 +1683,7 @@ function inView(v,view){return view==="all"||exMedia(v).includes(view)}
 function genCount(sel){let n=0;sel.forEach(v=>exMedia(v).forEach(m=>{const o=v.outlines&&v.outlines[m];if(!o)return;(o.episodes||[o]).forEach(x=>{n+=((x&&x.images)||[]).length+((x&&x.shots)||[]).length})}));return n}
 function renderExport(){
   const el=$("#export-body"), items=exItems();
-  if(!items.length){el.innerHTML=`<div class="empty"><strong>Nothing to export yet</strong>Save takes to your vault from an engine run, plan them as singles or series, then come back here to outline and export them.</div><button class="btn" type="button" data-goengine style="justify-self:start">Go to the engine</button>`;return}
+  if(!items.length){el.innerHTML=`<div class="empty"><strong>Nothing to export yet</strong>Save takes to your vault from an engine run, plan them as singles or series, then come back here to outline and export them.</div><button class="btn" type="button" data-goengine style="justify-self:start">Go to Alchemy</button>`;return}
   const sel=items.filter(v=>v.exportOn!==false), need=pendingVersions(sel);
   const counts={}; MKEYS.forEach(m=>counts[m]=sel.filter(v=>exMedia(v).includes(m)).length);
   if(exView!=="all"&&!counts[exView]) exView="all";
@@ -1758,7 +1784,7 @@ function toText(B){return B.map(b=>b.t==="h1"||b.t==="h2"||b.t==="h3"||b.t==="h4
   :b.t==="kv"?(b.v?`${b.k}: ${b.v}`:""):`\n${b.items.map((it,i)=>`${i+1}. ${it.head}${it.points.map(x=>`\n    • ${x}`).join("")}`).join("\n")}\n`).filter(Boolean).join("\n").replace(/\n{3,}/g,"\n\n").trim()}
 function promptParts(sel,view){
   const p=state.profile;
-  const who=[p.name?`I'm ${p.name}`:"I'm a content creator",p.archetype?`a ${p.archetype} brand`:"",p.niche?`in ${p.niche}`:""].filter(Boolean).join(", ");
+  const who=[p.name?`I'm ${p.name}`:"I'm a content creator",p.archetype?`${/^[AEIOU]/.test(p.archetype)?"an":"a"} ${p.archetype} brand`:"",p.niche?`in ${p.niche}`:""].filter(Boolean).join(", ");
   return {intro:`${who}.${p.voice?` My voice: ${p.voice}.`:""}${p.audience?` My audience: ${p.audience}.`:""}`,
     about:`Below is my ${view&&view!=="all"?MEDIA[view].toLowerCase()+" ":""}content plan from Handalf. It has ${sel.length} concept${sel.length===1?"":"s"}, each with a contrary take, ${view&&view!=="all"?"":"one or more media (text, audio or video), "}a date, and an outline. Some takes run as mixed content, with a separate version for each medium. Help me produce them one at a time. For each concept and each version:`,
     rules:["Write the full piece for its medium: finished copy for text, a speaking script with segment cues for audio, a script with on screen notes for video.","Follow the outline in order and keep the opening.","Where the plan lists shot prompts or image prompts, keep them in sync with the script so the visuals match what is said.","Keep my contrary take at full strength. Do not soften it back into the view it pushes against.","Use my own quoted words where the plan includes them.","Write plainly, the way I talk. No em dashes."],
@@ -1900,14 +1926,16 @@ $("#export-body").addEventListener("change",e=>{
 $("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexport]"))show("export")});
 
 /* ---------- look: Leather or black and white ---------- */
+const SKINS={leather:"Leather bound",ink:"Paperback",chalk:"Chalkboard"}, NEXT={leather:"ink",ink:"chalk",chalk:"leather"};
 function applySkin(k){
-  if(k==="ink") document.documentElement.setAttribute("data-skin","ink"); else document.documentElement.removeAttribute("data-skin");
-  $("#edition").innerHTML=k==="ink"?'<span class="ed-name">Paperback</span><span class="ed-hint"> · tap the book</span>':'<span class="ed-name">Leather bound</span><span class="ed-hint"> · tap the book</span>';
-  $("#skin-btn").setAttribute("aria-label",k==="ink"?"Switch to the leather bound look":"Switch to the paperback look");
+  if(!SKINS[k]) k="leather";
+  if(k==="leather") document.documentElement.removeAttribute("data-skin"); else document.documentElement.setAttribute("data-skin",k);
+  $("#edition").innerHTML=`<span class="ed-arrow">◂ </span><span class="ed-name">${SKINS[k]}</span><span class="ed-hint"> · tap book<span class="ed-more"> to change style</span></span>`;
+  $("#skin-btn").setAttribute("aria-label",`Switch to the ${SKINS[NEXT[k]].toLowerCase()} look`);
 }
 let skin="leather"; try{skin=localStorage.getItem("handalf.skin")||"leather"}catch(e){}
 applySkin(skin);
-$("#skin-btn").addEventListener("click",()=>{skin=skin==="ink"?"leather":"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}if(view==="settings")renderSettings();});
+$("#skin-btn").addEventListener("click",()=>{skin=NEXT[skin]||"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}if(view==="settings")renderSettings();});
 
 /* ---------- settings ---------- */
 function syncCopy(){return sync==="account"?["Your Claude account","Your brand, stances, vault and last search follow you to any device where you open Handalf in Claude."]
@@ -1924,10 +1952,10 @@ function renderSettings(){
     <p class="setgroup">Your profile sources</p>
     ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
     ${row("LLM or bio",src?esc(srcName):(p.brief?"Your bio":"Not added"),src?`Read ${when(src.at)}. Add again any time to refresh it.`:"Let ChatGPT, Claude or Gemini describe your brand from what it already knows, or upload a bio you've written.",`<button class="btn" type="button" data-set="bio">${src?"Add again":"Link LLM or upload bio"}</button>`)}
-    ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn" type="button" data-set="stances">Manage stances</button>`)}
+    ${row("Conversation exports",`${state.sources.length} file${state.sources.length===1?"":"s"}`,`${state.stances.length} stance${state.stances.length===1?"":"s"} in your bank.`,`<button class="btn" type="button" data-set="stances">Manage elements</button>`)}
     ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn" type="button" data-set="profile">Edit brand</button>`)}
     <p class="setgroup">App</p>
-    ${row("Edition",document.documentElement.getAttribute("data-skin")==="ink"?"Paperback":"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin!=="ink"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button></div>`)}
+    ${row("Edition",SKINS[skin]||"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin==="leather"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button><button type="button" data-skin="chalk" aria-pressed="${skin==="chalk"}">Chalkboard</button></div>`)}
     ${row("Opening story","The book opening","The short story Handalf tells on your first visit.",`<button class="btn" type="button" data-set="intro">Watch again</button>`)}
     <div class="setrow"><h3>Where your work is saved</h3><div class="val"><b id="sync-val">${esc(syncLine[0])}</b><p id="sync-sub">${esc(syncLine[1])}</p></div></div>
     ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn" type="button" data-set="vault">Open vault</button>`)}
