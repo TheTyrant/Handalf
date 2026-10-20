@@ -977,7 +977,7 @@ function glTurn(img,rect,dir,{z=59,onFirst,onDone}={}){
   const bg=getComputedStyle(document.querySelector(rect.book?".ipage":"#stage")).backgroundColor; try{g.mat.uniforms.back.value.set(bg.startsWith("rgb")?new THREE.Color(bg):new THREE.Color("#f4ecda"))}catch(e){}
   g.mat.uniforms.alpha.value=1;
   const t0=performance.now(), ms=paper.ms||1000, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; let first=true;
-  g.cv.classList.add("on"); paper.busy=true; ribbonImpulse(dir);
+  g.cv.classList.add("on"); paper.busy=true;
   return new Promise(res=>{
     function frame(now){
       const t=Math.min(1,(now-t0)/ms), e=ease(t), p=dir>0?e:1-e;
@@ -986,7 +986,7 @@ function glTurn(img,rect,dir,{z=59,onFirst,onDone}={}){
       g.renderer.render(g.scene,g.camera);
       if(first){first=false; onFirst&&onFirst()}
       if(t<1) requestAnimationFrame(frame);
-      else { g.cv.classList.remove("on"); g.renderer.clear(); paper.busy=false; onDone&&onDone(); res(); schedulePre() }
+      else { g.cv.classList.remove("on"); g.renderer.clear(); paper.busy=false; onDone&&onDone(); res(); ribbonRelease(); schedulePre() }
     }
     requestAnimationFrame(frame);
   });
@@ -1010,7 +1010,7 @@ function paperTurnView(from,to,dir){
         if(!img){ img=await captureView(); paper.cache.set(to,{fp:fpNew,cv:img}) }
         await glTurn(img,rect,-1,{onDone:()=>over.remove()});
       }
-    }catch(e){ over.remove(); paper.busy=false; logDiag&&logDiag({err:"turn: "+(e&&e.message||e)}) }
+    }catch(e){ over.remove(); paper.busy=false; ribbonRelease(); logDiag&&logDiag({err:"turn: "+(e&&e.message||e)}) }
   };
 }
 function viewClone2(oldScroller){ const c=oldScroller.cloneNode(true), st=oldScroller.scrollTop; c.style.cssText="position:absolute;left:0;top:0;width:100%;overflow:visible;height:auto;transform:translateY("+(-st)+"px)"; return c }
@@ -1031,7 +1031,7 @@ async function paperBookTurn(dir,apply){
       apply(); const img=await captureBook();
       await glTurn(img,rect,-1,{z:65,onDone:()=>over.remove()});
     }
-  }catch(e){ over.remove(); paper.busy=false; logDiag&&logDiag({err:"book turn: "+(e&&e.message||e)}) }
+  }catch(e){ over.remove(); paper.busy=false; ribbonRelease(); logDiag&&logDiag({err:"book turn: "+(e&&e.message||e)}) }
 }
 async function paperBoot(){
   if(RM()) return;
@@ -1064,6 +1064,7 @@ function fabTarget(v){
   fabColors(); fabWake(); return true;
 }
 function fabReset(){fab.pts=[];for(let r=0;r<fab.R;r++)for(let c=0;c<2;c++){const x=fab.ax+c*fab.aw,y=0;fab.pts.push({x,y,px:x,py:y})}}
+function ribbonRelease(){ if(fab.pendingV!=null){ const v=fab.pendingV; fab.pendingV=null; fabTarget(v) } }
 function ribbonImpulse(dir){fab.impulse=dir;fab.impT=performance.now();fabWake()}
 function fabWake(){if(fab.cv&&!fab.running){fab.running=true;fab.still=0;requestAnimationFrame(fabStep)}}
 function fabStep(now){
@@ -1118,7 +1119,7 @@ function fabDraw(){
 }
 
 function placeRibbon(v){
-  if(fab.cv){ fabTarget(v); return }
+  if(fab.cv){ if(paper.busy){ fab.pendingV=v; return } fabTarget(v); return }
   const r=$("#ribbon"); if(!r) return;
   const btn=document.querySelector(`.nav [data-view="${v}"]`);
   if(!btn){r.classList.remove("on");r.dataset.v="";return}
