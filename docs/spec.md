@@ -19,7 +19,7 @@ Tagline: Find the magic in your stories.
 2. Engine: topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
 3. Remix: add personal context or talk the take through with an interviewer; rebuilt takes cite stances pulled from that dialogue.
 4. Vault: no cap. Grouped by idea or by date. Each take is a single post with a date, or a 3 to 6 episode series with a start date and cadence.
-5. Export: pick concepts, choose text, audio or video for each, outline them for that medium, then copy the plan or prompt, or download either as a black and white Word doc (.docx) built in the page.
+5. Export: pick concepts and choose one or more media per take (text, audio, video; several makes it mixed content with a version per medium). Each version gets an outline for its medium plus image prompts for image generators, and video versions get shot prompts for text-to-video tools. Filter by medium and download labeled Word docs: "Handalf video plan", "Handalf video prompt", and a "Shot and image prompts" pack.
 6. Start over: new search, redo brand setup, or erase everything.
 
 ## Look

@@ -260,6 +260,10 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .doc h1{font-family:var(--f-display);font-weight:400;color:var(--gold);font-size:clamp(28px,4vw,40px);margin:0;line-height:1.1;text-wrap:balance}
 .doc h2{font-size:clamp(22px,3vw,28px);margin-top:14px;padding-top:18px;border-top:1px solid var(--rule)}
 .doc h3{font-size:17px;margin-top:10px}
+.doc h4{font-family:var(--f-head);font-style:italic;font-weight:600;font-size:16px;color:var(--ink);margin:8px 0 0}
+.doc .lbl{margin-top:6px;color:var(--ink)}
+.exview{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:12px}
+.mixnote{font-size:12px;color:var(--mute)}
 .doc .kv{font-size:14px;color:var(--mute);margin:0}
 .doc .kv b{color:var(--ink);font-weight:600}
 .doc ol{margin:0;padding-left:24px;display:grid;gap:8px}
@@ -1629,44 +1633,67 @@ Reply with only JSON: {"series_title":"short series name","episodes":[{"title":"
   }catch(e){btn.disabled=false;btn.textContent=errCopy(e)||"Try again"}
 }
 
-/* ---------- export: final plan ---------- */
+/* ---------- export: final plan, mixed media ---------- */
 const MEDIA={text:"Text",audio:"Audio",video:"Video"};
+const MKEYS=["text","audio","video"];
 const mediumFor=f=>/video|short|reel|tiktok|youtube/i.test(f||"")?"video":/podcast|audio|voice/i.test(f||"")?"audio":"text";
 const GUIDE={
  text:"Pick the best written form for it (post, thread, carousel, newsletter or article), using the format hint. Sections are the parts, slides or posts in order, with the key lines to write in each.",
  audio:"Pick the best audio form for it (podcast episode, solo episode, voice note or audio essay). Sections are segments in order, with talking points and the stories to tell. Put rough minutes in each heading.",
  video:"Pick the best video form for it (long-form video essay, short or reel), using the format hint. Sections are beats in order, with what to say and what is on screen. Put b-roll, visuals and edit notes in notes."};
-let exCtl=null;
+let exCtl=null, exView="all";
 const exItems=()=>[...state.vault].sort((a,b)=>(a.planDate||"9999").localeCompare(b.planDate||"9999")||((b.savedAt||0)-(a.savedAt||0)));
-function exMedium(v){return v.medium||mediumFor(v.format)}
-function outlineFresh(v){return v.outline&&v.outline.medium===exMedium(v)&&(v.kind!=="series"||(v.outline.episodes&&v.outline.episodes.length===(v.episodes||[]).length))}
+function exMedia(v){
+  if(!Array.isArray(v.media)||!v.media.length) v.media=[v.medium||mediumFor(v.format)];
+  if(v.outline&&!v.outlines){v.outlines={[v.outline.medium||v.media[0]]:v.outline};delete v.outline}
+  return MKEYS.filter(m=>v.media.includes(m));
+}
+const isSeries=v=>v.kind==="series"&&v.episodes&&v.episodes.length;
+function freshM(v,m){const o=v.outlines&&v.outlines[m];return !!o&&(!isSeries(v)||(o.episodes&&o.episodes.length===v.episodes.length))}
+const showPrompts=()=>state.profile.exPrompts!==false;
+function pendingVersions(sel){const out=[];sel.forEach(v=>exMedia(v).forEach(m=>{if(!freshM(v,m))out.push([v,m])}));return out}
+function inView(v,view){return view==="all"||exMedia(v).includes(view)}
+function genCount(sel){let n=0;sel.forEach(v=>exMedia(v).forEach(m=>{const o=v.outlines&&v.outlines[m];if(!o)return;(o.episodes||[o]).forEach(x=>{n+=((x&&x.images)||[]).length+((x&&x.shots)||[]).length})}));return n}
 function renderExport(){
   const el=$("#export-body"), items=exItems();
   if(!items.length){el.innerHTML=`<div class="empty"><strong>Nothing to export yet</strong>Save takes to your vault from an engine run, plan them as singles or series, then come back here to outline and export them.</div><button class="btn" type="button" data-goengine style="justify-self:start">Go to the engine</button>`;return}
-  const sel=items.filter(v=>v.exportOn!==false), need=sel.filter(v=>!outlineFresh(v));
+  const sel=items.filter(v=>v.exportOn!==false), need=pendingVersions(sel);
+  const counts={}; MKEYS.forEach(m=>counts[m]=sel.filter(v=>exMedia(v).includes(m)).length);
+  if(exView!=="all"&&!counts[exView]) exView="all";
+  const viewSel=sel.filter(v=>inView(v,exView)), vlabel=exView==="all"?"all media":MEDIA[exView].toLowerCase();
   el.innerHTML=`<div class="split">
     <div style="min-width:0">
-      <div class="exbar"><h3>Concepts</h3><div class="seg" role="group" aria-label="Set all to">${Object.entries(MEDIA).map(([k,l])=>`<button type="button" data-allmedium="${k}" aria-pressed="${sel.length&&sel.every(v=>exMedium(v)===k)}">All ${l.toLowerCase()}</button>`).join("")}</div></div>
-      <div class="exlist">${items.map(v=>{const k=v.key,m=exMedium(v),series=v.kind==="series";
+      <div class="exbar"><h3>Concepts</h3><div class="seg" role="group" aria-label="Set all to">${Object.entries(MEDIA).map(([k,l])=>`<button type="button" data-allmedium="${k}" aria-pressed="${!!sel.length&&sel.every(v=>exMedia(v).join()===k)}">All ${l.toLowerCase()}</button>`).join("")}</div></div>
+      <div class="exlist">${items.map(v=>{const k=v.key,ms=exMedia(v),series=v.kind==="series";
         const when=series?(v.episodes&&v.episodes.length?`${v.episodes.length} episode series${v.planDate?` from ${dayLabel(v.planDate)}`:""}`:"Series, episodes not built yet"):(v.planDate?dayLabel(v.planDate):"Not scheduled");
+        const todo=ms.filter(m=>!freshM(v,m)), any=ms.some(m=>v.outlines&&v.outlines[m]);
         return `<div class="exrow"><input type="checkbox" id="ex-${k}" data-exon="${k}"${v.exportOn!==false?" checked":""}>
           <label for="ex-${k}" style="min-width:0"><b>${esc(v.title)}</b><span class="sub">${esc(when)} · ${esc(v.topic||"")}</span></label>
-          <div class="ctl"><div class="seg" role="group" aria-label="Medium">${Object.entries(MEDIA).map(([mk,l])=>`<button type="button" data-medium="${mk}" data-key="${k}" aria-pressed="${m===mk}">${l}</button>`).join("")}</div>
-          <span class="st ${outlineFresh(v)?"ok":"need"}">${outlineFresh(v)?"Outlined":v.outline?"Medium changed":"Needs outline"}</span>
-          ${outlineFresh(v)?`<button class="btn quiet" type="button" data-reoutline="${k}">Redo outline</button>`:""}</div></div>`}).join("")}</div>
-      <div class="actions" style="margin-top:16px"><button class="btn" type="button" id="outline-btn"${!sel.length?" disabled":""}>${exCtl?"Stop":need.length?`Outline ${need.length} concept${need.length===1?"":"s"}`:"All outlined"}</button></div>
-      <p class="hint" id="ex-hint" style="margin-top:8px">${sample?"Each outline is shaped for its medium: sections for text, segments for audio, beats with on-screen notes for video.":"Outlines are written by Claude, so open this page inside Claude to build them. You can still export the plan as it stands."}</p>
+          <div class="ctl"><div class="seg" role="group" aria-label="Media, pick one or more">${Object.entries(MEDIA).map(([mk,l])=>`<button type="button" data-medium="${mk}" data-key="${k}" aria-pressed="${ms.includes(mk)}">${l}</button>`).join("")}</div>
+          <span class="st ${todo.length?"need":"ok"}">${todo.length?`${todo.map(m=>MEDIA[m]).join(" and ")} needs outline`:"Outlined"}</span>
+          ${any?`<button class="btn quiet" type="button" data-reoutline="${k}">Redo outlines</button>`:""}
+          ${ms.length>1?`<span class="mixnote">Mixed: one take, ${ms.length} versions</span>`:""}</div></div>`}).join("")}</div>
+      <div class="actions" style="margin-top:16px"><button class="btn" type="button" id="outline-btn"${!sel.length||(!need.length&&!exCtl)?" disabled":""}>${exCtl?"Stop":need.length?`Outline ${need.length} version${need.length===1?"":"s"}`:"All outlined"}</button></div>
+      <p class="hint" id="ex-hint" style="margin-top:8px">${sample?"Tap more than one medium to run a take as mixed content. Each version gets an outline shaped for its medium, image prompts for thumbnails, covers or slides, and, for video, shot prompts for video AI tools.":"Outlines are written by Claude, so open this page inside Claude to build them. You can still export the plan as it stands."}</p>
+      <label class="hint" style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="ex-prompts"${showPrompts()?" checked":""}> Include shot and image prompts in plan documents</label>
     </div>
     <div style="min-width:0">
+      <div class="exview"><span class="label">Show</span><div class="seg" role="group" aria-label="Show">${[["all",`All (${sel.length})`],...MKEYS.filter(m=>counts[m]).map(m=>[m,`${MEDIA[m]} (${counts[m]})`])].map(([k,l])=>`<button type="button" data-exview="${k}" aria-pressed="${exView===k}">${l}</button>`).join("")}</div></div>
       <div class="exactions">
-        <button class="btn" type="button" data-exp="copydoc"${!sel.length?" disabled":""}>Copy document</button>
-        <button class="btn ghost" type="button" data-exp="savedoc"${!sel.length?" disabled":""}>Download Word doc</button>
-        <button class="btn ghost" type="button" data-exp="copyprompt"${!sel.length?" disabled":""}>Copy as prompt</button>
-        <button class="btn ghost" type="button" data-exp="saveprompt"${!sel.length?" disabled":""}>Download prompt as Word doc</button>
+        <button class="btn" type="button" data-exp="savedoc"${!viewSel.length?" disabled":""}>Download ${esc(vlabel)} plan</button>
+        <button class="btn ghost" type="button" data-exp="saveprompt"${!viewSel.length?" disabled":""}>Download ${esc(vlabel)} prompt</button>
+        <button class="btn ghost" type="button" data-exp="savegen"${!genCount(viewSel)?" disabled":""}>Download shot and image prompts</button>
+        <button class="btn ghost" type="button" data-exp="copydoc"${!viewSel.length?" disabled":""}>Copy plan</button>
+        <button class="btn ghost" type="button" data-exp="copyprompt"${!viewSel.length?" disabled":""}>Copy prompt</button>
       </div>
-      <p class="hint" style="margin:-4px 0 12px">Word docs open in Microsoft Word, Google Docs and Pages.</p>
-      ${sel.length?`<article class="doc" id="doc-preview">${toHTML(planBlocks(sel))}</article>`:`<div class="empty"><strong>No concepts selected</strong>Tick at least one concept to build the plan.</div>`}
+      <p class="hint" style="margin:-4px 0 12px">Files are labeled by medium, like “Handalf video plan.” Word docs open in Microsoft Word, Google Docs and Pages.</p>
+      ${viewSel.length?`<article class="doc" id="doc-preview">${toHTML(planBlocks(viewSel,exView))}</article>`:`<div class="empty"><strong>No concepts selected</strong>Tick at least one concept to build the plan.</div>`}
     </div></div>`;
+}
+function promptBlocksFor(o,B){
+  if(!o) return;
+  if(Array.isArray(o.shots)&&o.shots.length){B.push({t:"lbl",v:"Shot prompts for video AI"});B.push({t:"ol",items:o.shots.map(x=>({head:[x.shot,x.beat,x.seconds?x.seconds+"s":""].filter(Boolean).join(" · ")||"Shot",points:[x.prompt||""]}))})}
+  if(Array.isArray(o.images)&&o.images.length){B.push({t:"lbl",v:"Image prompts for image generators"});B.push({t:"ol",items:o.images.map(x=>({head:x.use||"Image",points:[x.prompt||""]}))})}
 }
 function outlineBlocks(o,B){
   if(!o) return;
@@ -1675,55 +1702,74 @@ function outlineBlocks(o,B){
   if(o.sections&&o.sections.length) B.push({t:"ol",items:o.sections.map(x=>({head:x.heading,points:x.points||[]}))});
   if(o.cta) B.push({t:"kv",k:"Close with",v:o.cta});
   if(o.notes) B.push({t:"kv",k:"Production notes",v:o.notes});
+  if(showPrompts()) promptBlocksFor(o,B);
 }
-function planBlocks(sel){
-  const p=state.profile, B=[];
-  B.push({t:"h1",v:`${p.name?p.name+" · ":""}Content plan`});
+function planBlocks(sel,view){
+  view=view||"all";
+  const p=state.profile, B=[], vlabel=view==="all"?"Content plan":`${MEDIA[view]} plan`;
+  B.push({t:"h1",v:`${p.name?p.name+" · ":""}${vlabel}`});
   B.push({t:"kv",k:"Made with Handalf",v:new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})});
   const brand=[p.archetype?p.archetype+(p.archetype2?` with ${p.archetype2}`:"")+" archetype":"",p.niche,p.platforms].filter(Boolean).join(" · ");
   if(brand) B.push({t:"kv",k:"Brand",v:brand});
+  if(view!=="all") B.push({t:"kv",k:"Medium",v:MEDIA[view]});
   B.push({t:"h2",v:"At a glance"});
-  B.push({t:"ol",items:sel.map(v=>({head:`${v.title} · ${MEDIA[exMedium(v)]}${v.kind==="series"&&v.episodes&&v.episodes.length?` series, ${v.episodes.length} episodes`:""} · ${v.planDate?dayLabel(v.planDate):"Not scheduled"}`,points:[]}))});
+  B.push({t:"ol",items:sel.map(v=>({head:`${v.title} · ${(view==="all"?exMedia(v):[view]).map(m=>MEDIA[m]).join(" + ")}${isSeries(v)?` series, ${v.episodes.length} episodes`:""} · ${v.planDate?dayLabel(v.planDate):"Not scheduled"}`,points:[]}))});
   sel.forEach((v,i)=>{
+    const ms=view==="all"?exMedia(v):[view];
     B.push({t:"h2",v:`${i+1}. ${v.title}`});
-    B.push({t:"kv",k:"Medium",v:MEDIA[exMedium(v)]});
+    B.push({t:"kv",k:ms.length>1?"Media":"Medium",v:ms.map(m=>MEDIA[m]).join(" + ")+(ms.length>1?" (mixed)":"")});
     B.push({t:"kv",k:"Planned",v:v.kind==="series"?(v.planDate?`Series starting ${dayLabel(v.planDate)}, ${(CADENCE[v.cadence]||CADENCE.weekly)[0].toLowerCase()}`:"Series, not scheduled"):(v.planDate?dayLabel(v.planDate):"Not scheduled")});
     B.push({t:"kv",k:"The take",v:v.angle});
     if(v.againstText) B.push({t:"kv",k:"Pushes against",v:v.againstText});
     (v.stances||[]).slice(0,2).forEach(s=>B.push({t:"kv",k:"Backed by",v:s.quote?`"${s.quote}"`:s.text}));
     if(v.context) B.push({t:"kv",k:"Your context",v:v.context});
-    const fresh=outlineFresh(v);
-    if(v.kind==="series"&&v.episodes&&v.episodes.length){
-      v.episodes.forEach((e,j)=>{
-        B.push({t:"h3",v:`Episode ${j+1}: ${e.title}`});
-        B.push({t:"kv",k:"Planned",v:e.planDate?dayLabel(e.planDate):"Not scheduled"});
-        if(fresh) outlineBlocks(v.outline.episodes[j],B); else B.push({t:"kv",k:"Hook",v:e.hook});
-      });
-    }else if(fresh) outlineBlocks(v.outline,B);
-    else B.push({t:"kv",k:"Hook",v:v.hook});
-    if(!fresh) B.push({t:"p",v:"Outline not built yet."});
+    ms.forEach(m=>{
+      const o=v.outlines&&v.outlines[m], fresh=freshM(v,m);
+      B.push({t:"h3",v:`${MEDIA[m]} version${fresh&&!isSeries(v)&&o.form?` · ${o.form}`:""}`});
+      if(isSeries(v)){
+        v.episodes.forEach((e,j)=>{
+          B.push({t:"h4",v:`Episode ${j+1}: ${e.title}`});
+          B.push({t:"kv",k:"Planned",v:e.planDate?dayLabel(e.planDate):"Not scheduled"});
+          if(fresh) outlineBlocks(o.episodes[j],B); else B.push({t:"kv",k:"Hook",v:e.hook});
+        });
+      }else if(fresh) outlineBlocks(o,B);
+      else B.push({t:"kv",k:"Hook",v:v.hook});
+      if(!fresh) B.push({t:"p",v:`${MEDIA[m]} outline not built yet.`});
+    });
   });
   return B;
 }
-function toHTML(B){return B.map(b=>b.t==="h1"?`<h1>${esc(b.v)}</h1>`:b.t==="h2"?`<h2>${esc(b.v)}</h2>`:b.t==="h3"?`<h3>${esc(b.v)}</h3>`:b.t==="p"?`<p class="hint">${esc(b.v)}</p>`
+function genBlocks(sel,view){
+  const p=state.profile, B=[{t:"h1",v:`${p.name?p.name+" · ":""}Shot and image prompts`},{t:"kv",k:"Made with Handalf",v:new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})},
+    {t:"para",v:"Shot prompts are written for text-to-video tools such as Runway, Veo, Sora or Kling. Image prompts work in image generators such as Midjourney, DALL·E, Imagen or Firefly. Adjust aspect ratios and style words to the tool you use."}];
+  sel.forEach(v=>{
+    const ms=(view&&view!=="all"?[view]:exMedia(v)).filter(m=>v.outlines&&v.outlines[m]); if(!ms.length) return;
+    B.push({t:"h2",v:v.title});
+    ms.forEach(m=>{const o=v.outlines[m]; B.push({t:"h3",v:`${MEDIA[m]} version`});
+      if(isSeries(v)&&o.episodes) o.episodes.forEach((x,j)=>{B.push({t:"h4",v:`Episode ${j+1}: ${v.episodes[j].title}`});promptBlocksFor(x,B)});
+      else promptBlocksFor(o,B);});
+  });
+  return B;
+}
+function toHTML(B){return B.map(b=>b.t==="h1"?`<h1>${esc(b.v)}</h1>`:b.t==="h2"?`<h2>${esc(b.v)}</h2>`:b.t==="h3"?`<h3>${esc(b.v)}</h3>`:b.t==="h4"?`<h4>${esc(b.v)}</h4>`:b.t==="lbl"?`<p class="kv lbl"><b>${esc(b.v)}</b></p>`:b.t==="p"?`<p class="hint">${esc(b.v)}</p>`
   :b.t==="kv"?(b.v?`<p class="kv"><b>${esc(b.k)}:</b> ${esc(b.v)}</p>`:""):`<ol>${b.items.map(it=>`<li>${esc(it.head)}${it.points.length?`<ul>${it.points.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}</li>`).join("")}</ol>`).join("")}
-function toText(B){return B.map(b=>b.t==="h1"||b.t==="h2"||b.t==="h3"?`\n${b.v}\n`:b.t==="p"||b.t==="para"?`${b.v}\n`
+function toText(B){return B.map(b=>b.t==="h1"||b.t==="h2"||b.t==="h3"||b.t==="h4"?`\n${b.v}\n`:b.t==="lbl"?`${b.v}`:b.t==="p"||b.t==="para"?`${b.v}\n`
   :b.t==="kv"?(b.v?`${b.k}: ${b.v}`:""):`\n${b.items.map((it,i)=>`${i+1}. ${it.head}${it.points.map(x=>`\n    • ${x}`).join("")}`).join("\n")}\n`).filter(Boolean).join("\n").replace(/\n{3,}/g,"\n\n").trim()}
-function promptParts(sel){
+function promptParts(sel,view){
   const p=state.profile;
   const who=[p.name?`I'm ${p.name}`:"I'm a content creator",p.archetype?`a ${p.archetype} brand`:"",p.niche?`in ${p.niche}`:""].filter(Boolean).join(", ");
   return {intro:`${who}.${p.voice?` My voice: ${p.voice}.`:""}${p.audience?` My audience: ${p.audience}.`:""}`,
-    about:`Below is my content plan from Handalf. It has ${sel.length} concept${sel.length===1?"":"s"}, each with a contrary take, a medium (text, audio or video), a date, and an outline. Help me produce them one at a time. For each concept:`,
-    rules:["Write the full piece for its medium: finished copy for text, a speaking script with segment cues for audio, a script with on screen notes for video.","Follow the outline in order and keep the opening.","Keep my contrary take at full strength. Do not soften it back into the view it pushes against.","Use my own quoted words where the plan includes them.","Write plainly, the way I talk. No em dashes."],
+    about:`Below is my ${view&&view!=="all"?MEDIA[view].toLowerCase()+" ":""}content plan from Handalf. It has ${sel.length} concept${sel.length===1?"":"s"}, each with a contrary take, ${view&&view!=="all"?"":"one or more media (text, audio or video), "}a date, and an outline. Some takes run as mixed content, with a separate version for each medium. Help me produce them one at a time. For each concept and each version:`,
+    rules:["Write the full piece for its medium: finished copy for text, a speaking script with segment cues for audio, a script with on screen notes for video.","Follow the outline in order and keep the opening.","Where the plan lists shot prompts or image prompts, keep them in sync with the script so the visuals match what is said.","Keep my contrary take at full strength. Do not soften it back into the view it pushes against.","Use my own quoted words where the plan includes them.","Write plainly, the way I talk. No em dashes."],
     close:"Start with concept 1, then wait for my go-ahead before the next."};
 }
-function promptBlocks(sel){
-  const q=promptParts(sel), plan=planBlocks(sel);
-  return [{t:"h1",v:"Content prompt"},{t:"para",v:q.intro},{t:"para",v:q.about},{t:"ol",items:q.rules.map(r=>({head:r,points:[]}))},{t:"para",v:q.close},{t:"h2",v:"The plan"},...plan.slice(1)];
+function promptBlocks(sel,view){
+  const q=promptParts(sel,view), plan=planBlocks(sel,view);
+  return [{t:"h1",v:view&&view!=="all"?`${MEDIA[view]} content prompt`:"Content prompt"},{t:"para",v:q.intro},{t:"para",v:q.about},{t:"ol",items:q.rules.map(r=>({head:r,points:[]}))},{t:"para",v:q.close},{t:"h2",v:"The plan"},...plan.slice(1)];
 }
-function planPrompt(sel){
-  const q=promptParts(sel);
-  return `${q.intro}\n\n${q.about}\n${q.rules.map((r,i)=>`${i+1}. ${r}`).join("\n")}\n\n${q.close}\n\n${toText(planBlocks(sel))}`;
+function planPrompt(sel,view){
+  const q=promptParts(sel,view);
+  return `${q.intro}\n\n${q.about}\n${q.rules.map((r,i)=>`${i+1}. ${r}`).join("\n")}\n\n${q.close}\n\n${toText(planBlocks(sel,view))}`;
 }
 
 /* .docx built in the page: works inside Claude and in any browser */
@@ -1736,6 +1782,8 @@ async function buildDocx(B){
     if(b.t==="h1") body.push(wpara(wrun(b.v),"Title"));
     else if(b.t==="h2") body.push(wpara(wrun(b.v),"Heading1"));
     else if(b.t==="h3") body.push(wpara(wrun(b.v),"Heading2"));
+    else if(b.t==="h4") body.push(wpara(wrun(b.v),"Heading3"));
+    else if(b.t==="lbl") body.push(wpara(wrun(b.v,true)));
     else if(b.t==="p") body.push(wpara(`<w:r><w:rPr><w:i/></w:rPr><w:t xml:space="preserve">${xesc(b.v)}</w:t></w:r>`));
     else if(b.t==="para") body.push(wpara(wrun(b.v)));
     else if(b.t==="kv"){ if(b.v) body.push(wpara(wrun(b.k+": ",true)+wrun(b.v))); }
@@ -1750,6 +1798,7 @@ async function buildDocx(B){
 <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:spacing w:after="200"/></w:pPr><w:rPr>${font("Georgia")}<w:sz w:val="52"/><w:color w:val="000000"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="400" w:after="120"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr>${font("Georgia")}<w:b/><w:sz w:val="34"/><w:color w:val="000000"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="280" w:after="80"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr>${font("Georgia")}<w:b/><w:sz w:val="26"/><w:color w:val="000000"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="200" w:after="60"/><w:outlineLvl w:val="2"/></w:pPr><w:rPr>${font("Georgia")}<w:i/><w:sz w:val="23"/><w:color w:val="000000"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="ListParagraph"><w:name w:val="List Paragraph"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="60"/></w:pPr></w:style>
 </w:styles>`;
   const lvl=(i,fmt,text,ind)=>`<w:lvl w:ilvl="${i}"><w:start w:val="1"/><w:numFmt w:val="${fmt}"/><w:lvlText w:val="${text}"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="${ind}" w:hanging="360"/></w:pPr>${fmt==="bullet"?`<w:rPr>${font("Symbol")}</w:rPr>`:""}</w:lvl>`;
@@ -1768,10 +1817,14 @@ async function saveFile(name,blob){
   a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),4000);
 }
-function outlinePrompt(v){
-  const m=exMedium(v), series=v.kind==="series"&&v.episodes&&v.episodes.length;
-  const shape=`{"form":"specific form, e.g. 8 minute video essay","length":"rough length","hook":"the opening line, or the first 5 seconds for video","sections":[{"heading":"","points":["",""]}],"cta":"how it ends and what the audience should do","notes":"production notes"}`;
-  return `You are Handalf. Outline one content concept for this creator as ${MEDIA[m].toUpperCase()} content. ${GUIDE[m]} Keep the contrary take at full strength and lean on the creator's own experience. 4 to 7 sections, 2 to 4 points each. Write plainly, no em dashes.
+function outlinePrompt(v,m){
+  const series=isSeries(v), others=exMedia(v).filter(x=>x!==m);
+  const imgShape=`"images":[{"use":"what it is for, e.g. thumbnail, cover art, slide 3, end card","prompt":"a complete image generation prompt: subject, setting, composition, lighting, color, style, aspect ratio for the platform"}]`;
+  const shotShape=`"shots":[{"beat":"which section it belongs to","shot":"shot type and framing, e.g. slow push-in close up","seconds":5,"prompt":"a complete text-to-video prompt: subject, action, camera move, lens feel, lighting, mood, style"}]`;
+  const shape=`{"form":"specific form, e.g. 8 minute video essay","length":"rough length","hook":"the opening line, or the first 5 seconds for video","sections":[{"heading":"","points":["",""]}],"cta":"how it ends and what the audience should do","notes":"production notes",${m==="video"?shotShape+",":""}${imgShape}}`;
+  return `You are Handalf. Outline one content concept for this creator as ${MEDIA[m].toUpperCase()} content. ${GUIDE[m]} Keep the contrary take at full strength and lean on the creator's own experience. 4 to 7 sections, 2 to 4 points each.
+${others.length?`This take also runs as ${others.map(x=>MEDIA[x].toLowerCase()).join(" and ")} content, so make this ${MEDIA[m].toLowerCase()} version stand on its own and play to what ${MEDIA[m].toLowerCase()} does best, while sharing the same core take.\n`:""}${m==="video"?"Also write 4 to 8 shot prompts that follow the beats in order, for text-to-video tools such as Runway, Veo, Sora or Kling. Each prompt must work on its own when pasted into the tool, with no reference to other shots.\n":""}Also write ${m==="text"?"2 to 4 image prompts (cover image and key slides or inline images)":m==="audio"?"1 to 2 image prompts (episode cover art and a social card)":"2 to 3 image prompts (thumbnail and key stills)"} for image generators such as Midjourney, DALL·E, Imagen or Firefly. Each prompt must stand alone and describe the full image. Match the creator's brand and aesthetic.
+Write plainly, no em dashes.
 
 CREATOR PROFILE
 ${profileText()}
@@ -1786,23 +1839,22 @@ PUSHES AGAINST: ${v.againstText||"n/a"}
 FORMAT HINT: ${v.format||"n/a"}
 ${v.context?`CREATOR'S CONTEXT: ${v.context}\n`:""}${series?`\nThis is a series. Outline every episode in order, each building on the last:\n${v.episodes.map((e,i)=>`Episode ${i+1}: ${e.title}. ${e.hook}`).join("\n")}\n\nReply with only JSON: {"episodes":[${shape}]} with exactly ${v.episodes.length} entries.`:`\nReply with only JSON: ${shape}`}`;
 }
-async function outlineAll(btn){
+async function outlineAll(){
   if(exCtl){exCtl.abort();return}
   if(!sample){$("#ex-hint").textContent="Open this page inside Claude to build outlines.";return}
-  const todo=exItems().filter(v=>v.exportOn!==false&&!outlineFresh(v));
-  await outlineList(todo);
+  await outlineList(pendingVersions(exItems().filter(v=>v.exportOn!==false)));
 }
 async function outlineList(todo){
   if(!todo.length) return;
   exCtl=new AbortController(); renderExport();
   let done=0, err="";
-  for(const v of todo){
-    const h=$("#ex-hint"); if(h) h.textContent=`Outlining ${done+1} of ${todo.length}: ${v.title}`;
+  for(const [v,m] of todo){
+    const h=$("#ex-hint"); if(h) h.textContent=`Outlining ${done+1} of ${todo.length}: ${v.title}, ${MEDIA[m].toLowerCase()} version`;
     try{
-      const out=await sample.json(outlinePrompt(v),{signal:exCtl.signal,cache:false});
-      const m=exMedium(v);
-      if(v.kind==="series"&&v.episodes&&v.episodes.length){ if(!Array.isArray(out.episodes)) throw {code:"invalid_json"}; v.outline={medium:m,episodes:v.episodes.map((_,i)=>out.episodes[i]||{})}; }
-      else v.outline={medium:m,...out};
+      const out=await sample.json(outlinePrompt(v,m),{signal:exCtl.signal,cache:false});
+      v.outlines=v.outlines||{};
+      if(isSeries(v)){ if(!Array.isArray(out.episodes)) throw {code:"invalid_json"}; v.outlines[m]={medium:m,episodes:v.episodes.map((_,i)=>out.episodes[i]||{})}; }
+      else v.outlines[m]={medium:m,...out};
       persist("vault"); done++;
     }catch(e){ if(e&&e.code==="cancelled") break; err=errCopy(e); if(e&&(e.code==="not_granted"||e.code==="rate_limited")) break; }
   }
@@ -1812,32 +1864,38 @@ async function outlineList(todo){
 $("#export-body").addEventListener("click",async e=>{
   if(e.target.closest("[data-goengine]")) return show("engine");
   if(e.target.closest("#outline-btn")) return outlineAll();
+  const ev=e.target.closest("[data-exview]"); if(ev){exView=ev.dataset.exview;return renderExport()}
   const am=e.target.closest("[data-allmedium]");
-  if(am){state.vault.forEach(v=>{if(v.exportOn!==false)v.medium=am.dataset.allmedium});persist("vault");return renderExport()}
+  if(am){state.vault.forEach(v=>{if(v.exportOn!==false){exMedia(v);v.media=[am.dataset.allmedium]}});persist("vault");return renderExport()}
   const md=e.target.closest("[data-medium]");
-  if(md){const v=vfind(md.dataset.key);if(v){v.medium=md.dataset.medium;persist("vault");renderExport()}return}
+  if(md){const v=vfind(md.dataset.key);if(v){const ms=exMedia(v),m=md.dataset.medium;
+    if(ms.includes(m)){ if(ms.length>1) v.media=ms.filter(x=>x!==m); } else v.media=[...ms,m];
+    persist("vault");renderExport()}return}
   const ro=e.target.closest("[data-reoutline]");
-  if(ro){const v=vfind(ro.dataset.reoutline);if(v&&sample&&!exCtl){v.outline=null;outlineList([v])}return}
+  if(ro){const v=vfind(ro.dataset.reoutline);if(v&&sample&&!exCtl){const ms=exMedia(v);ms.forEach(m=>{if(v.outlines)delete v.outlines[m]});outlineList(ms.map(m=>[v,m]))}return}
   const x=e.target.closest("[data-exp]"); if(!x) return;
-  const sel=exItems().filter(v=>v.exportOn!==false); if(!sel.length) return;
-  const stamp=todayISO(), kind=x.dataset.exp;
+  const sel=exItems().filter(v=>v.exportOn!==false&&inView(v,exView)); if(!sel.length) return;
+  const stamp=todayISO(), kind=x.dataset.exp, lab=exView==="all"?"content":MEDIA[exView].toLowerCase();
   const label=x.textContent;
   if(kind.startsWith("copy")){
-    const text=kind==="copydoc"?toText(planBlocks(sel)):planPrompt(sel);
+    const text=kind==="copydoc"?toText(planBlocks(sel,exView)):planPrompt(sel,exView);
     try{await navigator.clipboard.writeText(text);x.textContent="Copied"}catch(err){x.textContent="Copy blocked"}
     setTimeout(()=>{x.textContent=label},1800); return;
   }
   if(typeof JSZip==="undefined"){x.textContent="Word export didn't load. Reload the page";return}
   x.disabled=true; x.textContent="Building…";
   try{
-    const blob=await buildDocx(kind==="savedoc"?planBlocks(sel):promptBlocks(sel));
-    await saveFile(kind==="savedoc"?`Handalf content plan ${stamp}.docx`:`Handalf content prompt ${stamp}.docx`,blob);
+    const blocks=kind==="savedoc"?planBlocks(sel,exView):kind==="saveprompt"?promptBlocks(sel,exView):genBlocks(sel,exView);
+    const name=kind==="savedoc"?`Handalf ${lab} plan ${stamp}.docx`:kind==="saveprompt"?`Handalf ${lab} prompt ${stamp}.docx`:`Handalf shot and image prompts${exView==="all"?"":" "+lab} ${stamp}.docx`;
+    await saveFile(name,await buildDocx(blocks));
     x.textContent="Saved";
   }catch(err){x.textContent=err&&err.code==="declined"?"Not saved":"Download didn't work"}
   x.disabled=false;
   setTimeout(()=>{x.textContent=label},2200);
 });
-$("#export-body").addEventListener("change",e=>{const k=e.target.dataset&&e.target.dataset.exon;if(!k)return;const v=vfind(k);if(v){v.exportOn=e.target.checked;persist("vault");renderExport()}});
+$("#export-body").addEventListener("change",e=>{
+  if(e.target.id==="ex-prompts"){state.profile.exPrompts=e.target.checked;persist("profile");return renderExport()}
+  const k=e.target.dataset&&e.target.dataset.exon;if(!k)return;const v=vfind(k);if(v){v.exportOn=e.target.checked;persist("vault");renderExport()}});
 $("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexport]"))show("export")});
 
 /* ---------- look: Leather or black and white ---------- */
