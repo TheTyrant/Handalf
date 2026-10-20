@@ -198,6 +198,14 @@ p{margin:0}
 /* stances */
 .split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:start}
 .panel{background:var(--sheet);border:1px solid var(--rule);border-radius:18px;padding:20px;display:grid;gap:12px}
+.addpanel{display:block}
+.addbody{display:grid;gap:12px;padding-top:16px}
+.addpanel>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-20px;padding:20px;border-radius:18px}
+.addpanel>summary::-webkit-details-marker{display:none}
+.addpanel>summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.addchev{width:9px;height:9px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(45deg) translateY(-3px);transition:transform .25s}
+.addpanel[open] .addchev{transform:rotate(-135deg) translate(-2px,-1px)}
+.split:has(>.addpanel:not([open])){grid-template-columns:minmax(0,1fr)}
 .drop{border:2px dashed var(--gold);border-radius:18px;padding:22px;text-align:center;cursor:pointer}
 .drop.over{border-color:var(--ultra);background:var(--ultra-soft)}
 textarea{width:100%;min-height:120px;background:var(--paper);border:1.5px solid var(--gold);padding:12px 16px;resize:vertical;border-radius:18px}
@@ -669,8 +677,9 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   <section class="view" id="v-stances" hidden>
     <div><h2>Your elements</h2><p class="lede">Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
     <div class="split">
-      <div class="panel">
-        <span class="label">Add conversations</span>
+      <details class="panel addpanel" id="addpanel">
+        <summary><span class="label">Add conversations</span><span class="addchev" aria-hidden="true"></span></summary>
+        <div class="addbody">
         <label class="drop" id="drop" for="file">
           <strong>Drop exports here</strong><br>
           <span class="hint">ChatGPT or Claude <span class="mono">conversations.json</span>, or any .txt / .md transcript</span>
@@ -683,7 +692,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
         <button class="btn" id="mine-btn" type="button">Mine stances</button>
         <div class="progress" id="mine-prog" hidden><b></b></div>
         <p class="hint" id="mine-hint">Your messages are queued here and only sent to Claude when you press Mine stances.</p>
-      </div>
+        </div>
+      </details>
       <div>
         <div class="col-head"><h3>Element bank</h3><span class="label" id="stance-meta"></span></div>
         <div class="add" style="margin:10px 0">
