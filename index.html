@@ -48,15 +48,15 @@ button,input,textarea,select{font:inherit;color:inherit}
 .logo-btn{background:none;border:0;padding:0;border-radius:0;cursor:pointer;line-height:0;transition:transform .25s ease}
 .logo-btn:hover{transform:rotate(-4deg) translateY(-2px)}
 .logo-btn:focus-visible{outline:2px solid var(--gold-hi);outline-offset:4px}
-.logo{width:60px;height:auto;display:block}
-.brand{display:grid;justify-items:end;text-align:right;gap:2px}
+.logo{width:70px;height:auto;display:block}
+.brand{display:grid;justify-items:start;text-align:left;gap:2px}
 .edition{white-space:nowrap;font-family:var(--f-title);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 2px}
 .logo .gold{color:var(--copper)}
 .mark{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,8vw,92px);line-height:.95;letter-spacing:.01em;margin:0}
 .mark span{color:var(--copper)}
 :root[data-skin="ink"] .mark span{color:#6E6E6E}
 .tagline{font-family:var(--f-title);font-weight:600;font-size:clamp(14px,1.5vw,18px);letter-spacing:.06em;color:var(--gold);margin:4px 0 0}
-.tagsub{justify-self:end;align-self:end;max-width:36ch;font-size:14px;color:var(--mute);margin:0 0 4px;text-wrap:balance;text-align:right}
+.tagsub{justify-self:end;align-self:end;max-width:36ch;font-size:14px;color:var(--mute);margin:0 0 4px;text-wrap:balance;text-align:left}
 .nav{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-block:0}
 .nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--gold) 62%,transparent);border-bottom:3px solid transparent}
 .nav button:hover{color:var(--gold-hi)}
@@ -240,7 +240,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .exactions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 
 /* landing: lines only, no pills or rounded boxes */
-.landing{padding-block:clamp(20px,6vh,72px) 8px}
+.landing{padding-block:12px 8px}
 .lwrap{display:grid;gap:40px}
 .lpanel{display:grid;gap:20px;max-width:920px;align-content:start;transition:opacity .28s ease,transform .28s ease}
 .lpanel.lout{opacity:0;transform:translateY(-6px)}
@@ -318,7 +318,15 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
 /* Handalf perched on the mode bar */
 .ltop{display:grid;align-content:start}
-.perch{width:clamp(118px,13vw,170px);margin:0 0 62px;color:var(--ink);pointer-events:none;justify-self:start}
+.perchrow{display:flex;align-items:flex-end;margin:0 0 62px;justify-self:start}
+.perch{flex:none;width:clamp(118px,13vw,170px);color:var(--ink);pointer-events:none}
+.sprout{display:flex;align-items:center;gap:4px;margin:0 0 calc(clamp(118px,13vw,170px)*.042 - 7px) -2px;font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+.sprout .leaf{width:22px;height:14px;flex:none;transform-origin:0 70%}
+.sprout span{display:inline-block}
+.sprout.grow .leaf{animation:leafgrow .55s cubic-bezier(.2,.8,.3,1.2) .35s both}
+.sprout.grow span{animation:unfurl .6s ease-out .7s both}
+@keyframes leafgrow{0%{transform:scale(0) rotate(-35deg);opacity:0}100%{transform:none;opacity:1}}
+@keyframes unfurl{0%{clip-path:inset(0 100% 0 0);transform:translateY(3px) rotate(-4deg);opacity:.2}100%{clip-path:inset(0 0 0 0);transform:none;opacity:1}}
 .perch svg{display:block;width:100%;height:auto;overflow:visible}
 .perch .head{transform-box:view-box;transform-origin:98px 120px;transform:rotate(var(--tilt,0deg));transition:transform .45s ease}
 .perch .arm{transform-box:view-box;transform-origin:130px 114px}
@@ -366,10 +374,12 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .lrow .lbtn{border-left:0;border-top:1px solid var(--rule);margin:0;padding:14px 0;text-align:left}
   .mode{font-size:10.5px;padding:14px 2px;letter-spacing:.02em}
   .mode svg{width:24px;height:24px}
-  .perch{width:110px;margin-bottom:52px}
+  .perchrow{margin-bottom:52px}
+  .perch{width:110px}
+  .sprout{font-size:11px;letter-spacing:.1em;margin-bottom:-2.4px}
   .status{display:none}
   .mast{padding-block:14px 10px;gap:12px}
-  .logo{width:38px}
+  .logo{width:46px}
   .edition{font-size:9.5px;letter-spacing:.1em}
   .tagline{font-size:12px}
   .mark{font-size:40px}
@@ -393,21 +403,21 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .status{width:100%;margin-left:0;padding-bottom:8px}
   .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.sprout *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
 </style>
 
 <header class="band">
   <div class="wrap">
     <div class="mast">
       <button type="button" class="logo-btn" id="skin-btn" aria-label="Switch to the paperback look">
-      <svg class="logo" viewBox="0 0 64 84" aria-hidden="true">
-        <path d="M13 8h40a4 4 0 0 1 4 4v64a4 4 0 0 1-4 4H13z" fill="var(--book-page)" stroke="var(--book-line)" stroke-width="2"/>
-        <path d="M53 20h4M53 32h4M53 44h4M53 56h4M53 68h4" stroke="var(--book-line)" stroke-width="1" opacity=".5"/>
-        <path d="M9 4h40a4 4 0 0 1 4 4v64a4 4 0 0 1-4 4H9z" fill="var(--book-cover)" stroke="var(--book-line)" stroke-width="2.4" stroke-linejoin="round"/>
-        <rect x="4" y="4" width="9" height="72" rx="3" fill="var(--book-spine)" stroke="var(--book-line)" stroke-width="2.4"/>
-        <path d="M4 14h9M4 66h9" stroke="var(--book-face)" stroke-width="1.4"/>
-        <rect x="18" y="10" width="29" height="60" rx="2" fill="none" stroke="var(--book-face)" stroke-width="1.1" opacity=".6"/>
-        <g transform="translate(12.4 13.6) scale(.63)">
+      <svg class="logo" viewBox="0 0 74 84" aria-hidden="true">
+        <path d="M13 8h50a4 4 0 0 1 4 4v64a4 4 0 0 1-4 4H13z" fill="var(--book-page)" stroke="var(--book-line)" stroke-width="2"/>
+        <path d="M63 20h4M63 32h4M63 44h4M63 56h4M63 68h4" stroke="var(--book-line)" stroke-width="1" opacity=".5"/>
+        <path d="M9 4h50a4 4 0 0 1 4 4v64a4 4 0 0 1-4 4H9z" fill="var(--book-cover)" stroke="var(--book-line)" stroke-width="2.4" stroke-linejoin="round"/>
+        <rect x="4" y="4" width="9" height="72" rx="3" fill="var(--book-spine)" stroke="var(--book-line)" stroke-width="1.2"/>
+        <path d="M4 14h9M4 66h9" stroke="var(--book-face)" stroke-width=".7"/>
+        <rect x="18" y="10" width="39" height="60" rx="2" fill="none" stroke="var(--book-face)" stroke-width="1.1" opacity=".6"/>
+        <g transform="translate(17.4 13.6) scale(.63)">
           <ellipse cx="32" cy="57" rx="18.5" ry="15" fill="var(--book-cover)" stroke="var(--book-face)" stroke-width="2.8"/>
           <circle cx="24.5" cy="56.5" r="6.4" fill="var(--book-eye)" stroke="var(--book-face)" stroke-width="1.8"/><circle cx="39.5" cy="56.5" r="6.4" fill="var(--book-eye)" stroke="var(--book-face)" stroke-width="1.8"/>
           <circle cx="25.5" cy="57.5" r="2.9" fill="var(--book-pupil)"/><circle cx="38.5" cy="57.5" r="2.9" fill="var(--book-pupil)"/>
@@ -719,7 +729,7 @@ const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, 
   <circle class="b3" cx="169" cy="66" r="2.4"/>
  </g>
 </svg>`;
-let waveNext=true, perchTilt=0;
+let waveNext=true, perchTilt=0, ebText="";
 const TILT=[-7,5,-3,7,-5,3,0,0];
 const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["link","Link your LLM",ICON.link],["upload","Upload a prompt",ICON.page],["erase","Erase everything",ICON.reset]];
 let mode="conjure", llm="ChatGPT", found=null, flash="", intro=false, askSeed=0, animIn=false;
@@ -758,7 +768,8 @@ Then list 5 to 15 opinions I hold that go against the common view in my field. F
 Only use what you actually know about me. Write "unknown" where you don't know.`;
 function owlHead(eyebrow,q,n){
   perchTilt=TILT[n]||0;
-  return `<div style="min-width:0;display:grid;gap:10px"><p class="leyebrow">${eyebrow}</p><h2 class="lq sm">${esc(q)}</h2></div>`;
+  ebText=eyebrow;
+  return `<h2 class="lq sm">${esc(q)}</h2>`;
 }
 function quizPanel(){
   const total=QUIZ.length+2, bar=n=>`<div class="lbar"><b style="width:${n/total*100}%"></b></div>`;
@@ -804,19 +815,22 @@ function renderStart(){
     const msg=flash||(thin?"Handalf conjures sharper takes when it knows you. Take the brand quiz, link your LLM, or upload a prompt below."
       :`Shaped for ${p.name?esc(p.name)+", ":""}${p.archetype?`a ${esc(p.archetype)} brand`:"your brand"}${p.niche?` in ${esc(p.niche)}`:""}.`);
     flash="";
-    panel=`<p class="leyebrow">Conjure</p><h2 class="lq">${esc(say("conjure"))}</h2>
+    ebText="Conjure";
+    panel=`<h2 class="lq">${esc(say("conjure"))}</h2>
       <form class="lrow" id="l-form"><input id="l-topic" type="text" placeholder="A topic, an idea, a hunch" autocomplete="off" aria-label="${esc(say("conjure"))}"><button class="lbtn" type="submit">Conjure content</button></form>
       <p class="lhint">${msg}${state.last?` <button class="ltext" type="button" data-golast>Back to “${esc(state.last.topic)}”</button>`:""}</p>
       ${sample?"":`<p class="lhint">Conjuring runs on Claude, so open this page inside Claude to use it.</p>`}`;
   }else if(mode==="quiz"){
     panel=quizPanel();
   }else if((mode==="link"||mode==="upload")&&intro){
-    panel=`<p class="leyebrow">${mode==="link"?"Link your LLM":"Upload a prompt"}</p><h2 class="lq">${esc(say(mode))}</h2>
+    ebText=mode==="link"?"Link your LLM":"Upload a prompt";
+    panel=`<h2 class="lq">${esc(say(mode))}</h2>
       <p class="lhint" style="font-size:17px">${mode==="link"?"Handalf can read the profile ChatGPT, Claude or Gemini writes about you, and pull out your brand and the opinions you hold.":"A brand brief, a bio, media kit text or a custom instructions prompt. Handalf reads it and learns your brand."}</p>
       <button class="lbtn solo" type="button" data-full="${mode}">${mode==="link"?"Link your LLM":"Upload a prompt"}</button>`;
   }else if(mode==="link"){
     const url=LLMS[llm];
-    panel=`<p class="leyebrow">Link your LLM</p><h2 class="lq sm">Which assistant knows you best?</h2>
+    ebText="Link your LLM";
+    panel=`<h2 class="lq sm">Which assistant knows you best?</h2>
       <div class="llms">${Object.keys(LLMS).map(k=>`<button type="button" data-llm="${k}" aria-pressed="${llm===k}">${k}</button>`).join("")}</div>
       <ol class="lsteps">
         <li><span class="n">1</span><div><span class="leyebrow">Copy this prompt</span><pre class="lpre" id="link-prompt">${esc(LINK_PROMPT)}</pre><button class="lbtn solo" type="button" data-copy>Copy prompt</button></div></li>
@@ -824,18 +838,21 @@ function renderStart(){
         <li><span class="n">3</span><div><label class="leyebrow" for="link-reply">Paste its answer here</label><textarea id="link-reply" placeholder="Paste the whole reply"></textarea><button class="lbtn solo" type="button" data-read="link">Read my profile</button><p class="lhint" id="read-hint"></p></div></li>
       </ol>`;
   }else if(mode==="upload"){
-    panel=`<p class="leyebrow">Upload a prompt</p><h2 class="lq sm">What have you written about yourself?</h2>
+    ebText="Upload a prompt";
+    panel=`<h2 class="lq sm">What have you written about yourself?</h2>
       <p class="lhint">A brand brief, a bio, media kit text, or a custom instructions prompt. Paste it, or <label class="lfile" for="brief-file">choose a file</label> (.txt, .md or .json).</p>
       <input id="brief-file" type="file" accept=".txt,.md,.json" hidden>
       <div class="ldrop"><textarea id="brief-text" placeholder="Paste or drop your brief here"></textarea></div>
       <button class="lbtn solo" type="button" data-read="upload">Read my profile</button><p class="lhint" id="read-hint"></p>`;
   }else if(mode==="erase"){
-    panel=`<p class="leyebrow">Erase everything</p><h2 class="lq sm">Start over from zero?</h2>
+    ebText="Erase everything";
+    panel=`<h2 class="lq sm">Start over from zero?</h2>
       <p class="lhint" style="font-size:17px">This deletes your brand, stances, vault and results. It can't be undone.</p>
       <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo danger" type="button" data-erase>Erase everything</button><button class="ltext" type="button" data-mode="conjure">Keep my data</button></div>`;
   }else if(mode==="done"){
     const f=found||{};
-    panel=`<p class="leyebrow">${esc(f.source||"Profile")}</p><h2 class="lq sm">${f.parsed?"Here's what Handalf picked up.":"Saved. Handalf will read this on every run."}</h2>
+    ebText=f.source||"Profile";
+    panel=`<h2 class="lq sm">${f.parsed?"Here's what Handalf picked up.":"Saved. Handalf will read this on every run."}</h2>
       ${f.parsed?`<ul class="lfound">
         <li>${f.arch?`Brand archetype: <b style="color:var(--gold)">${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}`:"No clear archetype. The brand quiz can find one."}</li>
         <li>${f.fields.length?`Filled in ${esc(f.fields.join(", "))}`:"No new brand fields. Your existing ones were kept."}</li>
@@ -844,7 +861,7 @@ function renderStart(){
       <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button><button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine with the quiz":"Take the brand quiz"}</button></div>`;
   }
   const active=mode==="done"?"":mode; const wasAnim=animIn; animIn=false; const wv=waveNext; waveNext=false; if(!(mode==="quiz"&&qi>=0)) perchTilt=0;
-  $("#quiz").innerHTML=`<div class="ltop"><div class="perch${wv?" waving":""}" style="--tilt:${perchTilt}deg" aria-hidden="true">${PERCH}</div><div class="lpanel${wasAnim||wv?" lin":""}${wv?" late":""}">${panel}</div></div>
+  $("#quiz").innerHTML=`<div class="ltop"><div class="perchrow"><div class="perch${wv?" waving":""}" style="--tilt:${perchTilt}deg" aria-hidden="true">${PERCH}</div><p class="sprout${wv?" grow":""}"><svg class="leaf" viewBox="0 0 22 14" aria-hidden="true"><path d="M0 9C5 9 7 8 9 7" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-linecap="round"/><path d="M8 7C10 2 16 0 21 1C19 7 13 10 8 7Z" fill="var(--gold)"/></svg><span>${esc(ebText)}</span></p></div><div class="lpanel${wasAnim||wv?" lin":""}${wv?" late":""}">${panel}</div></div>
 `;
   renderModes();
 }
@@ -864,7 +881,7 @@ function setMode(k){ mode=k; intro=false; waveNext=true; if(k==="quiz"){qi=-1;qa
 function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
 function openSetup(k){mode=k||"quiz";intro=false;if(mode==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}show("start")}
 /* idle rotation: the dialogue moves on by itself, at random, while nobody is using it */
-const ROT_MS=9000; let lastAct=Date.now(), hovering=false;
+const ROT_MS=11250; let lastAct=Date.now(), hovering=false;
 function rotatable(){
   if(view!=="start"||document.hidden||hovering) return false;
   const a=document.activeElement; if(a&&$("#quiz").contains(a)&&a.matches("input,textarea")) return false;
