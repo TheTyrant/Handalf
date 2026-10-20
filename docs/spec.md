@@ -33,3 +33,11 @@ Two editions, switched by tapping the book logo: Leather bound (brown leather wi
 
 ## Next
 Real connections to other LLMs and agents to pull conversations and profile directly. Real platform outlier data to weight topics. Google sign-in for a direct Save to Google Docs once standalone.
+
+## Idea: "May I read your LLM notes?"
+A starter dialogue from Handalf, with Yes and No. Yes opens the best available route:
+1. Handalf as a connector (most promising). Handalf runs as an MCP server. The user adds it to ChatGPT or Claude as a custom connector, then asks their own assistant to send Handalf their profile and opinions. Their assistant already has their memory, and the user approves the share inside it.
+2. Data exports. ChatGPT, Claude and Google (Gemini through Takeout) all let users export their chats. Handalf already reads these. A guided "fetch your export" flow per app would make it smoother.
+3. Paste a profile (works today). Handalf writes the prompt, the user's assistant answers, the user pastes it back.
+Not recommended: a browser extension that reads chat pages. It breaks easily and runs into the apps' terms.
+Note: none of the big chat apps offers an API for reading a user's chat history (as of Oct 2026), so routes 1 and 2 are how a standalone Handalf gets this data.
