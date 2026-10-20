@@ -441,8 +441,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .ipage-in.fresh>*:nth-child(n+5){animation-delay:.7s}
 @keyframes pin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .ipage{perspective:none}
-.ipage .pageleaf{z-index:3;background-color:var(--sheet)}
-.ipage .pageleaf .ipage-in{padding-top:32px}
+.ipage .pageleaf{z-index:3;display:grid;grid-template-rows:auto 1fr;bottom:auto;height:100%;background-color:var(--sheet);background-image:var(--noise);background-size:200px 200px;overflow:hidden}
 .inscribed{font-family:var(--f-head);font-style:italic;font-size:clamp(20px,2.4vw,26px)!important;color:var(--gold)!important;margin:2px 0 4px;padding-left:16px;border-left:2px solid var(--gold);line-height:1.35}
 .inscribed.write{animation:ink 1s cubic-bezier(.5,.1,.3,1) both}
 @keyframes ink{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
@@ -458,6 +457,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .bopts.answered button[aria-pressed="true"]{opacity:1;color:var(--gold)}
 .bnav{display:flex;justify-content:space-between;gap:16px;min-height:22px}
 .bturn{display:grid;gap:8px;justify-items:start}
+.bturn .iswipe{justify-self:stretch;width:100%}
+.ipage-in>.ltext{justify-self:start}
 .bturn2{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 .bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .bgrid b{font-size:14px}
@@ -470,7 +471,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .ipage.drag{transition:none}
 .ipage{transform-origin:0 50%;transition:transform .45s cubic-bezier(.3,.8,.3,1)}
 .ipage.gone{transform:translateX(-105%) rotateY(18deg)}
-@media (max-width:640px),(pointer:coarse){.bturn>.btn[data-bnext]{display:none}.iswipe{display:block}.ipage{touch-action:pan-y}.ipage-in .lgrid{grid-template-columns:1fr}}
+@media (max-width:640px),(pointer:coarse){[data-kind="narrative"] .bturn>.btn[data-bnext]{display:none}[data-kind="narrative"] .iswipe{display:block}.ipage{touch-action:pan-y}.ipage-in .lgrid{grid-template-columns:1fr}}
 .icover{position:absolute;inset:0;z-index:2;transform-origin:0 50%;transform-style:preserve-3d;transition:transform 1.5s cubic-bezier(.6,.05,.3,1),opacity .5s ease 1s}
 .ibook.open .icover{transform:rotateY(-180deg);opacity:0;pointer-events:none}
 .iface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-content:center;justify-items:center;text-align:center;gap:14px}
@@ -2057,20 +2058,22 @@ addEventListener("error",e=>logDiag({err:String(e.message||e),at:(e.filename||""
 addEventListener("unhandledrejection",e=>logDiag({err:"promise: "+String((e.reason&&e.reason.message)||e.reason)}));
 document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest("#settings-body [data-set]"); if(b) logDiag({down:b.dataset.set,view});},true);
 document.addEventListener("click",e=>{ if(view!=="settings") return; const hit=document.elementFromPoint(e.clientX,e.clientY); const b=e.target.closest&&e.target.closest("[data-set]"); logDiag({click:b?b.dataset.set:(e.target.className||e.target.tagName)+"", hit:hit?(hit.className||hit.tagName)+"":"none"});},true);
-$("#settings-body").addEventListener("click",e=>{
+document.addEventListener("click",e=>{
+  if(!(e.target.closest&&e.target.closest("#settings-body"))) return;
+  logDiag({handler:(e.target.closest("[data-set],[data-skin]")||{}).dataset?.set||"other"});
   try{ settingsClick(e) }catch(err){ logDiag({err:"settings: "+(err&&err.message||err)}); const l=$("#v-settings .lede"); if(l) l.textContent="Something went wrong: "+(err&&err.message||err); }
 });
 function settingsClick(e){
   const sk=e.target.closest("[data-skin]"); if(sk){skin=sk.dataset.skin;applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(err){}renderSettings();return}
   const b=e.target.closest("[data-set]"); if(!b) return;
   const k=b.dataset.set;
-  if(k==="quiz") return openBook("quiz");
+  if(k==="quiz"){ openBook("quiz"); return logDiag({done:"quiz",open:!$("#intro").hidden}) }
   if(k==="bio") return openSetup("bio");
   if(k==="intro") return openBook("story");
   if(k==="erase") return openSetup("erase");
   show(k); logDiag({done:k,view});
 }
-$("#gear-btn").addEventListener("click",()=>show(view==="settings"?"start":"settings"));
+document.addEventListener("click",e=>{ if(e.target.closest&&e.target.closest("#gear-btn")) show(view==="settings"?"start":"settings") });
 
 /* ---------- the storybook: introduction, onboarding and brand quiz in one book ---------- */
 let introTimers=[];
@@ -2176,8 +2179,9 @@ function bookTurn(dir){
   if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
     const pg=$(".ipage"); pg.querySelectorAll(".pageleaf").forEach(x=>x.remove());
     const leaf=document.createElement("div"); leaf.className="pageleaf "+(dir>0?"fwd":"back"); leaf.setAttribute("aria-hidden","true");
-    const c=$("#ipage-in").cloneNode(true); c.removeAttribute("id"); c.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id"));
-    leaf.appendChild(c); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760);
+    const top=pg.querySelector(".itop").cloneNode(true), c=$("#ipage-in").cloneNode(true);
+    c.removeAttribute("id"); c.classList.remove("fresh"); [top,c].forEach(x=>x.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id")));
+    leaf.style.top=pg.scrollTop+"px"; leaf.append(top,c); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760);
   }
   book.i=ni; book.showGrid=false; renderBook();
 }
