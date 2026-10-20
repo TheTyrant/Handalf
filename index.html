@@ -75,7 +75,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 .nav .count{color:var(--copper);margin-left:6px}
 .status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
 
-.stage{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden;perspective:2400px}
+.stage{position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 #scroller,.leaf-sc{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-block:28px 40px}
 .pageleaf{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;background-color:var(--paper);background-image:var(--noise);background-size:200px 200px;pointer-events:none;backface-visibility:hidden;will-change:transform}
 .pageleaf .leaf-sc{overflow:hidden}
@@ -84,10 +84,11 @@ button,input,textarea,select{font:inherit;color:inherit}
 .pageleaf.back{transform-origin:100% 50%;animation:turnB .72s cubic-bezier(.55,.05,.4,1) forwards}
 .pageleaf.fwd::after{background:linear-gradient(90deg,transparent 30%,rgba(0,0,0,.45));animation:shade .72s ease-in forwards}
 .pageleaf.back::after{background:linear-gradient(270deg,transparent 30%,rgba(0,0,0,.45));animation:shade .72s ease-in forwards}
-@keyframes turnF{0%{transform:rotateY(0)}100%{transform:rotateY(-108deg)}}
-@keyframes turnB{0%{transform:rotateY(0)}100%{transform:rotateY(108deg)}}
+@keyframes turnF{0%{transform:perspective(2400px) rotateY(0)}100%{transform:perspective(2400px) rotateY(-108deg)}}
+@keyframes turnB{0%{transform:perspective(2400px) rotateY(0)}100%{transform:perspective(2400px) rotateY(108deg)}}
 @keyframes shade{0%{opacity:0}100%{opacity:1}}
 .turned{animation:settle .72s ease-out}
+.intro[hidden]{display:none!important}
 @keyframes settle{0%{filter:brightness(.82)}100%{filter:none}}
 .band{flex:none;position:relative;z-index:6}
 .band>.wrap{position:relative}
@@ -703,7 +704,7 @@ const EXAMPLE={example:true,topic:"AI image tools and the future of illustrators
 
 /* ---------- storage: per-account db when available, browser storage otherwise ---------- */
 let db=null, uid=null, sample=null, dl=null, sync="browser";
-function setSync(k){ sync=k; if(typeof view!=="undefined"&&view==="settings") renderSettings(); }
+function setSync(k){ sync=k; const v=document.getElementById("sync-val"); if(v&&typeof syncCopy==="function"){const c=syncCopy();v.textContent=c[0];document.getElementById("sync-sub").textContent=c[1]} }
 const LS="handalf.v1";
 function lsLoad(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j)Object.assign(state,j)}catch(e){}}
 function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,last:state.last}))}catch(e){}}
@@ -1909,15 +1910,16 @@ applySkin(skin);
 $("#skin-btn").addEventListener("click",()=>{skin=skin==="ink"?"leather":"ink";applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(e){}if(view==="settings")renderSettings();});
 
 /* ---------- settings ---------- */
+function syncCopy(){return sync==="account"?["Your Claude account","Your brand, stances, vault and last search follow you to any device where you open Handalf in Claude."]
+  :sync==="failed"?["This browser, for now","Saving to your Claude account didn't go through, so your work is kept in this browser. It will try again on your next change."]
+  :["This browser only","Open Handalf inside Claude to keep your work in your Claude account and see it on your other devices."]}
 const when=ts=>ts?new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"";
 function renderSettings(){
   const p=state.profile, A=p.archetype&&ARCH[p.archetype];
   const filled=["name","niche","expertise","audience","platforms","voice","pillars","off"].filter(k=>String(p[k]||"").trim()).length;
   const src=p.linked||null, srcName=src?(/^Linked /.test(src.source)?src.source.replace(/^Linked /,""):"Your bio"):"";
   const row=(t,v,sub,act)=>`<div class="setrow"><h3>${t}</h3><div class="val"><b>${v}</b>${sub?`<p>${sub}</p>`:""}${act?`<div class="act">${act}</div>`:""}</div></div>`;
-  const syncLine=sync==="account"?["Your Claude account","Your brand, stances, vault and last search follow you to any device where you open Handalf in Claude."]
-    :sync==="failed"?["This browser, for now","Saving to your Claude account didn't go through, so your work is kept in this browser. It will try again on your next change."]
-    :["This browser only","Open Handalf inside Claude to keep your work in your Claude account and see it on your other devices."];
+  const syncLine=syncCopy();
   $("#settings-body").innerHTML=`<div class="sets">
     <p class="setgroup">Your profile sources</p>
     ${row("Brand archetype",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not set",A?esc(A.style)+(p.quizAt?` Quiz taken ${when(p.quizAt)}.`:""):"Decides how your contrary takes argue.",`<button class="btn" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
@@ -1927,7 +1929,7 @@ function renderSettings(){
     <p class="setgroup">App</p>
     ${row("Edition",document.documentElement.getAttribute("data-skin")==="ink"?"Paperback":"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin!=="ink"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button></div>`)}
     ${row("Opening story","The book opening","The short story Handalf tells on your first visit.",`<button class="btn" type="button" data-set="intro">Watch again</button>`)}
-    ${row("Where your work is saved",syncLine[0],syncLine[1],"")}
+    <div class="setrow"><h3>Where your work is saved</h3><div class="val"><b id="sync-val">${esc(syncLine[0])}</b><p id="sync-sub">${esc(syncLine[1])}</p></div></div>
     ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn" type="button" data-set="vault">Open vault</button>`)}
     ${row("Erase everything","Start from zero","Deletes your brand, stances, vault and results.",`<button class="btn ghost" type="button" data-set="erase" style="color:var(--risk);border-color:var(--risk)">Erase</button>`)}
   </div>`;
