@@ -1,0 +1,1436 @@
+<title>Handalf</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Cinzel:wght@500;600;700&family=EB+Garamond:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: Swiss 12-column grid on brown leather. Gold rules, gold pill controls, serif gold headings. Consensus baseline left, ranked takes right. */
+:root{
+  --paper:#2E1B10; --sheet:#3B2416; --ink:#F3E6CF; --mute:#CDB592; --rule:#9C7A36;
+  --gold:#D9B45E; --gold-hi:#EBCB7E; --on-gold:#2A170C;
+  --ultra:#A9CDB9; --ultra-soft:#33392B; --copper:#D9B45E; --copper-soft:#4A3119;
+  --good:#9DD3A8; --risk:#F2917F; --band:#1E110A; --band-fg:#F3E6CF;
+  --f-display:"Uncial Antiqua","Palatino Linotype",Georgia,serif;
+  --f-title:"Cinzel","Trajan Pro","Palatino Linotype",Georgia,serif;
+  --f-head:"EB Garamond","Garamond","Palatino Linotype",Georgia,serif;
+  --f-body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --pill:999px;
+  color-scheme:dark;
+}
+html{background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");background-size:200px 200px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");background-size:200px 200px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.label{font-family:var(--f-body);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--mute)}
+
+/* masthead */
+.band{background-color:var(--band);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");background-size:200px 200px;color:var(--band-fg);border-bottom:1px solid var(--gold)}
+.mast{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;padding-block:26px 20px}
+.logo{width:64px;height:auto;color:var(--band-fg)}
+.logo .gold{color:var(--copper)}
+.mark{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,8vw,92px);line-height:.95;letter-spacing:.01em;margin:0}
+.mark span{color:var(--copper)}
+.tag{justify-self:end}
+.tag{max-width:36ch;display:grid;gap:6px;text-wrap:balance}
+.tagline{font-family:var(--f-title);font-weight:600;font-size:clamp(18px,2.2vw,24px);letter-spacing:.06em;color:var(--gold);margin:0}
+.tagsub{font-size:14px;color:var(--mute);margin:0}
+.nav{display:flex;gap:2px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-block:0}
+.nav button{background:none;border:0;padding:12px 14px 12px 0;margin-right:18px;cursor:pointer;font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.08em;color:color-mix(in srgb,var(--gold) 62%,transparent);border-bottom:3px solid transparent}
+.nav button:hover{color:var(--gold-hi)}
+.nav button[aria-selected="true"]{color:var(--gold);border-bottom-color:var(--gold)}
+.nav .count{color:var(--copper);margin-left:6px}
+.status{margin-left:auto;align-self:center;font-size:12px;color:var(--mute);margin-right:16px}
+
+main{padding-block:28px 64px}
+.view{display:grid;gap:24px}
+h2{color:var(--gold);font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1.05;margin:0;text-wrap:balance}
+h3{color:var(--gold);font-family:var(--f-title);font-weight:700;font-size:19px;line-height:1.15;letter-spacing:.04em;margin:0}
+p{margin:0}
+.lede{color:var(--mute);max-width:65ch}
+
+/* run bar */
+.run{display:grid;grid-template-columns:1fr auto;gap:10px}
+.run input{width:100%;min-width:0;background:var(--sheet);border:1.5px solid var(--gold);padding:14px 24px;font-size:18px;border-radius:var(--pill)}
+.btn{background:var(--gold);color:var(--on-gold);border:1.5px solid var(--gold);padding:12px 24px;font-weight:600;cursor:pointer;border-radius:var(--pill);white-space:nowrap}
+.btn:hover{background:var(--gold-hi);border-color:var(--gold-hi)}
+.btn:disabled{opacity:.45;cursor:not-allowed;background:var(--gold);border-color:var(--gold)}
+.btn.ghost{background:transparent;color:var(--gold);border:1.5px solid var(--gold);padding:6px 14px;font-size:13px;font-weight:500}
+.btn.ghost:hover{background:rgba(217,180,94,.12);color:var(--gold-hi);border-color:var(--gold-hi)}
+.btn.quiet{background:transparent;color:var(--mute);border:0;padding:4px 8px;font-size:13px;border-radius:var(--pill)}
+.btn.quiet:hover{color:var(--risk);background:transparent}
+.hint{font-size:13px;color:var(--mute)}
+.notice{margin-bottom:20px;border-radius:14px;border:1px solid var(--rule);border-left:4px solid var(--gold);background:var(--copper-soft);padding:10px 14px;font-size:14px}
+.notice.err{border-color:var(--risk)}
+
+/* results grid */
+.results{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:28px;align-items:start}
+.col-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:2px solid var(--gold);padding-bottom:8px;margin-bottom:4px;flex-wrap:wrap}
+.cons{list-style:none;margin:0;padding:0}
+.cons li{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.cons .cid{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--mute);padding-top:2px}
+.cons strong{display:block;font-family:var(--f-head);color:var(--gold);font-size:17px;font-weight:600;line-height:1.3}
+.cons span{font-size:13px;color:var(--mute)}
+.baseline{font-family:var(--f-title);font-weight:600;font-size:15px;color:var(--mute)}
+
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--gold);color:var(--gold);border-radius:var(--pill);background:transparent;padding:5px 14px;font-family:var(--f-body);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--gold);color:var(--on-gold);border-color:var(--gold)}
+
+.take{display:grid;grid-template-columns:96px minmax(0,1fr);gap:18px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.take.remix{padding-left:24px;border-left:3px solid var(--ultra-soft)}
+.mult{font-family:var(--f-title);font-weight:700;font-size:40px;line-height:.95;color:var(--copper);font-variant-numeric:tabular-nums}
+.mult small{font-size:20px}
+.tier{display:inline-block;margin-top:6px;font-family:var(--f-title);font-weight:700;font-size:11px;letter-spacing:.08em;padding:3px 10px;border-radius:var(--pill);color:var(--on-gold);background:var(--gold)}
+.tier.t-out{background:var(--gold)} .tier.t-str{background:var(--ultra)} .tier.t-fr{background:var(--good)} .tier.t-echo{background:var(--mute)}
+.take h4,.vcard h4{font-family:var(--f-head);color:var(--gold);font-size:23px;line-height:1.2;margin:0 0 6px;font-weight:600;text-wrap:balance}
+.hook{font-style:italic;margin-bottom:8px}
+.angle{color:var(--mute);font-size:14px;max-width:65ch}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px}
+.meta span{font-size:13px;color:var(--mute)}
+.meta b{color:var(--ink);font-weight:600}
+.backing{margin-top:10px;border-left:2px solid var(--ultra);padding:4px 0 4px 10px;font-size:13px}
+.backing q{color:var(--ultra)}
+.bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px;max-width:440px}
+.bar .label{font-size:11px;letter-spacing:.06em}
+.bar i{display:block;height:4px;background:rgba(217,180,94,.22);margin-top:3px}
+.bar i b{display:block;height:100%;background:var(--gold)}
+.risk{margin-top:8px;font-size:13px;color:var(--risk)}
+.actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+
+/* stances */
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:start}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:18px;padding:20px;display:grid;gap:12px}
+.drop{border:2px dashed var(--gold);border-radius:18px;padding:22px;text-align:center;cursor:pointer}
+.drop.over{border-color:var(--ultra);background:var(--ultra-soft)}
+textarea{width:100%;min-height:120px;background:var(--paper);border:1.5px solid var(--gold);padding:12px 16px;resize:vertical;border-radius:18px}
+.sources{list-style:none;padding:0;margin:0;display:grid;gap:4px}
+.sources li{display:flex;justify-content:space-between;gap:10px;font-size:13px;border-bottom:1px solid var(--rule);padding:4px 0}
+.progress{height:6px;background:var(--rule)}
+.progress b{display:block;height:100%;background:var(--copper);width:0;transition:width .3s}
+.stance{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.sid{font-size:13px;font-weight:600;color:var(--mute)}
+.dots{display:flex;gap:3px;margin-top:6px}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(217,180,94,.25)}
+.dots i.on{background:var(--copper)}
+.stance p{font-family:var(--f-head);color:var(--gold);font-size:18px;font-weight:600;line-height:1.3}
+.stance .vs{font-size:13px;color:var(--mute)}
+.stance q{display:block;font-size:13px;color:var(--ultra);margin-top:4px}
+.empty{padding:28px 0;color:var(--mute);border-bottom:1px solid var(--rule)}
+.empty strong{display:block;color:var(--ink);font-family:var(--f-title);font-weight:700;font-size:19px;letter-spacing:.04em;margin-bottom:4px}
+
+/* profile */
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px}
+.field{display:grid;gap:6px}
+.field.wide{grid-column:1/-1}
+.field input{background:var(--sheet);border:1.5px solid var(--gold);padding:10px 18px;border-radius:var(--pill);min-height:0}
+.field textarea{background:var(--sheet);border:1.5px solid var(--gold);padding:12px 18px;border-radius:18px}
+.field textarea{min-height:80px}
+
+/* brand quiz */
+.quiz{max-width:820px;display:grid;gap:20px}
+.qstep{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.qbar{height:3px;background:var(--rule)} .qbar b{display:block;height:100%;background:var(--gold);transition:width .3s}
+.qtext{font-family:var(--f-title);font-weight:600;font-size:clamp(22px,3vw,30px);line-height:1.2;text-wrap:balance;margin:0}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{text-align:left;background:var(--sheet);border:1px solid var(--rule);padding:16px 20px;cursor:pointer;border-radius:18px;font-size:15px;line-height:1.4;display:grid;gap:4px}
+.opt:hover{border-color:var(--gold)}
+.opt[aria-pressed="true"]{border-color:var(--copper);box-shadow:inset 0 0 0 1px var(--copper)}
+.opt .mono{color:var(--mute)}
+.result{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:24px;align-items:start}
+.archname{font-family:var(--f-display);font-size:clamp(40px,6vw,64px);line-height:1;color:var(--copper);margin:4px 0 8px}
+.arch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.arch{background:transparent;border:1px solid var(--rule);padding:10px 12px;text-align:left;cursor:pointer;border-radius:14px;display:grid;gap:2px}
+.arch b{font-family:var(--f-title);font-size:14px;letter-spacing:.03em}
+.arch span{font-size:12px;color:var(--mute)}
+.arch[aria-pressed="true"]{border-color:var(--copper);background:var(--copper-soft)}
+.arch.second{border-style:dashed;border-color:var(--ultra)}
+.arch-readout{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px 20px}
+.arch-readout strong{font-family:var(--f-title);font-size:18px;color:var(--copper)}
+
+/* setup choices */
+.ways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.way{text-align:left;background:var(--sheet);border:1px solid var(--rule);padding:22px;cursor:pointer;border-radius:18px;display:grid;gap:8px;align-content:start}
+.way:hover{border-color:var(--copper)}
+.way b{color:var(--gold);font-family:var(--f-title);font-size:20px;letter-spacing:.03em;line-height:1.15}
+.way p{color:var(--mute);font-size:14px}
+.way .label{color:var(--copper)}
+.way.skip{background:transparent;border-style:dashed}
+.way.skip .label{color:var(--mute)}
+.llms{display:flex;gap:6px;flex-wrap:wrap}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:18px;counter-reset:st}
+.steps>li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;counter-increment:st}
+.steps>li::before{content:counter(st);font-family:var(--f-title);font-weight:700;font-size:22px;line-height:1;color:var(--copper)}
+.steps>li>div{display:grid;gap:8px;min-width:0}
+.promptbox{min-height:170px;font-size:13.5px;line-height:1.55;background:var(--sheet)}
+a.btn{display:inline-block;text-decoration:none;justify-self:start}
+.found{display:grid;gap:4px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px 20px 16px 36px}
+.found li{font-size:14px}
+
+/* vault planner */
+.vhead{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.vgroup{display:grid;margin-bottom:32px}
+.vcard{display:grid;grid-template-columns:96px minmax(0,1fr);gap:18px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.plan{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:14px}
+.seg{display:inline-flex;border:1.5px solid var(--gold);border-radius:var(--pill);overflow:hidden}
+.seg button{background:transparent;border:0;padding:6px 14px;font-size:13px;cursor:pointer;border-radius:0}
+.seg button{color:var(--gold)}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--on-gold)}
+.plan input,.plan select,.eps input,.eps select,.buildrow select{background:var(--sheet);border:1.5px solid var(--gold);padding:5px 14px;border-radius:var(--pill)}
+.series-title{color:var(--gold);font-family:var(--f-title);font-weight:700;font-size:16px;letter-spacing:.03em;margin-top:14px}
+.eps{list-style:none;margin:8px 0 0;padding:0;border-left:2px solid var(--copper)}
+.eps li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0 10px 14px;border-bottom:1px solid var(--rule);align-items:center}
+.eps b{display:block;font-family:var(--f-head);color:var(--gold);font-size:18px;font-weight:600;line-height:1.25}
+.eps span{display:block;font-size:13px;color:var(--mute)}
+.buildrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:12px}
+.agenda{display:grid;gap:24px}
+.aday{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;align-items:start}
+.aday h3{font-size:16px;padding-top:10px}
+.aday.past h3{color:var(--mute)}
+.arow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule);align-items:center}
+.arow b{display:block;font-family:var(--f-head);color:var(--gold);font-size:18px;font-weight:600;line-height:1.25}
+.arow span{display:block;font-size:13px;color:var(--mute)}
+.ways3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.way.danger b{color:var(--risk)}
+.resetp{margin-bottom:8px}
+
+/* export */
+.exlist{display:grid}
+.exbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:2px solid var(--gold)}
+.exrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.exrow input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold);margin-top:3px}
+.exrow b{display:block;font-family:var(--f-head);color:var(--gold);font-size:18px;font-weight:600;line-height:1.25}
+.exrow .sub{display:block;font-size:13px;color:var(--mute)}
+.exrow .ctl{grid-column:2;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:6px}
+.st{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.st.ok{color:var(--good)} .st.need{color:var(--gold)}
+.doc{background:var(--sheet);border:1px solid var(--rule);border-radius:18px;padding:28px clamp(18px,4vw,40px);display:grid;gap:10px;min-width:0}
+.doc h1{font-family:var(--f-display);font-weight:400;color:var(--gold);font-size:clamp(28px,4vw,40px);margin:0;line-height:1.1;text-wrap:balance}
+.doc h2{font-size:clamp(22px,3vw,28px);margin-top:14px;padding-top:18px;border-top:1px solid var(--rule)}
+.doc h3{font-size:17px;margin-top:10px}
+.doc .kv{font-size:14px;color:var(--mute);margin:0}
+.doc .kv b{color:var(--ink);font-weight:600}
+.doc ol{margin:0;padding-left:24px;display:grid;gap:8px}
+.doc ol ul{margin:4px 0 0;padding-left:18px;color:var(--mute);display:grid;gap:2px}
+.doc p{max-width:68ch}
+.exactions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+
+/* deepen panel */
+.deep{margin-top:14px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px;display:grid;gap:10px}
+.deep textarea{min-height:84px;background:var(--paper)}
+.thread{display:grid;gap:8px;max-height:420px;overflow-y:auto}
+.bubble{border-radius:14px;padding:10px 14px;font-size:14px;max-width:88%;white-space:pre-wrap}
+.bubble.ai{background:var(--ultra-soft);justify-self:start}
+.bubble.me{background:var(--copper-soft);justify-self:end}
+.say{display:grid;grid-template-columns:1fr auto;gap:8px}
+.say input{background:var(--paper);border:1.5px solid var(--gold);padding:8px 16px;border-radius:var(--pill);min-width:0}
+.badge{display:inline-block;margin-left:8px;font-family:var(--f-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ultra);vertical-align:middle}
+
+.add{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+.add input{background:var(--sheet);border:1.5px solid var(--gold);padding:8px 16px;border-radius:var(--pill);min-width:0}
+
+@media (max-width:860px){
+  .results,.split,.ways3{grid-template-columns:1fr}
+  .mast{grid-template-columns:auto 1fr}
+  .tag{grid-column:1/-1;justify-self:start}
+}
+@media (max-width:520px){
+  .run{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .opts,.result,.ways{grid-template-columns:1fr}
+  .vcard{grid-template-columns:1fr;gap:8px}
+  .vcard .scorecol{display:flex;align-items:baseline;gap:10px}
+  .aday{grid-template-columns:1fr;gap:4px}
+  .aday h3{padding-top:0}
+  .eps li{grid-template-columns:1fr}
+  .arch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bubble{max-width:100%}
+  .take{grid-template-columns:1fr;gap:8px}
+  .take .scorecol{display:flex;align-items:baseline;gap:10px}
+  .add{grid-template-columns:1fr}
+  .stance{grid-template-columns:44px minmax(0,1fr)}
+  .stance .btn{grid-column:2}
+  .status{width:100%;margin-left:0;padding-bottom:8px}
+  .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
+  #reset-btn{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="band">
+  <div class="wrap">
+    <div class="mast">
+      <svg class="logo" viewBox="0 0 64 96" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <rect x="4" y="2" width="56" height="92" rx="10"/>
+        <line x1="26" y1="10" x2="38" y2="10"/>
+        <path class="gold" stroke="none" fill="currentColor" d="M33 26 C 40 33, 44 46, 47 60 L 17 60 C 22 50, 26 38, 33 26 Z M33 26 C 36 22, 42 20, 47 23 C 42 23, 38 25, 35 29 Z"/>
+        <path stroke="currentColor" d="M10 62 C 20 68, 44 68, 54 62"/>
+        <path class="gold" stroke="none" fill="currentColor" d="M50 36 l1.4 3.2 3.2 1.4 -3.2 1.4 -1.4 3.2 -1.4 -3.2 -3.2 -1.4 3.2 -1.4z"/>
+        <line x1="24" y1="84" x2="40" y2="84"/>
+      </svg>
+      <h1 class="mark">Hand<span>alf</span></h1>
+      <div class="tag"><p class="tagline">Make Content Magical</p><p class="tagsub">Find the take only you can make, measured against the crowd and backed by your own words.</p></div>
+    </div>
+    <nav class="nav" role="tablist">
+      <button role="tab" data-view="engine" aria-selected="true">Engine</button>
+      <button role="tab" data-view="stances" aria-selected="false">Stances<span class="count" id="n-stances"></span></button>
+      <button role="tab" data-view="profile" aria-selected="false">Brand</button>
+      <button role="tab" data-view="vault" aria-selected="false">Vault<span class="count" id="n-vault"></span></button>
+      <button role="tab" data-view="export" aria-selected="false">Export</button>
+      <span class="status" id="status">Saved in this browser</span>
+      <button type="button" id="reset-btn" aria-expanded="false" style="margin-right:0">Start over</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="panel resetp" id="reset-panel" hidden>
+    <div class="qstep"><h3>Start over</h3><button class="btn quiet" type="button" data-reset="cancel">Close</button></div>
+    <div class="ways3">
+      <button class="way" type="button" data-reset="search"><b>New search</b><p>Clear the current results and start a fresh topic. Your brand, stances and vault stay.</p></button>
+      <button class="way" type="button" data-reset="setup"><b>Redo brand setup</b><p>Go back to the four ways in: quiz, link your LLM, upload a prompt, or skip. Nothing is deleted.</p></button>
+      <button class="way danger" type="button" data-reset="erase"><b>Erase everything</b><p>Delete your brand, stances, vault and results, and start from zero.</p></button>
+    </div>
+    <p class="notice err" id="erase-confirm" hidden>This can't be undone. <button class="btn" type="button" data-reset="erase-yes">Erase everything</button> <button class="btn ghost" type="button" data-reset="erase-no">Keep my data</button></p>
+  </div>
+  <!-- BRAND QUIZ -->
+  <section class="view" id="v-start" hidden>
+    <div class="quiz" id="quiz"></div>
+  </section>
+
+  <!-- ENGINE -->
+  <section class="view" id="v-engine" hidden>
+    <form class="run" id="run-form">
+      <input id="topic" type="text" placeholder="Drop a topic or idea, e.g. AI tools for illustrators" autocomplete="off" aria-label="Topic">
+      <button class="btn" id="run-btn" type="submit">Find outliers</button>
+    </form>
+    <p class="hint" id="run-hint">Each run maps what most creators would say about the topic (the 1x baseline), then ranks contrary takes by how far they move from it and how well your own stances back them.</p>
+    <div id="run-notice"></div>
+    <div id="results"></div>
+  </section>
+
+  <!-- STANCES -->
+  <section class="view" id="v-stances" hidden>
+    <div><h2>Your stances</h2><p class="lede">Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
+    <div class="split">
+      <div class="panel">
+        <span class="label">Add conversations</span>
+        <label class="drop" id="drop" for="file">
+          <strong>Drop exports here</strong><br>
+          <span class="hint">ChatGPT or Claude <span class="mono">conversations.json</span>, or any .txt / .md transcript</span>
+        </label>
+        <input id="file" type="file" accept=".json,.txt,.md" multiple hidden>
+        <label class="label" for="paste">Or paste a conversation</label>
+        <textarea id="paste" placeholder="Paste chat text. Lines starting with &quot;You:&quot; or &quot;User:&quot; are read as yours; otherwise all text is treated as yours."></textarea>
+        <button class="btn ghost" id="paste-add" type="button">Add pasted text</button>
+        <ul class="sources" id="sources"></ul>
+        <button class="btn" id="mine-btn" type="button">Mine stances</button>
+        <div class="progress" id="mine-prog" hidden><b></b></div>
+        <p class="hint" id="mine-hint">Your messages are queued here and only sent to Claude when you press Mine stances.</p>
+      </div>
+      <div>
+        <div class="col-head"><h3>Stance bank</h3><span class="label" id="stance-meta"></span></div>
+        <div class="add" style="margin:10px 0">
+          <input id="add-stance" placeholder="Add a stance by hand: I think…" aria-label="Stance">
+          <input id="add-against" placeholder="Against what consensus?" aria-label="Against">
+          <button class="btn ghost" id="add-btn" type="button">Add</button>
+        </div>
+        <div id="stance-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="view" id="v-profile" hidden>
+    <div><h2>Your brand</h2><p class="lede">The engine scores fit against this. Write it the way you would brief a collaborator.</p></div>
+    <form class="form" id="profile-form">
+      <div class="arch-readout" id="arch-readout"></div>
+      <div class="field"><label class="label" for="p-name">Name or brand</label><input id="p-name" name="name"></div>
+      <div class="field"><label class="label" for="p-platforms">Platforms and formats</label><input id="p-platforms" name="platforms" placeholder="YouTube video essays, IG carousels, X threads"></div>
+      <div class="field"><label class="label" for="p-niche">Niche</label><input id="p-niche" name="niche" placeholder="Design, comics, creative business"></div>
+      <div class="field"><label class="label" for="p-audience">Audience</label><input id="p-audience" name="audience" placeholder="Who watches and what they want"></div>
+      <div class="field wide"><label class="label" for="p-expertise">Expertise</label><textarea id="p-expertise" name="expertise" placeholder="What you know from doing it, not from reading about it. Years, projects, scars."></textarea></div>
+      <div class="field wide"><label class="label" for="p-voice">Voice</label><textarea id="p-voice" name="voice" placeholder="How you sound. Words you use, tone, references you lean on."></textarea></div>
+      <div class="field wide"><label class="label" for="p-pillars">Content pillars</label><textarea id="p-pillars" name="pillars" placeholder="The 3 to 5 territories you keep coming back to"></textarea></div>
+      <div class="field wide"><label class="label" for="p-off">Off limits</label><textarea id="p-off" name="off" placeholder="Takes you will never make, topics you avoid"></textarea></div>
+    </form>
+    <p class="hint" id="profile-saved"></p>
+  </section>
+
+  <!-- EXPORT -->
+  <section class="view" id="v-export" hidden>
+    <div><h2>Export your plan</h2><p class="lede">The last step. Pick the concepts to include, choose text, audio or video for each, and Handalf outlines them into a plan you can follow yourself or hand to any AI as a prompt.</p></div>
+    <div id="export-body"></div>
+  </section>
+
+  <!-- VAULT -->
+  <section class="view" id="v-vault" hidden>
+    <div class="vhead"><div><h2>Vault</h2><p class="lede">Takes you kept. Plan each one as a single post or a series, give it a date, and see what's coming up.</p></div>
+      <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Export plan</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
+    <div id="vault-list"></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clamp=n=>Math.max(0,Math.min(10,Number(n)||0));
+
+/* ---------- scoring: 1x = the take everyone already made ---------- */
+function multiple(t){
+  return (clamp(t.divergence)/5)*(clamp(t.ownership)/5)*(clamp(t.defensibility)/5)*(0.5+clamp(t.fit)/10);
+}
+function tier(m){return m>=5?["Outlier","t-out"]:m>=2.5?["Strong","t-str"]:m>=1.2?["Fresh","t-fr"]:["Echo","t-echo"]}
+const fmt=m=>m>=10?m.toFixed(0):m.toFixed(1);
+
+/* ---------- state ---------- */
+const state={profile:{},stances:[],vault:[],sources:[],last:null};
+let queue=[]; // [{name, messages:[string]}]  unsent corpus
+let filter="all";
+
+const EXAMPLE={example:true,topic:"AI image tools and the future of illustrators",
+ consensus:[
+  {id:"c1",take:"AI will replace entry-level illustrators.",why:"Fear drives clicks and it matches headlines."},
+  {id:"c2",take:"Learn the tools or get left behind.",why:"Safe, actionable, and sponsor friendly."},
+  {id:"c3",take:"AI art is theft and should be boycotted.",why:"Strong community identity on art platforms."},
+  {id:"c4",take:"Human touch will always matter.",why:"Reassuring and impossible to disprove."},
+  {id:"c5",take:"Use AI for ideation, not finals.",why:"A compromise that offends nobody."}],
+ takes:[
+  {title:"The style is not the job. The world is.",hook:"Nobody hires an illustrator for linework. They hire you for a universe they can't invent.",angle:"Argues that clients pay for worldbuilding and IP, so illustrators who own characters and lore are insulated while style-for-hire is the part AI commoditizes.",against:"c4",stances:[{text:"Owning the IP matters more than polishing the rendering.",quote:"I'd rather own a rough comic than render somebody else's brand perfectly"}],format:"Video essay",divergence:8,ownership:9,defensibility:7,fit:8,risk:"Can read as dismissive of craft if the examples skew corporate."},
+  {title:"Stop learning the tools. Learn the brief.",hook:"Every AI tutorial makes you a faster button presser. None of them make you the person who decides.",angle:"Flips the 'learn the tools' advice: tool skill depreciates monthly, while art direction and briefing skill compound. Positions the creator as the director, AI as crew.",against:"c2",stances:[{text:"Direction is the scarce skill, execution is cheap.",quote:"the person who writes the brief runs the room"}],format:"Carousel",divergence:7,ownership:8,defensibility:8,fit:8,risk:"Sponsors in the tool space may pass on this one."},
+  {title:"Boycotts protect the platform, not the artist",hook:"The loudest anti-AI posts are doing free marketing for the apps that undercut you.",angle:"Contrary to the boycott consensus: argues collective licensing and ownership deals beat boycotts.",against:"c3",stances:[],format:"Thread",divergence:9,ownership:3,defensibility:5,fit:5,risk:"High heat with your own peers and no stance of yours behind it yet."},
+  {title:"Use AI for finals and humans for sketches",hook:"Everyone says ideate with AI. I do the opposite.",angle:"Inverts the compromise take: the sketch holds the intent, so it should stay human; polish is where automation belongs.",against:"c5",stances:[{text:"The thumbnail sketch is where the idea lives.",quote:"if the sketch is dead the final is dead"}],format:"Short",divergence:7,ownership:6,defensibility:6,fit:7,risk:"Needs a real before and after to land."},
+  {title:"Entry-level work was already dying",hook:"AI didn't kill the junior illustrator job. Template marketplaces did, five years ago.",angle:"Reframes the replacement fear with timeline evidence about stock and template platforms.",against:"c1",stances:[],format:"Video essay",divergence:5,ownership:2,defensibility:7,fit:6,risk:"Lands as a history lesson without your own story in it."}
+ ]};
+
+/* ---------- storage: per-account db when available, browser storage otherwise ---------- */
+let db=null, uid=null, sample=null, dl=null;
+const LS="handalf.v1";
+function lsLoad(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j)Object.assign(state,j)}catch(e){}}
+function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,last:state.last}))}catch(e){}}
+const writing={};const pending={};
+function persist(key){
+  lsSave();
+  if(!db||!uid) return;
+  clearTimeout(pending[key]);
+  pending[key]=setTimeout(async()=>{
+    if(writing[key]){persist(key);return}
+    writing[key]=true;
+    try{
+      const body= key==="profile"?{profile:state.profile}
+        : key==="stances"?{stances:state.stances,sources:state.sources}
+        : key==="vault"?{vault:state.vault}
+        : {last:state.last};
+      await db.doc("data/users/"+uid+"/"+key).set(JSON.parse(JSON.stringify(body)));
+      $("#status").textContent="Saved to your Claude account";
+    }catch(e){ if(e&&e.code==="quota_exceeded") showNotice("Account storage is full. Remove a few vault items or sources.",true); else $("#status").textContent="Account sync failed. Saved in this browser"; }
+    finally{writing[key]=false}
+  },600);
+}
+async function initRuntime(){
+  if(!window.claude||!claude.use) {setRunAvail();return}
+  const [d,u,s,dw]=await Promise.all([claude.use("db"),claude.use("user"),claude.use("sample"),claude.use("downloads")]);
+  sample=s; dl=dw; setRunAvail(); if(view==="export") renderExport();
+  if(d&&u){
+    try{uid=await u.id()}catch(e){uid=null}
+    if(uid){
+      db=d;
+      try{
+        const keys=["profile","stances","vault","last"];
+        const snaps=await Promise.all(keys.map(k=>db.doc("data/users/"+uid+"/"+k).get()));
+        snaps.forEach((sn,i)=>{
+          if(sn.exists){
+            const v=sn.data();
+            if(keys[i]==="vault"){ const dbv=Array.isArray(v.vault)?v.vault.map(x=>({...x})):[]; const have=new Set(dbv.map(x=>x.key)); const extra=state.vault.filter(x=>!have.has(x.key)); state.vault=dbv.concat(extra); if(extra.length) persist("vault"); }
+            else Object.assign(state,JSON.parse(JSON.stringify(v)));
+          } else if(hasLocal(keys[i])) persist(keys[i]); });
+        $("#status").textContent="Saved to your Claude account";
+        renderAll();
+      }catch(e){db=null}
+    }
+  }
+}
+function hasLocal(k){return k==="profile"?Object.keys(state.profile).length:k==="stances"?state.stances.length:k==="vault"?state.vault.length:!!state.last}
+
+/* ---------- nav ---------- */
+document.querySelectorAll(".nav [data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+let view="engine";
+function show(v){
+  view=v;
+  document.querySelectorAll(".nav [data-view]").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
+  ["start","engine","stances","profile","vault","export"].forEach(x=>$("#v-"+x).hidden=x!==v);
+  if(v==="export") renderExport();
+  if(v==="start") renderStart();
+  try{history.replaceState(null,"","#"+v)}catch(e){}
+}
+
+/* ---------- brand archetypes + quiz ---------- */
+const ARCH={
+ Sage:{line:"Seeks the truth and explains it.",style:"Disagrees with evidence. Best contrary takes debunk a popular belief with data, history or first-hand testing."},
+ Explorer:{line:"Goes where others haven't.",style:"Disagrees by going first. Reports back from territory the crowd hasn't visited."},
+ Outlaw:{line:"Breaks the rules that deserve breaking.",style:"Disagrees out loud. Names the sacred cow and explains who it really serves."},
+ Magician:{line:"Transforms how people see things.",style:"Disagrees with a reframe. Shows the same facts through a lens that flips the conclusion."},
+ Hero:{line:"Proves what's possible through effort.",style:"Disagrees by doing. The contrary take is a challenge taken on and the result."},
+ Lover:{line:"Leads with passion and taste.",style:"Disagrees on taste. Defends what deserves love and calls out what is hollow."},
+ Jester:{line:"Tells the truth through humor.",style:"Disagrees with a joke that lands a point. Exposes the absurd thing everyone accepts."},
+ Everyperson:{line:"One of the people, speaking plainly.",style:"Disagrees on behalf of regular people. Calls out advice that only works for the privileged."},
+ Caregiver:{line:"Protects and supports the audience.",style:"Disagrees to protect. Pushes back on advice that hurts the people they serve."},
+ Ruler:{line:"Sets the standard and builds systems.",style:"Disagrees with a better system. Replaces a sloppy norm with a framework."},
+ Creator:{line:"Makes things and shows the work.",style:"Disagrees through process. Shows how it is actually made versus how people say it is made."},
+ Innocent:{line:"Optimistic, simple, sincere.",style:"Disagrees with cynicism. Defends the hopeful position everyone got too jaded to make."}
+};
+const QUIZ=[
+ {q:"Your audience leaves your content feeling…",o:[
+  ["Smarter. They get how something actually works.",{Sage:2,Ruler:1}],
+  ["Fired up. Ready to break a rule or take a risk.",{Outlaw:2,Hero:1}],
+  ["Inspired to make something of their own.",{Creator:2,Magician:1}],
+  ["Seen. Like somebody finally gets them.",{Everyperson:2,Caregiver:1,Lover:1}]]},
+ {q:"When everyone in your field agrees on something, you…",o:[
+  ["Want the receipts before I agree.",{Sage:2,Ruler:1}],
+  ["Assume they're missing something and go looking.",{Explorer:2,Outlaw:1}],
+  ["Say the opposite to see who flinches.",{Outlaw:2,Jester:1}],
+  ["Skip the argument and show a better way.",{Magician:2,Creator:1}]]},
+ {q:"Your best-performing content usually looks like…",o:[
+  ["A deep breakdown or explainer",{Sage:2,Ruler:1}],
+  ["Behind the scenes of how I make things",{Creator:2,Everyperson:1}],
+  ["A story with real stakes",{Hero:2,Lover:1,Explorer:1}],
+  ["Something funny that still makes a point",{Jester:2,Everyperson:1}]]},
+ {q:"The compliment that hits hardest:",o:[
+  ["You changed how I see this.",{Magician:2,Sage:1}],
+  ["You never play it safe.",{Outlaw:2,Explorer:1,Hero:1}],
+  ["You make this feel possible for people like me.",{Everyperson:2,Caregiver:1,Innocent:1}],
+  ["Your work is on another level.",{Ruler:2,Creator:1,Lover:1}]]},
+ {q:"Your brand would never…",o:[
+  ["Dumb it down",{Sage:1,Ruler:1,Creator:1}],
+  ["Sell out to look respectable",{Outlaw:2,Explorer:1}],
+  ["Be cynical or cruel",{Innocent:2,Caregiver:2}],
+  ["Be boring",{Jester:2,Lover:1,Magician:1}]]},
+ {q:"Your role with your audience is closest to…",o:[
+  ["Teacher",{Sage:2,Caregiver:1}],
+  ["Guide into new territory",{Explorer:2,Magician:1}],
+  ["Instigator",{Outlaw:2,Jester:1}],
+  ["Master builder they learn from",{Creator:2,Ruler:1,Hero:1}]]}
+];
+let qi=0, qans=[], qpick=null;
+function tally(){
+  const s={}; Object.keys(ARCH).forEach(k=>s[k]=0);
+  qans.forEach((a,i)=>{ if(a==null) return; Object.entries(QUIZ[i].o[a][1]).forEach(([k,v])=>s[k]+=v) });
+  return Object.entries(s).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+}
+function renderQuiz(){
+  const el=$("#quiz"), total=QUIZ.length+2;
+  const head=(n,label)=>`<div class="qstep"><span class="label">${label}</span><span class="label">Step ${n} of ${total}</span></div><div class="qbar"><b style="width:${n/total*100}%"></b></div>`;
+  if(qi<QUIZ.length){
+    const Q=QUIZ[qi];
+    el.innerHTML=`${qi===0?`<div><h2>Find your brand archetype</h2><p class="lede" style="margin-top:6px">Six quick questions. Your archetype shapes how Handalf builds contrary takes, because a Sage and an Outlaw disagree in different ways.</p></div>`:""}
+      ${head(qi+1,"Brand quiz")}
+      <p class="qtext">${esc(Q.q)}</p>
+      <div class="opts">${Q.o.map((o,i)=>`<button class="opt" type="button" data-q="${i}" aria-pressed="${qans[qi]===i}"><span class="mono">${"ABCD"[i]}</span>${esc(o[0])}</button>`).join("")}</div>
+      <div class="qstep">${qi>0?`<button class="btn ghost" data-qnav="back" type="button">Back</button>`:`<button class="btn ghost" data-qnav="choices" type="button">Other ways in</button>`}<button class="btn quiet" data-qnav="skip" type="button">I know my archetype</button></div>`;
+    return;
+  }
+  if(qi===QUIZ.length){
+    const ranked=qans.some(a=>a!=null)?tally():[state.profile.archetype||"Creator"];
+    if(!qpick) qpick={primary:state.profile.archetype&&!qans.length?state.profile.archetype:ranked[0],secondary:qans.some(a=>a!=null)?ranked[1]:(state.profile.archetype2||"")};
+    const A=ARCH[qpick.primary];
+    el.innerHTML=`${head(qi+1,"Your archetype")}
+      <div class="result">
+        <div><span class="label">Primary</span><p class="archname">${esc(qpick.primary)}</p><p><strong>${esc(A.line)}</strong></p><p class="lede" style="margin-top:8px">${esc(A.style)}</p>
+          ${qpick.secondary?`<p class="hint" style="margin-top:12px">Secondary: <b>${esc(qpick.secondary)}</b>. ${esc(ARCH[qpick.secondary].line)}</p>`:""}</div>
+        <div><span class="label">Not quite? Tap one to make it primary. Your previous pick becomes secondary.</span>
+          <div class="arch-grid" style="margin-top:8px">${Object.entries(ARCH).map(([k,v])=>`<button class="arch${qpick.secondary===k?" second":""}" type="button" data-arch="${k}" aria-pressed="${qpick.primary===k}"><b>${k}</b><span>${esc(v.line)}</span></button>`).join("")}</div></div>
+      </div>
+      <div class="qstep"><button class="btn ghost" data-qnav="back" type="button">Back</button><button class="btn" data-qnav="next" type="button">Keep ${esc(qpick.primary)}</button></div>`;
+    return;
+  }
+  const p=state.profile;
+  el.innerHTML=`${head(total,"Niche and expertise")}
+    <p class="qtext">What do you know that most creators in your space don't?</p>
+    <div class="form">
+      <div class="field"><label class="label" for="q-niche">Niche</label><input id="q-niche" value="${esc(p.niche||"")}" placeholder="Illustration, comics, creative business"></div>
+      <div class="field"><label class="label" for="q-audience">Who it's for</label><input id="q-audience" value="${esc(p.audience||"")}" placeholder="Indie artists who want to own their work"></div>
+      <div class="field wide"><label class="label" for="q-expertise">Your expertise</label><textarea id="q-expertise" placeholder="What you know from doing it. Years in, things built, mistakes made.">${esc(p.expertise||"")}</textarea></div>
+      <div class="field wide"><label class="label" for="q-platforms">Where you post</label><input id="q-platforms" value="${esc(p.platforms||"")}" placeholder="YouTube video essays, IG carousels, X threads"></div>
+    </div>
+    <div class="qstep"><button class="btn ghost" data-qnav="back" type="button">Back</button><button class="btn" data-qnav="finish" type="button">Start finding takes</button></div>`;
+}
+$("#quiz").addEventListener("click",e=>{
+  const o=e.target.closest("[data-q]");
+  if(o){qans[qi]=+o.dataset.q; qi++; qpick=null; renderQuiz(); return}
+  const a=e.target.closest("[data-arch]");
+  if(a){const k=a.dataset.arch;
+    if(qpick.primary===k) return;
+    qpick.secondary=qpick.primary; qpick.primary=k;
+    renderQuiz(); return}
+  const n=e.target.closest("[data-qnav]"); if(!n) return;
+  const act=n.dataset.qnav;
+  if(act==="choices"){mode="choose";renderStart();return}
+  if(act==="back"){qi=Math.max(0,qi-1);renderQuiz()}
+  if(act==="skip"){qi=QUIZ.length;qans=[];qpick={primary:state.profile.archetype||"Creator",secondary:state.profile.archetype2||""};renderQuiz()}
+  if(act==="next"){state.profile.archetype=qpick.primary;state.profile.archetype2=qpick.secondary||"";persist("profile");qi++;renderQuiz()}
+  if(act==="finish"){
+    [["niche","q-niche"],["audience","q-audience"],["expertise","q-expertise"],["platforms","q-platforms"]].forEach(([k,id])=>state.profile[k]=$("#"+id).value.trim());
+    state.profile.onboarded=true; persist("profile"); renderProfile(); renderEngine(); show("engine");
+  }
+});
+function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
+function openSetup(){mode="choose";show("start")}
+
+/* ---------- setup: four ways in ---------- */
+let mode="choose", llm="ChatGPT", found=null;
+const LLMS={ChatGPT:"https://chatgpt.com/",Claude:"https://claude.ai/new",Gemini:"https://gemini.google.com/app",Other:""};
+const LINK_PROMPT=`I'm setting up a content strategy tool and want it to know me as a creator. Based on everything you know about me from our past conversations and your memory of me, write a profile with these sections:
+
+Name or brand
+Niche
+Expertise (what I know from actually doing it)
+Audience
+Platforms and formats I use
+Voice (how I sound, words and references I lean on)
+Content themes (the 3 to 5 I keep coming back to)
+Off limits (topics or takes I avoid)
+Brand archetype: which one fits me best and a runner up, from Sage, Explorer, Outlaw, Magician, Hero, Lover, Jester, Everyperson, Caregiver, Ruler, Creator, Innocent
+
+Then list 5 to 15 opinions I hold that go against the common view in my field. For each one, give the opinion, the common view it pushes against, and my own words if you remember them.
+
+Only use what you actually know about me. Write "unknown" where you don't know.`;
+function renderStart(){
+  if(mode==="quiz") return renderQuiz();
+  const el=$("#quiz");
+  if(mode==="choose"){
+    el.innerHTML=`<div><h2>Tell Handalf who you are</h2><p class="lede" style="margin-top:6px">Takes get sharper the more Handalf knows about you and your brand. Pick one way in. You can add the others later from the Brand tab.</p></div>
+    <div class="ways">
+      <button class="way" type="button" data-way="quiz"><span class="label">About 2 minutes</span><b>Take the brand archetype quiz</b><p>Six questions to find how your brand argues, then your niche and expertise.</p></button>
+      <button class="way" type="button" data-way="link"><span class="label">About 3 minutes</span><b>Link your LLM</b><p>Have ChatGPT, Claude or Gemini describe your brand from what it already knows about you.</p></button>
+      <button class="way" type="button" data-way="upload"><span class="label">About 1 minute</span><b>Upload a prompt</b><p>Drop in a brand brief, a bio, or a prompt you already use about yourself.</p></button>
+      <button class="way skip" type="button" data-way="skip"><span class="label">Go straight in</span><b>Skip for now</b><p>Use the engine right away. Takes stay more general until Handalf knows you.</p></button>
+    </div>`;
+    return;
+  }
+  const back=`<button class="btn ghost" data-qnav="choices" type="button">Other ways in</button>`;
+  if(mode==="link"){
+    const url=LLMS[llm];
+    el.innerHTML=`<div class="qstep"><span class="label">Link your LLM</span>${back}</div>
+    <p class="qtext">Let the assistant you use most describe you.</p>
+    <div class="llms">${Object.keys(LLMS).map(k=>`<button class="chip" type="button" data-llm="${k}" aria-pressed="${llm===k}">${k}</button>`).join("")}</div>
+    <ol class="steps">
+      <li><div><span class="label">Copy this prompt</span><textarea class="promptbox" id="link-prompt" readonly>${esc(LINK_PROMPT)}</textarea><button class="btn ghost" type="button" data-copy style="justify-self:start">Copy prompt</button></div></li>
+      <li><div><span class="label">Paste it into ${llm==="Other"?"your assistant":esc(llm)}</span>${url?`<a class="btn ghost" href="${url}" target="_blank" rel="noopener">Open ${esc(llm)}</a>`:""}<p class="hint">Works best with memory turned on in that app, so it can draw on your past chats.</p></div></li>
+      <li><div><label class="label" for="link-reply">Paste its answer here</label><textarea id="link-reply" placeholder="Paste the whole reply"></textarea><button class="btn" type="button" data-read="link" style="justify-self:start">Read my profile</button><p class="hint" id="read-hint"></p></div></li>
+    </ol>
+    <p class="hint">Direct account linking is on the way. For your full history, upload a conversation export in the Stances tab.</p>`;
+    return;
+  }
+  if(mode==="upload"){
+    el.innerHTML=`<div class="qstep"><span class="label">Upload a prompt</span>${back}</div>
+    <p class="qtext">Give Handalf something you've already written about yourself.</p>
+    <label class="drop" for="brief-file"><strong>Drop a file or choose one</strong><br><span class="hint">.txt, .md or .json. A brand brief, bio, media kit text, or a custom instructions prompt.</span></label>
+    <input id="brief-file" type="file" accept=".txt,.md,.json" hidden>
+    <label class="label" for="brief-text">Or paste it</label>
+    <textarea id="brief-text" placeholder="Paste your brief or prompt" style="min-height:180px"></textarea>
+    <div><button class="btn" type="button" data-read="upload">Read my profile</button></div>
+    <p class="hint" id="read-hint"></p>`;
+    return;
+  }
+  if(mode==="done"){
+    const f=found||{};
+    el.innerHTML=`<div class="qstep"><span class="label">${esc(f.source||"Profile")}</span></div>
+    <p class="qtext">${f.parsed?"Here's what Handalf picked up.":"Saved. Handalf will read this on every run."}</p>
+    ${f.parsed?`<ul class="found">
+      ${f.arch?`<li>Brand archetype: <b>${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}</li>`:`<li>No clear archetype. The quiz can find one.</li>`}
+      <li>${f.fields.length?`Filled in ${esc(f.fields.join(", "))}`:"No new brand fields. Your existing ones were kept."}</li>
+      <li>${f.stances} contrary stance${f.stances===1?"":"s"} added to your bank</li></ul>`:""}
+    <p class="hint">You can edit any of it in the Brand tab.</p>
+    <div class="qstep"><button class="btn ghost" type="button" data-way="quiz">${f.arch?"Refine with the quiz":"Take the quiz"}</button><button class="btn" type="button" data-way="engine">Start finding takes</button></div>`;
+  }
+}
+const PROFILE_KEYS=["name","niche","expertise","audience","platforms","voice","pillars","off"];
+function extractPrompt(text){
+return `Below is text a content creator gave us about themselves: either a brief they wrote or a profile their AI assistant wrote about them. Extract a creator profile and their contrary opinions.
+
+Rules: use only what the text says. Use an empty string for anything missing or marked unknown. Never invent. archetype and archetype2 must each be one of: ${Object.keys(ARCH).join(", ")}, or empty. Write plainly, no em dashes.
+
+Reply with only JSON:
+{"profile":{"name":"","niche":"","expertise":"","audience":"","platforms":"","voice":"","pillars":"","off":""},"archetype":"","archetype2":"","stances":[{"stance":"first person, one sentence","against":"the common view it pushes against","quote":"their words if given, else empty","topic":"2 to 4 words","strength":1-5}]}
+
+TEXT
+${text.slice(0,60000)}`;
+}
+async function readProfile(text,source){
+  const hint=$("#read-hint");
+  text=String(text||"").trim();
+  if(text.length<40){hint.textContent="Add a bit more text first.";return}
+  const p=state.profile;
+  if(!sample){
+    p.brief=text.slice(0,8000); p.onboarded=true; persist("profile"); renderProfile();
+    found={source,parsed:false}; mode="done"; renderStart(); return;
+  }
+  const btn=$("[data-read]"); btn.disabled=true; btn.textContent="Reading…";
+  hint.textContent="Reading your profile. This takes about 20 to 40 seconds.";
+  try{
+    const out=await sample.json(extractPrompt(text),{cache:false});
+    const prof=(out&&out.profile)||{}, fields=[];
+    const ok=v=>v&&!/^unknown\.?$/i.test(String(v).trim());
+    PROFILE_KEYS.forEach(k=>{ if(ok(prof[k])&&!String(p[k]||"").trim()){p[k]=String(prof[k]).trim();fields.push(k==="off"?"off limits":k==="pillars"?"themes":k)} });
+    let arch="",arch2="";
+    if(ARCH[out.archetype]&&!p.archetype){p.archetype=out.archetype;arch=out.archetype;if(ARCH[out.archetype2]&&out.archetype2!==out.archetype){p.archetype2=out.archetype2;arch2=out.archetype2}}
+    else if(p.archetype){arch=p.archetype;arch2=p.archetype2||""}
+    syncNextId(); const seen=new Set(state.stances.map(s=>s.stance.toLowerCase())); let n=0;
+    (Array.isArray(out.stances)?out.stances:[]).forEach(s=>{
+      if(!s||!s.stance||seen.has(String(s.stance).toLowerCase())) return; seen.add(String(s.stance).toLowerCase());
+      state.stances.push({id:"s"+(nextId++),stance:String(s.stance),against:String(s.against||""),quote:String(s.quote||""),topic:String(s.topic||""),strength:Math.max(1,Math.min(5,+s.strength||3)),source});n++;
+    });
+    p.onboarded=true; persist("profile"); if(n) persist("stances");
+    renderProfile(); renderStances(); renderEngine();
+    found={source,parsed:true,arch,arch2,fields,stances:n}; mode="done"; renderStart();
+  }catch(e){
+    btn.disabled=false; btn.textContent="Read my profile";
+    hint.textContent=errCopy(e)||"Reading failed. Try again.";
+  }
+}
+$("#quiz").addEventListener("click",async e=>{
+  const w=e.target.closest("[data-way]");
+  if(w){const k=w.dataset.way;
+    if(k==="quiz") return startQuiz();
+    if(k==="skip"){state.profile.onboarded=true;state.profile.skipped=true;persist("profile");renderEngine();return show("engine")}
+    if(k==="engine"){renderEngine();return show("engine")}
+    mode=k; renderStart(); return}
+  const l=e.target.closest("[data-llm]"); if(l){llm=l.dataset.llm;const keep=$("#link-reply").value;renderStart();$("#link-reply").value=keep;return}
+  const c=e.target.closest("[data-copy]");
+  if(c){try{await navigator.clipboard.writeText(LINK_PROMPT);c.textContent="Copied"}catch(err){const t=$("#link-prompt");t.focus();t.select();c.textContent="Selected. Press copy on your keyboard"}return}
+  const r=e.target.closest("[data-read]");
+  if(r){ if(r.dataset.read==="link") readProfile($("#link-reply").value,"Linked "+(llm==="Other"?"LLM":llm)); else readProfile($("#brief-text").value,"Uploaded prompt"); }
+});
+$("#quiz").addEventListener("change",e=>{
+  if(e.target.id!=="brief-file"||!e.target.files[0]) return;
+  const f=e.target.files[0], rd=new FileReader();
+  rd.onload=()=>{$("#brief-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};
+  rd.readAsText(f); e.target.value="";
+});
+$("#quiz").addEventListener("dragover",e=>{if(e.target.closest(".drop")){e.preventDefault();e.target.closest(".drop").classList.add("over")}});
+$("#quiz").addEventListener("dragleave",e=>{const d=e.target.closest(".drop");if(d)d.classList.remove("over")});
+$("#quiz").addEventListener("drop",e=>{const d=e.target.closest(".drop");if(!d)return;e.preventDefault();d.classList.remove("over");const f=e.dataTransfer.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{$("#brief-text").value=String(rd.result);$("#read-hint").textContent=`Loaded ${f.name}. Press Read my profile.`};rd.readAsText(f)});
+
+/* ---------- engine ---------- */
+function setRunAvail(){
+  const ok=!!sample;
+  $("#run-btn").disabled=!ok; $("#mine-btn").disabled=!ok||!queue.length;
+  $("#run-hint").textContent=ok?"Each run maps what most creators would say about the topic (the 1x baseline), then ranks contrary takes by how far they move from it and how well your own stances back them.":"AI runs work when this page is open inside Claude. You can still build your profile and queue conversations.";
+}
+function showNotice(msg,err){$("#run-notice").innerHTML=msg?`<p class="notice${err?" err":""}">${esc(msg)}</p>`:""}
+function errCopy(e){
+  const c=e&&e.code;
+  return c==="not_granted"?"Claude access was declined for this page. Reload to allow it."
+   : c==="rate_limited"?"Too many runs at once. Wait a minute, then try again."
+   : c==="invalid_json"?"The answer came back malformed. Run it again."
+   : c==="prompt_too_large"?"Too much material in one go. Trim the stance bank or the pasted text."
+   : c==="cancelled"?"" : "The run failed partway. Try again.";
+}
+function profileText(){
+  const p=state.profile, f=k=>p[k]?String(p[k]).trim():"";
+  const arch=p.archetype&&ARCH[p.archetype]?`${p.archetype}${p.archetype2?" (secondary "+p.archetype2+")":""}. How this archetype disagrees: ${ARCH[p.archetype].style}`:"";
+  const lines=[["Name",f("name")],["Brand archetype",arch],["Niche",f("niche")],["Expertise",f("expertise")],["Audience",f("audience")],["Platforms",f("platforms")],["Voice",f("voice")],["Pillars",f("pillars")],["Off limits",f("off")],["Brand brief (their own words)",f("brief").slice(0,3000)]].filter(x=>x[1]);
+  return lines.length?lines.map(x=>x[0]+": "+x[1]).join("\n"):"(No profile yet. Assume a general creator audience.)";
+}
+function stanceText(){
+  const s=[...state.stances].sort((a,b)=>(b.strength||0)-(a.strength||0)).slice(0,120);
+  return s.length?s.map(x=>`${x.id}: ${x.stance} (against: ${x.against||"n/a"})`).join("\n"):"(No stances mined yet. Ownership must then stay at 3 or below.)";
+}
+const TAKE_SCHEMA=`{"title":"short, publishable title","hook":"opening line under 25 words","angle":"2-3 sentences on the argument","against":"consensus id like c2","stances":["stance ids that back it"],"format":"video essay | short | carousel | thread | post | podcast","divergence":0-10,"ownership":0-10,"defensibility":0-10,"fit":0-10,"risk":"one sentence on what could backfire"}`;
+function enginePrompt(topic){
+return `You are Handalf, a content strategy engine. Your job: find the most unique take a specific creator can own on a topic.
+
+Method, adapted from outlier research on video platforms: a video's outlier score is its views divided by the channel's normal views. Here the "normal" is the consensus take. First map the consensus: the takes most creators in this space would make (the 1x baseline). Then generate contrary takes that move away from that baseline AND are grounded in this creator's own stances. A contrary take nobody can back up is noise. A take that matches the crowd is an echo.
+
+CREATOR PROFILE
+${profileText()}
+
+CREATOR STANCES (mined from their own AI conversations; cite by id)
+${stanceText()}
+
+TOPIC
+${topic}
+
+Shape every take to the creator's archetype and lean on their stated expertise: a take they can speak to from experience beats one they would have to research.
+
+Scoring rules: divergence = distance from the consensus. ownership = how directly the cited stances back it (0 to 2 if none cited). defensibility = can it survive pushback with evidence or lived experience. fit = match to the audience, voice and platforms. Score honestly; most takes should land between 4 and 7. Include at least 2 lower-risk fresh takes and at least 2 high-divergence takes. Respect anything marked off limits. Write plainly, no em dashes.
+
+Reply with only JSON in this shape:
+{"consensus":[{"id":"c1","take":"the common take in one sentence","why":"why most creators say it"}],"takes":[${TAKE_SCHEMA}]}
+Give 5 consensus items and 8 takes.`;
+}
+let runCtl=null;
+$("#run-form").addEventListener("submit",async ev=>{
+  ev.preventDefault();
+  const topic=$("#topic").value.trim(); if(!topic||!sample) return;
+  if(runCtl){runCtl.abort();}
+  runCtl=new AbortController();
+  const btn=$("#run-btn"); btn.disabled=true; btn.textContent="Mapping the baseline…";
+  showNotice("");
+  $("#results").innerHTML=`<p class="empty"><strong>Thinking</strong>Mapping the consensus on “${esc(topic)}”, then scoring contrary takes against your stances. This usually takes 30 to 60 seconds.</p>`;
+  try{
+    const out=await sample.json(enginePrompt(topic),{signal:runCtl.signal,cache:false});
+    if(!out||!Array.isArray(out.takes)) throw {code:"invalid_json"};
+    state.last={topic,consensus:out.consensus||[],takes:out.takes.map(normTake),at:Date.now()};
+    if(!state.profile.ran){state.profile.ran=true;persist("profile")}
+    persist("last"); renderEngine();
+  }catch(e){ showNotice(errCopy(e),true); renderEngine(); }
+  finally{btn.disabled=false;btn.textContent="Find outliers";runCtl=null}
+});
+let tk=0;
+function normTake(t){
+  const ids=Array.isArray(t.stances)?t.stances:[];
+  const backing=ids.map(id=>state.stances.find(s=>s.id===String(id).trim())).filter(Boolean).map(s=>({id:s.id,text:s.stance,quote:s.quote}));
+  return {key:"k"+Date.now().toString(36)+(tk++),title:t.title,hook:t.hook,angle:t.angle,against:t.against,format:t.format,risk:t.risk,
+    divergence:clamp(t.divergence),ownership:clamp(t.ownership),defensibility:clamp(t.defensibility),fit:clamp(t.fit),stances:backing,remixOf:t.remixOf||null};
+}
+/* ---------- deepen: add your context, talk it through, rebuild ---------- */
+const open=new Set(); const busy={};
+const findTake=key=>state.last&&state.last.takes.find(x=>x.key===key);
+function threadText(t){return (t.thread||[]).map(m=>(m.role==="user"?"CREATOR: ":"INTERVIEWER: ")+m.content).join("\n")}
+function deepHTML(t){
+  const th=t.thread||[];
+  return `<div class="deep">
+    <label class="label" for="ctx-${t.key}">Your context</label>
+    <textarea id="ctx-${t.key}" data-ctx="${t.key}" placeholder="Why is this personal? What have you seen, made, or changed your mind on? Example: the tools need better input, so I'm drawing by hand more than I have in years.">${esc(t.context||"")}</textarea>
+    ${th.length?`<div class="thread" id="thread-${t.key}">${th.map(m=>`<div class="bubble ${m.role==="user"?"me":"ai"}">${esc(m.content)}</div>`).join("")}</div>
+      <form class="say" data-say="${t.key}"><input id="say-${t.key}" placeholder="Answer, push back, or tell the story" autocomplete="off" aria-label="Your reply"><button class="btn ghost" type="submit"${busy[t.key]?" disabled":""}>Send</button></form>`:""}
+    <div class="actions">
+      ${th.length?"":`<button class="btn ghost" data-act="talk" data-key="${t.key}" type="button"${busy[t.key]?" disabled":""}>Talk it through</button>`}
+      <button class="btn" data-act="build" data-key="${t.key}" type="button"${busy[t.key]?" disabled":""}>${th.length?"Build takes from this conversation":"Remix with my context"}</button>
+    </div>
+    <p class="hint">Talk it through and Handalf interviews you about this take. Anything you say becomes a stance it can cite.</p>
+  </div>`;
+}
+function renderPanel(key){
+  const slot=document.getElementById("panel-"+key), t=findTake(key); if(!slot||!t) return;
+  slot.innerHTML=open.has(key)?deepHTML(t):"";
+  const th=document.getElementById("thread-"+key); if(th) th.scrollTop=th.scrollHeight;
+}
+function interviewInstr(t){
+  const run=state.last;
+  return `You are Handalf's interviewer, a sharp content strategist helping a creator deepen one contrary take they feel personally. Your goal is to pull out the lived experience that makes this take theirs and nobody else's.
+
+Ask ONE question at a time, under 40 words. Dig for: the specific moment they noticed this, concrete examples from their own work, what they used to believe, who would disagree and whether that person has a point, and what is at stake for their audience. When an answer lands, reflect it back in one short sentence, then ask the next question. Do not write the content yet. Plain language, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+TOPIC: ${run.topic}
+THE TAKE: ${t.title}. ${t.hook} ${t.angle}
+${t.context?`\nWHAT THE CREATOR ADDED: ${t.context}`:""}
+
+Start with your first question.`;
+}
+async function ask(key){
+  const t=findTake(key); if(!t||!sample) return;
+  t.thread=t.thread||[]; busy[key]=true;
+  t.thread.push({role:"assistant",content:"…"}); renderPanel(key);
+  const bubbles=()=>document.querySelectorAll(`#thread-${key} .bubble`);
+  const turns=[{role:"user",content:interviewInstr(t)},...t.thread.slice(0,-1)];
+  try{
+    const {text}=await sample(turns,{cache:false,onText:({text})=>{const b=bubbles();if(b.length)b[b.length-1].textContent=text}});
+    t.thread[t.thread.length-1].content=text;
+  }catch(e){ t.thread.pop(); showNotice(errCopy(e),true) }
+  busy[key]=false; persist("last"); renderPanel(key);
+  const inp=document.getElementById("say-"+key); if(inp) inp.focus();
+}
+async function build(key){
+  const run=state.last, t=findTake(key); if(!run||!t||!sample) return;
+  const hasTalk=(t.thread||[]).some(m=>m.role==="user");
+  if(!t.context&&!hasTalk){showNotice("Add some context or talk it through first, so the remix has something of yours to work with.",true);return}
+  busy[key]=true; renderPanel(key);
+  const btn=document.querySelector(`#panel-${key} [data-act="build"]`); if(btn) btn.textContent="Building…";
+  const p=`You are Handalf. A creator picked one contrary take and gave you more of themselves. Rebuild it into 3 sharper takes grounded in what they told you. Keep the core position, use their real details (moments, examples, work), and vary the frame (format, hook, evidence).
+
+Also extract the personal stances the creator stated in their own words, so they can be cited. Give each a temporary id n1, n2, n3.
+
+CREATOR PROFILE
+${profileText()}
+
+EXISTING STANCES
+${stanceText()}
+
+TOPIC: ${run.topic}
+CONSENSUS: ${(run.consensus||[]).map(c=>c.id+": "+c.take).join(" | ")}
+ORIGINAL TAKE: ${t.title}. ${t.hook} ${t.angle}
+${t.context?`\nCREATOR'S CONTEXT: ${t.context}`:""}
+${hasTalk?`\nINTERVIEW\n${threadText(t)}`:""}
+
+Score honestly with the same rules (divergence, ownership, defensibility, fit, 0 to 10). Ownership should reflect how much of the creator's own experience is in the take. Takes may cite new stance ids (n1...) or existing ids. Write plainly, no em dashes.
+Reply with only JSON: {"stances":[{"id":"n1","stance":"first person, one sentence","against":"the consensus it pushes against","quote":"their words, verbatim, max 25 words","topic":"2 to 4 words","strength":1-5}],"takes":[${TAKE_SCHEMA}]}`;
+  try{
+    const out=await sample.json(p,{cache:false});
+    syncNextId(); const map={};
+    (Array.isArray(out.stances)?out.stances:[]).forEach(s=>{
+      if(!s||!s.stance) return;
+      const id="s"+(nextId++); map[String(s.id)]=id;
+      state.stances.push({id,stance:String(s.stance),against:String(s.against||""),quote:String(s.quote||""),topic:String(s.topic||""),strength:Math.max(1,Math.min(5,+s.strength||4)),source:"Dialogue: "+t.title});
+    });
+    if(Object.keys(map).length){persist("stances");renderStances()}
+    const news=(out.takes||[]).slice(0,3).map(x=>{const n=normTake({...x,stances:(x.stances||[]).map(id=>map[String(id).trim()]||id),remixOf:key});n.deepened=true;return n});
+    const i=run.takes.findIndex(x=>x.key===key);
+    let j=i+1; while(j<run.takes.length&&run.takes[j].remixOf===key) j++;
+    run.takes.splice(j,0,...news);
+    busy[key]=false; persist("last"); renderEngine();
+    showNotice(`Added ${news.length} takes under “${t.title}”${Object.keys(map).length?` and ${Object.keys(map).length} new stances to your bank`:""}.`);
+  }catch(e){ busy[key]=false; renderPanel(key); showNotice(errCopy(e),true) }
+}
+function takeHTML(t,ctx){
+  const m=multiple(t), [tn,tc]=tier(m);
+  const cons=ctx.consensus&&ctx.consensus.find(c=>c.id===t.against);
+  const saved=state.vault.some(v=>v.key===t.key);
+  const bars=[["Diverge",t.divergence],["Own",t.ownership],["Defend",t.defensibility],["Fit",t.fit]]
+    .map(([l,v])=>`<div class="bar"><span class="label">${l} ${v}</span><i><b style="width:${v*10}%"></b></i></div>`).join("");
+  const back=(t.stances||[]).slice(0,2).map(s=>`<div class="backing"><span class="mono">${esc(s.id||"stance")}</span> ${esc(s.text)}${s.quote?` <q>${esc(s.quote)}</q>`:""}</div>`).join("");
+  return `<article class="take${t.remixOf?" remix":""}">
+    <div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
+    <div style="min-width:0">
+      <h4>${esc(t.title)}${t.deepened?`<span class="badge">From your context</span>`:""}</h4>
+      <p class="hook">${esc(t.hook)}</p>
+      <p class="angle">${esc(t.angle)}</p>
+      <div class="meta"><span>Against <b>${esc(t.against||"n/a")}</b>${cons?` · ${esc(cons.take)}`:""}</span><span>Format <b>${esc(t.format||"n/a")}</b></span></div>
+      ${back||(t.ownership<=3?`<div class="backing" style="border-color:var(--risk)">No stance of yours backs this yet.</div>`:"")}
+      <div class="bars">${bars}</div>
+      ${t.risk?`<p class="risk">Risk: ${esc(t.risk)}</p>`:""}
+      ${ctx.example?"":`<div class="actions">
+        <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In vault":"Save to vault"}</button>
+        ${ctx.vault?`<button class="btn ghost" data-act="copy" data-key="${t.key}" type="button">Copy</button><button class="btn quiet" data-act="unsave" data-key="${t.key}" type="button">Remove</button>`:`<button class="btn ghost" data-act="remix" data-key="${t.key}" type="button" aria-expanded="${open.has(t.key)}">${open.has(t.key)?"Close":(t.thread&&t.thread.length?"Continue":"Remix")}</button>`}
+      </div>`}
+      ${ctx.example||ctx.vault?"":`<div id="panel-${t.key}">${open.has(t.key)?deepHTML(t):""}</div>`}
+    </div></article>`;
+}
+function renderEngine(){
+  const run=state.last||(state.profile.ran?null:EXAMPLE);
+  if(!run){
+    const p0=state.profile, thin0=!p0.archetype&&!p0.niche&&!p0.expertise&&!p0.brief;
+    $("#results").innerHTML=(thin0?`<p class="notice">Ideas will be more detailed once Handalf knows about you and your brand. <button class="btn ghost" data-setup type="button">Add your brand</button></p>`:"")
+      +`<div class="empty"><strong>Ready for a new topic</strong>Type an idea above and press Find outliers. Your vault${state.vault.length?` still holds ${state.vault.length} saved take${state.vault.length===1?"":"s"}`:" is ready for whatever you keep"}.</div>`;
+    return;
+  }
+  const takes=(run.takes||[]).map(t=>t.key?t:{...t,key:"ex"+Math.random()});
+  // keep remixes under their parent; rank parents by multiple
+  const parents=takes.filter(t=>!t.remixOf).sort((a,b)=>multiple(b)-multiple(a));
+  let ordered=[];
+  parents.forEach(p=>{ordered.push(p); ordered.push(...takes.filter(t=>t.remixOf===p.key).sort((a,b)=>multiple(b)-multiple(a)))});
+  ordered=ordered.filter(t=>{const m=multiple(t);return filter==="all"||(filter==="out"&&m>=5)||(filter==="owned"&&t.ownership>=6)||(filter==="safe"&&t.defensibility>=7)});
+  const p=state.profile, thin=!p.archetype&&!p.niche&&!p.expertise&&!p.brief;
+  const head=(thin?`<p class="notice">Ideas will be more detailed once Handalf knows about you and your brand. <button class="btn ghost" data-setup type="button">Add your brand</button></p>`:"")
+    +(run.example?`<p class="notice">Example run on a sample topic. Mine your stances, then run your own topic.</p>`:"");
+  $("#results").innerHTML=`${head}
+  <div class="results">
+    <aside>
+      <div class="col-head"><h3>Consensus</h3><span class="baseline">= 1x</span></div>
+      <ul class="cons">${(run.consensus||[]).map(c=>`<li><span class="cid">${esc(c.id)}</span><div><strong>${esc(c.take)}</strong><span>${esc(c.why)}</span></div></li>`).join("")}</ul>
+      <p class="hint" style="margin-top:12px">The multiple compares each take to this baseline: divergence × ownership × defensibility, adjusted for fit. 5x and up is an outlier.</p>
+    </aside>
+    <div style="min-width:0">
+      <div class="col-head"><h3>Takes · ${esc(run.topic)}</h3>
+        <div class="filters">${[["all","All"],["out","5x+"],["owned","Backed by you"],["safe","Defensible"]].map(([k,l])=>`<button class="chip" data-filter="${k}" aria-pressed="${filter===k}" type="button">${l}</button>`).join("")}</div>
+      </div>
+      ${ordered.length?ordered.map(t=>takeHTML(t,{consensus:run.consensus,example:run.example})).join(""):`<p class="empty">No takes match this filter.</p>`}
+    </div>
+  </div>`;
+  if(state.last&&!$("#topic").value) $("#topic").value=state.last.topic;
+}
+$("#results").addEventListener("click",e=>{
+  if(e.target.closest("[data-setup]")){openSetup();return}
+  const f=e.target.closest("[data-filter]"); if(f){filter=f.dataset.filter;renderEngine();return}
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const t=state.last&&state.last.takes.find(x=>x.key===b.dataset.key);
+  if(b.dataset.act==="remix"){const k=b.dataset.key;open.has(k)?open.delete(k):open.add(k);b.textContent=open.has(k)?"Close":"Remix";b.setAttribute("aria-expanded",open.has(k));renderPanel(k);const ta=document.getElementById("ctx-"+k);if(ta)ta.focus();return}
+  if(b.dataset.act==="talk"){ask(b.dataset.key);return}
+  if(b.dataset.act==="build"){build(b.dataset.key);return}
+  if(b.dataset.act==="save"&&t&&!state.vault.some(v=>v.key===t.key)){
+    const {thread,...rest}=t;
+    state.vault.push({...rest,topic:state.last.topic,againstText:(state.last.consensus.find(c=>c.id===t.against)||{}).take||"",savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]});
+    persist("vault"); renderEngine(); renderVault();
+  }
+});
+
+$("#results").addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.ctx;if(!k)return;const t=findTake(k);if(t){t.context=e.target.value;persist("last")}});
+$("#results").addEventListener("submit",e=>{
+  const f=e.target.closest("[data-say]"); if(!f) return; e.preventDefault();
+  const k=f.dataset.say, inp=document.getElementById("say-"+k), t=findTake(k);
+  if(!t||busy[k]||!inp.value.trim()) return;
+  t.thread.push({role:"user",content:inp.value.trim()}); ask(k);
+});
+
+/* ---------- conversation ingest ---------- */
+function partsText(p){return (Array.isArray(p)?p:[p]).map(x=>typeof x==="string"?x:(x&&x.text)||"").join("\n")}
+function parseExport(name,text){
+  const out=[];
+  let j=null; if(/\.json$/i.test(name)){try{j=JSON.parse(text)}catch(e){}}
+  if(Array.isArray(j)){
+    j.forEach(conv=>{
+      const title=conv.title||conv.name||"";
+      if(conv.mapping){ // ChatGPT
+        Object.values(conv.mapping).forEach(n=>{const m=n&&n.message;if(m&&m.author&&m.author.role==="user"){const t=partsText(m.content&&m.content.parts);if(t.trim())out.push({title,t:t.trim(),ts:m.create_time||0})}});
+      }else if(conv.chat_messages){ // Claude
+        conv.chat_messages.forEach(m=>{if(m.sender==="human"){const t=(m.text&&m.text.trim())?m.text:partsText(m.content);if(t&&t.trim())out.push({title,t:t.trim()})}});
+      }else if(conv.role&&conv.content){ if(conv.role==="user") out.push({title:"",t:partsText(conv.content)}) }
+    });
+    out.sort((a,b)=>(a.ts||0)-(b.ts||0));
+    return out.map(x=>(x.title?"["+x.title+"] ":"")+x.t);
+  }
+  // plain text: keep lines that belong to the user when labels exist
+  const lines=text.split(/\r?\n/), lab=/^(you|user|me|human)\s*:/i, other=/^(assistant|claude|chatgpt|ai|gpt|model)\s*:/i;
+  if(lines.some(l=>lab.test(l))){
+    const msgs=[];let cur=null;
+    lines.forEach(l=>{if(lab.test(l)){cur=[l.replace(lab,"").trim()];msgs.push(cur)}else if(other.test(l)){cur=null}else if(cur)cur.push(l)});
+    return msgs.map(m=>m.join("\n").trim()).filter(Boolean);
+  }
+  return [text.trim()];
+}
+function addSource(name,msgs){
+  msgs=msgs.filter(m=>m.length>=40);
+  if(!msgs.length){showStanceHint(`Nothing usable in ${name}. Handalf skips messages under 40 characters.`);return}
+  queue.push({name,messages:msgs}); renderSources(); setRunAvail();
+}
+function readFiles(files){[...files].forEach(f=>{const r=new FileReader();r.onload=()=>addSource(f.name,parseExport(f.name,String(r.result)));r.readAsText(f)})}
+const drop=$("#drop");
+["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>readFiles(e.dataTransfer.files));
+$("#file").addEventListener("change",e=>{readFiles(e.target.files);e.target.value=""});
+$("#paste-add").addEventListener("click",()=>{const t=$("#paste").value;if(!t.trim())return;addSource("Pasted text "+(queue.length+state.sources.length+1),parseExport("paste.txt",t));$("#paste").value=""});
+function renderSources(){
+  const q=queue.map((s,i)=>`<li><span>${esc(s.name)}</span><span>${s.messages.length} msgs · queued <button class="btn quiet" data-unq="${i}" type="button">×</button></span></li>`);
+  const done=state.sources.map(s=>`<li><span>${esc(s.name)}</span><span>${s.msgs} msgs · ${s.found} stances</span></li>`);
+  $("#sources").innerHTML=q.concat(done).join("");
+}
+$("#sources").addEventListener("click",e=>{const b=e.target.closest("[data-unq]");if(b){queue.splice(+b.dataset.unq,1);renderSources();setRunAvail()}});
+function showStanceHint(t){$("#mine-hint").textContent=t}
+
+const CHUNK=40000;
+function chunks(msgs){const out=[];let cur="";msgs.forEach(m=>{const s=m.slice(0,4000)+"\n---\n";if(cur.length+s.length>CHUNK&&cur){out.push(cur);cur=""}cur+=s});if(cur)out.push(cur);return out}
+function minePrompt(text){
+return `Below are messages a content creator wrote to AI assistants (only their side of each chat). Extract their contrarian stances: positions where they disagree with the assistant, with conventional advice, with their industry, or with popular opinion. Also include strong original convictions they state. Ignore requests, instructions, code and logistics.
+
+Reply with only a JSON array (at most 20 items, empty array if none) of:
+{"stance":"the position in one first-person sentence","against":"the consensus it pushes against","quote":"their own words, verbatim, at most 25 words","topic":"2 to 4 word topic","strength":1-5}
+Write plainly, no em dashes.
+
+MESSAGES
+${text}`;
+}
+let mineCtl=null;
+$("#mine-btn").addEventListener("click",async()=>{
+  if(mineCtl){mineCtl.abort();return}
+  if(!sample||!queue.length) return;
+  mineCtl=new AbortController();
+  const btn=$("#mine-btn"), prog=$("#mine-prog"), bar=prog.querySelector("b");
+  btn.textContent="Stop"; prog.hidden=false;
+  const jobs=[]; queue.forEach(s=>chunks(s.messages).forEach(c=>jobs.push({src:s,c})));
+  let n=0, found=0, failed=null;
+  const seen=new Set(state.stances.map(s=>s.stance.toLowerCase()));
+  const perSrc=new Map();
+  for(const job of jobs){
+    showStanceHint(`Reading batch ${n+1} of ${jobs.length} from ${job.src.name}…`);
+    try{
+      const arr=await sample.json(minePrompt(job.c),{signal:mineCtl.signal,cache:{gcTime:86400000}});
+      (Array.isArray(arr)?arr:[]).forEach(x=>{
+        if(!x||!x.stance) return; const k=String(x.stance).toLowerCase(); if(seen.has(k)) return; seen.add(k);
+        state.stances.push({id:"s"+(nextId++),stance:String(x.stance),against:String(x.against||""),quote:String(x.quote||""),topic:String(x.topic||""),strength:Math.max(1,Math.min(5,+x.strength||3)),source:job.src.name});
+        found++; perSrc.set(job.src,(perSrc.get(job.src)||0)+1);
+      });
+      renderStances();
+    }catch(e){ if(e&&e.code==="cancelled"){failed="stopped";break} failed=errCopy(e); if(e&&(e.code==="not_granted"||e.code==="rate_limited"))break; }
+    n++; bar.style.width=(n/jobs.length*100)+"%";
+  }
+  // move fully processed sources out of the queue
+  if(n===jobs.length){
+    queue.forEach(s=>state.sources.push({name:s.name,msgs:s.messages.length,found:perSrc.get(s)||0}));
+    queue=[];
+  }
+  persist("stances"); renderSources(); renderStances();
+  showStanceHint(failed==="stopped"?`Stopped. Kept ${found} new stances; the queue stays so you can resume.`:failed?`${failed} Kept ${found} new stances.`:`Done. ${found} new stances from ${jobs.length} batches.`);
+  btn.textContent="Mine stances"; mineCtl=null; prog.hidden=true; bar.style.width="0"; setRunAvail();
+});
+let nextId=1;
+function syncNextId(){nextId=1+state.stances.reduce((m,s)=>Math.max(m,parseInt(String(s.id).slice(1))||0),0)}
+$("#add-btn").addEventListener("click",()=>{
+  const s=$("#add-stance").value.trim(); if(!s) return;
+  syncNextId();
+  state.stances.push({id:"s"+(nextId++),stance:s,against:$("#add-against").value.trim(),quote:"",topic:"",strength:4,source:"Added by hand"});
+  $("#add-stance").value="";$("#add-against").value=""; persist("stances"); renderStances();
+});
+function renderStances(){
+  syncNextId();
+  const list=[...state.stances].sort((a,b)=>(b.strength||0)-(a.strength||0));
+  $("#n-stances").textContent=list.length?list.length:"";
+  $("#stance-meta").textContent=list.length?`${list.length} stances · strongest first`:"";
+  $("#stance-list").innerHTML=list.length?list.map(s=>`<div class="stance">
+      <div><span class="sid">${esc(s.id)}</span><div class="dots">${[1,2,3,4,5].map(i=>`<i class="${i<=s.strength?"on":""}"></i>`).join("")}</div></div>
+      <div style="min-width:0"><p>${esc(s.stance)}</p>${s.against?`<span class="vs">Against: ${esc(s.against)}</span>`:""}${s.quote?`<q>${esc(s.quote)}</q>`:""}<span class="mono" style="color:var(--mute)">${esc([s.topic,s.source].filter(Boolean).join(" · "))}</span></div>
+      <button class="btn quiet" data-del="${esc(s.id)}" type="button">Remove</button></div>`).join("")
+    :`<div class="empty"><strong>No stances yet</strong>Drop a conversation export on the left and press Mine stances, or add one by hand above. Each stance gets an id like s4 that takes cite as evidence.</div>`;
+}
+$("#stance-list").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;state.stances=state.stances.filter(s=>s.id!==b.dataset.del);persist("stances");renderStances()});
+
+/* ---------- profile ---------- */
+const pf=$("#profile-form");
+function renderProfile(){
+  [...pf.elements].forEach(el=>{if(el.name)el.value=state.profile[el.name]||""});
+  const p=state.profile, A=p.archetype&&ARCH[p.archetype];
+  $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-retake>Retake quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`
+    :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Take the brand quiz</button><button class="btn ghost" type="button" data-setup>Link LLM or upload</button></div>`;
+}
+$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup()});
+pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
+
+/* ---------- vault planner ---------- */
+let vgroup="idea";
+const savedLabel=ts=>ts?new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"earlier";
+function todayISO(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function addDays(iso,n){const [y,m,d]=iso.split("-").map(Number);const dt=new Date(y,m-1,d+n);return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0")}
+function dayLabel(iso){const [y,m,d]=iso.split("-").map(Number);const dt=new Date(y,m-1,d);return dt.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:y!==new Date().getFullYear()?"numeric":undefined})}
+const CADENCE={weekly:["Weekly",7],twice:["Twice a week",3.5],biweekly:["Every other week",14]};
+function spaceEpisodes(v){ if(!v.planDate||!v.episodes) return; const step=(CADENCE[v.cadence]||CADENCE.weekly)[1]; v.episodes.forEach((e,i)=>e.planDate=addDays(v.planDate,Math.round(i*step))) }
+function vaultCard(v){
+  const m=multiple(v),[tn,tc]=tier(m), series=v.kind==="series", eps=v.episodes||[], k=v.key;
+  return `<article class="vcard" id="vc-${k}">
+    <div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
+    <div style="min-width:0">
+      <h4>${esc(v.title)}</h4>
+      <p class="hook">${esc(v.hook)}</p>
+      <div class="meta"><span>Format <b>${esc(v.format||"n/a")}</b></span><span>Saved <b>${savedLabel(v.savedAt)}</b></span>${v.againstText?`<span>Against <b>${esc(v.againstText)}</b></span>`:""}</div>
+      <div class="plan">
+        <div class="seg" role="group" aria-label="Plan as"><button type="button" data-kind="single" data-key="${k}" aria-pressed="${!series}">Single</button><button type="button" data-kind="series" data-key="${k}" aria-pressed="${series}">Series</button></div>
+        <label class="label" for="pd-${k}">${series?"Starts":"Post on"}</label>
+        <input type="date" id="pd-${k}" data-pdate="${k}" value="${esc(v.planDate||"")}">
+        ${series?`<label class="label" for="cad-${k}">Cadence</label><select id="cad-${k}" data-cad="${k}">${Object.entries(CADENCE).map(([c,[l]])=>`<option value="${c}"${(v.cadence||"weekly")===c?" selected":""}>${l}</option>`).join("")}</select>`:""}
+      </div>
+      ${series?(eps.length?`<p class="series-title">${esc(v.seriesTitle||"Series")} · ${eps.length} episodes</p>
+        <ol class="eps">${eps.map((e,i)=>`<li><div><b>Ep ${i+1} · ${esc(e.title)}</b><span>${esc(e.hook)}</span><span class="mono">${esc(e.format||"")}</span></div><input type="date" aria-label="Episode ${i+1} date" data-epdate="${k}" data-ep="${i}" value="${esc(e.planDate||"")}"></li>`).join("")}</ol>
+        <div class="buildrow"><label class="label" for="epn-${k}">Episodes</label><select id="epn-${k}">${[3,4,5,6].map(n=>`<option${n===eps.length?" selected":""}>${n}</option>`).join("")}</select><button class="btn ghost" type="button" data-act="series" data-key="${k}">Rebuild series</button></div>`
+       :`<div class="buildrow"><label class="label" for="epn-${k}">Episodes</label><select id="epn-${k}">${[3,4,5,6].map(n=>`<option${n===4?" selected":""}>${n}</option>`).join("")}</select><button class="btn" type="button" data-act="series" data-key="${k}">Build the series</button></div>
+        <p class="hint" style="margin-top:6px">Handalf plans an arc of episodes from this take, each one building on the last. Set a start date and they get spaced out for you.</p>`):""}
+      <div class="actions"><button class="btn ghost" type="button" data-act="copy" data-key="${k}">Copy</button><button class="btn quiet" type="button" data-act="unsave" data-key="${k}">Remove</button></div>
+    </div></article>`;
+}
+function renderVault(){
+  const v=state.vault;
+  $("#n-vault").textContent=v.length?v.length:"";
+  document.querySelectorAll("[data-vgroup]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.vgroup===vgroup));
+  if(!v.length){$("#vault-list").innerHTML=`<div class="empty"><strong>Vault is empty</strong>Save takes from an engine run. They collect here by idea, and you can plan each one as a single post or a series.</div>`;return}
+  if(vgroup==="idea"){
+    const groups=new Map();
+    v.forEach(x=>{const t=x.topic||"Untitled";if(!groups.has(t))groups.set(t,[]);groups.get(t).push(x)});
+    const ordered=[...groups.entries()].sort((a,b)=>Math.max(...b[1].map(x=>x.savedAt||0))-Math.max(...a[1].map(x=>x.savedAt||0)));
+    $("#vault-list").innerHTML=ordered.map(([topic,items])=>`<section class="vgroup"><div class="col-head"><h3>${esc(topic)}</h3><span class="label">${items.length} take${items.length===1?"":"s"} · last saved ${savedLabel(Math.max(...items.map(x=>x.savedAt||0)))}</span></div>
+      ${[...items].sort((a,b)=>multiple(b)-multiple(a)).map(vaultCard).join("")}</section>`).join("");
+    return;
+  }
+  const rows=[];
+  v.forEach(x=>{
+    if(x.kind==="series"&&x.episodes&&x.episodes.length) x.episodes.forEach((e,i)=>rows.push({date:e.planDate||"",title:e.title,sub:`Episode ${i+1} of ${x.episodes.length} · ${x.seriesTitle||x.title}`,key:x.key,topic:x.topic}));
+    else rows.push({date:x.planDate||"",title:x.title,sub:x.kind==="series"?"Series, episodes not built yet":`Single · ${x.format||"post"}`,key:x.key,topic:x.topic});
+  });
+  const today=todayISO(), byDay=new Map();
+  rows.forEach(r=>{const d=r.date||"none";if(!byDay.has(d))byDay.set(d,[]);byDay.get(d).push(r)});
+  const days=[...byDay.keys()].filter(d=>d!=="none").sort();
+  if(byDay.has("none")) days.push("none");
+  $("#vault-list").innerHTML=`<div class="agenda">${days.map(d=>`<div class="aday${d!=="none"&&d<today?" past":""}"><h3>${d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":"")}</h3><div>
+    ${byDay.get(d).map(r=>`<div class="arow"><div style="min-width:0"><b>${esc(r.title)}</b><span>${esc(r.sub)}</span><span class="mono">${esc(r.topic||"")}</span></div><button class="btn ghost" type="button" data-open="${r.key}">Plan</button></div>`).join("")}</div></div>`).join("")}</div>`;
+}
+$("#vault-group").addEventListener("click",e=>{const b=e.target.closest("[data-vgroup]");if(!b)return;vgroup=b.dataset.vgroup;renderVault()});
+const vfind=k=>state.vault.find(x=>x.key===k);
+$("#vault-list").addEventListener("click",async e=>{
+  const o=e.target.closest("[data-open]");
+  if(o){vgroup="idea";renderVault();const c=document.getElementById("vc-"+o.dataset.open);if(c)c.scrollIntoView({block:"start"});return}
+  const kd=e.target.closest("[data-kind]");
+  if(kd){const v=vfind(kd.dataset.key);if(v&&v.kind!==kd.dataset.kind){v.kind=kd.dataset.kind;persist("vault");renderVault()}return}
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const t=vfind(b.dataset.key); if(!t) return;
+  if(b.dataset.act==="unsave"){state.vault=state.vault.filter(x=>x.key!==t.key);persist("vault");renderVault();renderEngine()}
+  if(b.dataset.act==="copy"){
+    let txt=`${t.title}\n\n${t.hook}\n\n${t.angle}\n\nFormat: ${t.format}${t.planDate?`\nPlanned: ${t.planDate}`:""}`;
+    if(t.kind==="series"&&t.episodes&&t.episodes.length) txt+=`\n\n${t.seriesTitle||"Series"}\n`+t.episodes.map((x,i)=>`\nEp ${i+1}: ${x.title}${x.planDate?` (${x.planDate})`:""}\n${x.hook}\n${x.angle||""}`).join("\n");
+    try{await navigator.clipboard.writeText(txt);b.textContent="Copied"}catch(err){b.textContent="Copy blocked"}
+  }
+  if(b.dataset.act==="series") buildSeries(t,b);
+});
+$("#vault-list").addEventListener("change",e=>{
+  const el=e.target;
+  if(el.dataset.pdate){const v=vfind(el.dataset.pdate);if(!v)return;v.planDate=el.value;if(v.kind==="series")spaceEpisodes(v);persist("vault");renderVault()}
+  if(el.dataset.cad){const v=vfind(el.dataset.cad);if(!v)return;v.cadence=el.value;spaceEpisodes(v);persist("vault");renderVault()}
+  if(el.dataset.epdate){const v=vfind(el.dataset.epdate);if(!v||!v.episodes)return;const ep=v.episodes[+el.dataset.ep];if(ep){ep.planDate=el.value;persist("vault")}}
+});
+async function buildSeries(v,btn){
+  if(!sample){btn.textContent="Open inside Claude to build";return}
+  const n=+(document.getElementById("epn-"+v.key)||{}).value||4;
+  btn.disabled=true; btn.textContent="Planning the arc…";
+  const p=`You are Handalf. Turn one contrary take into a content series of ${n} episodes for this creator. Build an arc: open with the boldest version of the claim, go deeper with the creator's own experience and evidence, take on the strongest pushback honestly, and land on what the audience should do or believe next. Every episode must still work on its own. Write plainly, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+CREATOR STANCES
+${stanceText()}
+
+TOPIC: ${v.topic}
+THE TAKE: ${v.title}. ${v.hook} ${v.angle}
+${v.context?`CREATOR'S CONTEXT: ${v.context}`:""}
+
+Reply with only JSON: {"series_title":"short series name","episodes":[{"title":"","hook":"under 25 words","angle":"one sentence","format":"video essay | short | carousel | thread | post | podcast"}]}`;
+  try{
+    const out=await sample.json(p,{cache:false});
+    const eps=(Array.isArray(out.episodes)?out.episodes:[]).slice(0,n).map(x=>({title:String(x.title||""),hook:String(x.hook||""),angle:String(x.angle||""),format:String(x.format||""),planDate:""}));
+    if(!eps.length) throw {code:"invalid_json"};
+    v.episodes=eps; v.seriesTitle=String(out.series_title||v.title); spaceEpisodes(v); persist("vault"); renderVault();
+  }catch(e){btn.disabled=false;btn.textContent=errCopy(e)||"Try again"}
+}
+
+/* ---------- export: final plan ---------- */
+const MEDIA={text:"Text",audio:"Audio",video:"Video"};
+const mediumFor=f=>/video|short|reel|tiktok|youtube/i.test(f||"")?"video":/podcast|audio|voice/i.test(f||"")?"audio":"text";
+const GUIDE={
+ text:"Pick the best written form for it (post, thread, carousel, newsletter or article), using the format hint. Sections are the parts, slides or posts in order, with the key lines to write in each.",
+ audio:"Pick the best audio form for it (podcast episode, solo episode, voice note or audio essay). Sections are segments in order, with talking points and the stories to tell. Put rough minutes in each heading.",
+ video:"Pick the best video form for it (long-form video essay, short or reel), using the format hint. Sections are beats in order, with what to say and what is on screen. Put b-roll, visuals and edit notes in notes."};
+let exCtl=null;
+const exItems=()=>[...state.vault].sort((a,b)=>(a.planDate||"9999").localeCompare(b.planDate||"9999")||((b.savedAt||0)-(a.savedAt||0)));
+function exMedium(v){return v.medium||mediumFor(v.format)}
+function outlineFresh(v){return v.outline&&v.outline.medium===exMedium(v)&&(v.kind!=="series"||(v.outline.episodes&&v.outline.episodes.length===(v.episodes||[]).length))}
+function renderExport(){
+  const el=$("#export-body"), items=exItems();
+  if(!items.length){el.innerHTML=`<div class="empty"><strong>Nothing to export yet</strong>Save takes to your vault from an engine run, plan them as singles or series, then come back here to outline and export them.</div><button class="btn" type="button" data-goengine style="justify-self:start">Go to the engine</button>`;return}
+  const sel=items.filter(v=>v.exportOn!==false), need=sel.filter(v=>!outlineFresh(v));
+  el.innerHTML=`<div class="split">
+    <div style="min-width:0">
+      <div class="exbar"><h3>Concepts</h3><div class="seg" role="group" aria-label="Set all to">${Object.entries(MEDIA).map(([k,l])=>`<button type="button" data-allmedium="${k}" aria-pressed="${sel.length&&sel.every(v=>exMedium(v)===k)}">All ${l.toLowerCase()}</button>`).join("")}</div></div>
+      <div class="exlist">${items.map(v=>{const k=v.key,m=exMedium(v),series=v.kind==="series";
+        const when=series?(v.episodes&&v.episodes.length?`${v.episodes.length} episode series${v.planDate?` from ${dayLabel(v.planDate)}`:""}`:"Series, episodes not built yet"):(v.planDate?dayLabel(v.planDate):"Not scheduled");
+        return `<div class="exrow"><input type="checkbox" id="ex-${k}" data-exon="${k}"${v.exportOn!==false?" checked":""}>
+          <label for="ex-${k}" style="min-width:0"><b>${esc(v.title)}</b><span class="sub">${esc(when)} · ${esc(v.topic||"")}</span></label>
+          <div class="ctl"><div class="seg" role="group" aria-label="Medium">${Object.entries(MEDIA).map(([mk,l])=>`<button type="button" data-medium="${mk}" data-key="${k}" aria-pressed="${m===mk}">${l}</button>`).join("")}</div>
+          <span class="st ${outlineFresh(v)?"ok":"need"}">${outlineFresh(v)?"Outlined":v.outline?"Medium changed":"Needs outline"}</span>
+          ${outlineFresh(v)?`<button class="btn quiet" type="button" data-reoutline="${k}">Redo outline</button>`:""}</div></div>`}).join("")}</div>
+      <div class="actions" style="margin-top:16px"><button class="btn" type="button" id="outline-btn"${!sel.length?" disabled":""}>${exCtl?"Stop":need.length?`Outline ${need.length} concept${need.length===1?"":"s"}`:"All outlined"}</button></div>
+      <p class="hint" id="ex-hint" style="margin-top:8px">${sample?"Each outline is shaped for its medium: sections for text, segments for audio, beats with on-screen notes for video.":"Outlines are written by Claude, so open this page inside Claude to build them. You can still export the plan as it stands."}</p>
+    </div>
+    <div style="min-width:0">
+      <div class="exactions">
+        <button class="btn" type="button" data-exp="copydoc"${!sel.length?" disabled":""}>Copy document</button>
+        <button class="btn ghost" type="button" data-exp="savedoc"${!sel.length?" disabled":""}>Download Word doc</button>
+        <button class="btn ghost" type="button" data-exp="copyprompt"${!sel.length?" disabled":""}>Copy as prompt</button>
+        <button class="btn ghost" type="button" data-exp="saveprompt"${!sel.length?" disabled":""}>Download prompt as Word doc</button>
+      </div>
+      <p class="hint" style="margin:-4px 0 12px">Word docs open in Microsoft Word, Google Docs and Pages.</p>
+      ${sel.length?`<article class="doc" id="doc-preview">${toHTML(planBlocks(sel))}</article>`:`<div class="empty"><strong>No concepts selected</strong>Tick at least one concept to build the plan.</div>`}
+    </div></div>`;
+}
+function outlineBlocks(o,B){
+  if(!o) return;
+  B.push({t:"kv",k:"Form",v:[o.form,o.length].filter(Boolean).join(" · ")});
+  if(o.hook) B.push({t:"kv",k:"Open with",v:o.hook});
+  if(o.sections&&o.sections.length) B.push({t:"ol",items:o.sections.map(x=>({head:x.heading,points:x.points||[]}))});
+  if(o.cta) B.push({t:"kv",k:"Close with",v:o.cta});
+  if(o.notes) B.push({t:"kv",k:"Production notes",v:o.notes});
+}
+function planBlocks(sel){
+  const p=state.profile, B=[];
+  B.push({t:"h1",v:`${p.name?p.name+" · ":""}Content plan`});
+  B.push({t:"kv",k:"Made with Handalf",v:new Date().toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})});
+  const brand=[p.archetype?p.archetype+(p.archetype2?` with ${p.archetype2}`:"")+" archetype":"",p.niche,p.platforms].filter(Boolean).join(" · ");
+  if(brand) B.push({t:"kv",k:"Brand",v:brand});
+  B.push({t:"h2",v:"At a glance"});
+  B.push({t:"ol",items:sel.map(v=>({head:`${v.title} · ${MEDIA[exMedium(v)]}${v.kind==="series"&&v.episodes&&v.episodes.length?` series, ${v.episodes.length} episodes`:""} · ${v.planDate?dayLabel(v.planDate):"Not scheduled"}`,points:[]}))});
+  sel.forEach((v,i)=>{
+    B.push({t:"h2",v:`${i+1}. ${v.title}`});
+    B.push({t:"kv",k:"Medium",v:MEDIA[exMedium(v)]});
+    B.push({t:"kv",k:"Planned",v:v.kind==="series"?(v.planDate?`Series starting ${dayLabel(v.planDate)}, ${(CADENCE[v.cadence]||CADENCE.weekly)[0].toLowerCase()}`:"Series, not scheduled"):(v.planDate?dayLabel(v.planDate):"Not scheduled")});
+    B.push({t:"kv",k:"The take",v:v.angle});
+    if(v.againstText) B.push({t:"kv",k:"Pushes against",v:v.againstText});
+    (v.stances||[]).slice(0,2).forEach(s=>B.push({t:"kv",k:"Backed by",v:s.quote?`"${s.quote}"`:s.text}));
+    if(v.context) B.push({t:"kv",k:"Your context",v:v.context});
+    const fresh=outlineFresh(v);
+    if(v.kind==="series"&&v.episodes&&v.episodes.length){
+      v.episodes.forEach((e,j)=>{
+        B.push({t:"h3",v:`Episode ${j+1}: ${e.title}`});
+        B.push({t:"kv",k:"Planned",v:e.planDate?dayLabel(e.planDate):"Not scheduled"});
+        if(fresh) outlineBlocks(v.outline.episodes[j],B); else B.push({t:"kv",k:"Hook",v:e.hook});
+      });
+    }else if(fresh) outlineBlocks(v.outline,B);
+    else B.push({t:"kv",k:"Hook",v:v.hook});
+    if(!fresh) B.push({t:"p",v:"Outline not built yet."});
+  });
+  return B;
+}
+function toHTML(B){return B.map(b=>b.t==="h1"?`<h1>${esc(b.v)}</h1>`:b.t==="h2"?`<h2>${esc(b.v)}</h2>`:b.t==="h3"?`<h3>${esc(b.v)}</h3>`:b.t==="p"?`<p class="hint">${esc(b.v)}</p>`
+  :b.t==="kv"?(b.v?`<p class="kv"><b>${esc(b.k)}:</b> ${esc(b.v)}</p>`:""):`<ol>${b.items.map(it=>`<li>${esc(it.head)}${it.points.length?`<ul>${it.points.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}</li>`).join("")}</ol>`).join("")}
+function toText(B){return B.map(b=>b.t==="h1"||b.t==="h2"||b.t==="h3"?`\n${b.v}\n`:b.t==="p"||b.t==="para"?`${b.v}\n`
+  :b.t==="kv"?(b.v?`${b.k}: ${b.v}`:""):`\n${b.items.map((it,i)=>`${i+1}. ${it.head}${it.points.map(x=>`\n    • ${x}`).join("")}`).join("\n")}\n`).filter(Boolean).join("\n").replace(/\n{3,}/g,"\n\n").trim()}
+function promptParts(sel){
+  const p=state.profile;
+  const who=[p.name?`I'm ${p.name}`:"I'm a content creator",p.archetype?`a ${p.archetype} brand`:"",p.niche?`in ${p.niche}`:""].filter(Boolean).join(", ");
+  return {intro:`${who}.${p.voice?` My voice: ${p.voice}.`:""}${p.audience?` My audience: ${p.audience}.`:""}`,
+    about:`Below is my content plan from Handalf. It has ${sel.length} concept${sel.length===1?"":"s"}, each with a contrary take, a medium (text, audio or video), a date, and an outline. Help me produce them one at a time. For each concept:`,
+    rules:["Write the full piece for its medium: finished copy for text, a speaking script with segment cues for audio, a script with on screen notes for video.","Follow the outline in order and keep the opening.","Keep my contrary take at full strength. Do not soften it back into the view it pushes against.","Use my own quoted words where the plan includes them.","Write plainly, the way I talk. No em dashes."],
+    close:"Start with concept 1, then wait for my go-ahead before the next."};
+}
+function promptBlocks(sel){
+  const q=promptParts(sel), plan=planBlocks(sel);
+  return [{t:"h1",v:"Content prompt"},{t:"para",v:q.intro},{t:"para",v:q.about},{t:"ol",items:q.rules.map(r=>({head:r,points:[]}))},{t:"para",v:q.close},{t:"h2",v:"The plan"},...plan.slice(1)];
+}
+function planPrompt(sel){
+  const q=promptParts(sel);
+  return `${q.intro}\n\n${q.about}\n${q.rules.map((r,i)=>`${i+1}. ${r}`).join("\n")}\n\n${q.close}\n\n${toText(planBlocks(sel))}`;
+}
+
+/* .docx built in the page: works inside Claude and in any browser */
+const xesc=t=>String(t??"").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const wrun=(t,bold)=>`<w:r>${bold?"<w:rPr><w:b/></w:rPr>":""}<w:t xml:space="preserve">${xesc(t)}</w:t></w:r>`;
+const wpara=(inner,style,num)=>`<w:p>${style||num?`<w:pPr>${style?`<w:pStyle w:val="${style}"/>`:""}${num?`<w:numPr><w:ilvl w:val="${num[1]}"/><w:numId w:val="${num[0]}"/></w:numPr>`:""}</w:pPr>`:""}${inner}</w:p>`;
+async function buildDocx(B){
+  let lists=0; const body=[];
+  B.forEach(b=>{
+    if(b.t==="h1") body.push(wpara(wrun(b.v),"Title"));
+    else if(b.t==="h2") body.push(wpara(wrun(b.v),"Heading1"));
+    else if(b.t==="h3") body.push(wpara(wrun(b.v),"Heading2"));
+    else if(b.t==="p") body.push(wpara(`<w:r><w:rPr><w:i/></w:rPr><w:t xml:space="preserve">${xesc(b.v)}</w:t></w:r>`));
+    else if(b.t==="para") body.push(wpara(wrun(b.v)));
+    else if(b.t==="kv"){ if(b.v) body.push(wpara(wrun(b.k+": ",true)+wrun(b.v))); }
+    else if(b.t==="ol"){ const id=++lists; b.items.forEach(it=>{ body.push(wpara(wrun(it.head),"ListParagraph",[id,0])); it.points.forEach(x=>body.push(wpara(wrun(x),"ListParagraph",[id,1]))) }) }
+  });
+  const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W}><w:body>${body.join("")}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const font=f=>`<w:rFonts w:ascii="${f}" w:hAnsi="${f}" w:cs="${f}"/>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${W}>
+<w:docDefaults><w:rPrDefault><w:rPr>${font("Calibri")}<w:sz w:val="22"/><w:color w:val="000000"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="288" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
+<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>
+<w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:spacing w:after="200"/></w:pPr><w:rPr>${font("Georgia")}<w:sz w:val="52"/><w:color w:val="000000"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="400" w:after="120"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr>${font("Georgia")}<w:b/><w:sz w:val="34"/><w:color w:val="000000"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="280" w:after="80"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr>${font("Georgia")}<w:b/><w:sz w:val="26"/><w:color w:val="000000"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="ListParagraph"><w:name w:val="List Paragraph"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="60"/></w:pPr></w:style>
+</w:styles>`;
+  const lvl=(i,fmt,text,ind)=>`<w:lvl w:ilvl="${i}"><w:start w:val="1"/><w:numFmt w:val="${fmt}"/><w:lvlText w:val="${text}"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="${ind}" w:hanging="360"/></w:pPr>${fmt==="bullet"?`<w:rPr>${font("Symbol")}</w:rPr>`:""}</w:lvl>`;
+  let nums=""; for(let i=1;i<=Math.max(lists,1);i++) nums+=`<w:num w:numId="${i}"><w:abstractNumId w:val="0"/><w:lvlOverride w:ilvl="0"><w:startOverride w:val="1"/></w:lvlOverride></w:num>`;
+  const numbering=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering ${W}><w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="hybridMultilevel"/>${lvl(0,"decimal","%1.",720)}${lvl(1,"bullet","",1440)}</w:abstractNum>${nums}</w:numbering>`;
+  const zip=new JSZip();
+  zip.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>`);
+  zip.file("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`);
+  zip.file("word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>`);
+  zip.file("word/document.xml",doc); zip.file("word/styles.xml",styles); zip.file("word/numbering.xml",numbering);
+  return zip.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+}
+async function saveFile(name,blob){
+  if(dl) return dl.save({filename:name,data:blob});
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+function outlinePrompt(v){
+  const m=exMedium(v), series=v.kind==="series"&&v.episodes&&v.episodes.length;
+  const shape=`{"form":"specific form, e.g. 8 minute video essay","length":"rough length","hook":"the opening line, or the first 5 seconds for video","sections":[{"heading":"","points":["",""]}],"cta":"how it ends and what the audience should do","notes":"production notes"}`;
+  return `You are Handalf. Outline one content concept for this creator as ${MEDIA[m].toUpperCase()} content. ${GUIDE[m]} Keep the contrary take at full strength and lean on the creator's own experience. 4 to 7 sections, 2 to 4 points each. Write plainly, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+CREATOR STANCES
+${stanceText()}
+
+CONCEPT: ${v.title}
+HOOK: ${v.hook}
+THE TAKE: ${v.angle}
+PUSHES AGAINST: ${v.againstText||"n/a"}
+FORMAT HINT: ${v.format||"n/a"}
+${v.context?`CREATOR'S CONTEXT: ${v.context}\n`:""}${series?`\nThis is a series. Outline every episode in order, each building on the last:\n${v.episodes.map((e,i)=>`Episode ${i+1}: ${e.title}. ${e.hook}`).join("\n")}\n\nReply with only JSON: {"episodes":[${shape}]} with exactly ${v.episodes.length} entries.`:`\nReply with only JSON: ${shape}`}`;
+}
+async function outlineAll(btn){
+  if(exCtl){exCtl.abort();return}
+  if(!sample){$("#ex-hint").textContent="Open this page inside Claude to build outlines.";return}
+  const todo=exItems().filter(v=>v.exportOn!==false&&!outlineFresh(v));
+  await outlineList(todo);
+}
+async function outlineList(todo){
+  if(!todo.length) return;
+  exCtl=new AbortController(); renderExport();
+  let done=0, err="";
+  for(const v of todo){
+    const h=$("#ex-hint"); if(h) h.textContent=`Outlining ${done+1} of ${todo.length}: ${v.title}`;
+    try{
+      const out=await sample.json(outlinePrompt(v),{signal:exCtl.signal,cache:false});
+      const m=exMedium(v);
+      if(v.kind==="series"&&v.episodes&&v.episodes.length){ if(!Array.isArray(out.episodes)) throw {code:"invalid_json"}; v.outline={medium:m,episodes:v.episodes.map((_,i)=>out.episodes[i]||{})}; }
+      else v.outline={medium:m,...out};
+      persist("vault"); done++;
+    }catch(e){ if(e&&e.code==="cancelled") break; err=errCopy(e); if(e&&(e.code==="not_granted"||e.code==="rate_limited")) break; }
+  }
+  exCtl=null; renderExport();
+  const h=$("#ex-hint"); if(h) h.textContent=err?`${err} ${done} of ${todo.length} outlined.`:`${done} outline${done===1?"":"s"} ready.`;
+}
+$("#export-body").addEventListener("click",async e=>{
+  if(e.target.closest("[data-goengine]")) return show("engine");
+  if(e.target.closest("#outline-btn")) return outlineAll();
+  const am=e.target.closest("[data-allmedium]");
+  if(am){state.vault.forEach(v=>{if(v.exportOn!==false)v.medium=am.dataset.allmedium});persist("vault");return renderExport()}
+  const md=e.target.closest("[data-medium]");
+  if(md){const v=vfind(md.dataset.key);if(v){v.medium=md.dataset.medium;persist("vault");renderExport()}return}
+  const ro=e.target.closest("[data-reoutline]");
+  if(ro){const v=vfind(ro.dataset.reoutline);if(v&&sample&&!exCtl){v.outline=null;outlineList([v])}return}
+  const x=e.target.closest("[data-exp]"); if(!x) return;
+  const sel=exItems().filter(v=>v.exportOn!==false); if(!sel.length) return;
+  const stamp=todayISO(), kind=x.dataset.exp;
+  const label=x.textContent;
+  if(kind.startsWith("copy")){
+    const text=kind==="copydoc"?toText(planBlocks(sel)):planPrompt(sel);
+    try{await navigator.clipboard.writeText(text);x.textContent="Copied"}catch(err){x.textContent="Copy blocked"}
+    setTimeout(()=>{x.textContent=label},1800); return;
+  }
+  if(typeof JSZip==="undefined"){x.textContent="Word export didn't load. Reload the page";return}
+  x.disabled=true; x.textContent="Building…";
+  try{
+    const blob=await buildDocx(kind==="savedoc"?planBlocks(sel):promptBlocks(sel));
+    await saveFile(kind==="savedoc"?`Handalf content plan ${stamp}.docx`:`Handalf content prompt ${stamp}.docx`,blob);
+    x.textContent="Saved";
+  }catch(err){x.textContent=err&&err.code==="declined"?"Not saved":"Download didn't work"}
+  x.disabled=false;
+  setTimeout(()=>{x.textContent=label},2200);
+});
+$("#export-body").addEventListener("change",e=>{const k=e.target.dataset&&e.target.dataset.exon;if(!k)return;const v=vfind(k);if(v){v.exportOn=e.target.checked;persist("vault");renderExport()}});
+$("#vault-group").addEventListener("click",e=>{if(e.target.closest("[data-goexport]"))show("export")});
+
+/* ---------- start over ---------- */
+const rp=$("#reset-panel"), rb=$("#reset-btn");
+function closeReset(){rp.hidden=true;$("#erase-confirm").hidden=true;rb.setAttribute("aria-expanded","false")}
+rb.addEventListener("click",()=>{const o=rp.hidden;closeReset();rp.hidden=!o;rb.setAttribute("aria-expanded",String(o));if(o)rp.scrollIntoView({block:"nearest"})});
+rp.addEventListener("click",e=>{
+  const b=e.target.closest("[data-reset]"); if(!b) return;
+  const a=b.dataset.reset;
+  if(a==="cancel") return closeReset();
+  if(a==="search"){ if(runCtl)runCtl.abort(); state.last=null; open.clear(); persist("last"); $("#topic").value=""; filter="all"; showNotice(""); renderEngine(); closeReset(); show("engine"); $("#topic").focus(); return }
+  if(a==="setup"){ closeReset(); openSetup(); return }
+  if(a==="erase"){ $("#erase-confirm").hidden=false; return }
+  if(a==="erase-no"){ $("#erase-confirm").hidden=true; return }
+  if(a==="erase-yes"){
+    if(runCtl)runCtl.abort();
+    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;queue=[];open.clear();
+    ["profile","stances","vault","last"].forEach(persist);
+    $("#topic").value=""; showNotice(""); renderAll(); setRunAvail(); closeReset(); openSetup();
+  }
+});
+
+function renderAll(){renderEngine();renderStances();renderProfile();renderVault();renderSources()}
+
+lsLoad(); renderAll(); setRunAvail();
+const h=(location.hash||"").slice(1);
+let touched=false; document.addEventListener("click",()=>touched=true,{capture:true,once:true});
+function boot(){
+  if(!state.profile.onboarded&&!state.profile.archetype) show("start");
+  else if(["engine","stances","profile","vault","export"].includes(h)) show(h);
+  else show("engine");
+}
+boot();
+initRuntime().then(()=>{ if(!touched&&view==="start"&&state.profile.archetype) boot(); });
+})();
+</script>

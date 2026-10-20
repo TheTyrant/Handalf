@@ -1,0 +1,35 @@
+# Handalf: 1of10 process mapped to the engine
+
+Tagline: Make Content Magical
+
+## What 1of10 does
+1. Outlier score: a video's views divided by its channel's typical views. 10x to 100x marks an outlier.
+2. Outlier Finder: search a topic, results ranked by outlier score.
+3. Idea Generator: connect a channel so the AI learns niche and style, then remix ideas for variations.
+4. Bookmarks and tracked channels: a swipe file of saved winners.
+
+## How Handalf translates it
+1. Channel average becomes the consensus: the takes most creators would make on a topic (the 1x baseline).
+2. Connected channel becomes the brand profile plus a stance bank mined from the creator's own AI conversations.
+3. Outlier score becomes the take multiple: (divergence/5) x (ownership/5) x (defensibility/5) x (0.5 + fit/10). Tiers: 5x+ Outlier, 2.5x Strong, 1.2x Fresh, below that Echo.
+4. Ownership only scores high when one of the creator's own stances backs the take, cited with their words.
+
+## Current flow (v8, Oct 20, 2026)
+1. Setup, four ways in: brand archetype quiz (12 archetypes, each with a way of disagreeing), link your LLM (copy a profile prompt into ChatGPT, Claude or Gemini and paste the answer back), upload a prompt or brief, or skip. Then niche and expertise.
+2. Engine: topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
+3. Remix: add personal context or talk the take through with an interviewer; rebuilt takes cite stances pulled from that dialogue.
+4. Vault: no cap. Grouped by idea or by date. Each take is a single post with a date, or a 3 to 6 episode series with a start date and cadence.
+5. Export: pick concepts, choose text, audio or video for each, outline them for that medium, then copy the plan or prompt, or download either as a black and white Word doc (.docx) built in the page.
+6. Start over: new search, redo brand setup, or erase everything.
+
+## Look
+Brown leather with light monochrome noise, gold dividers, gold pill inputs and buttons, gold serif tabs and headers (Uncial wordmark, Cinzel titles, EB Garamond content titles), filled score pills. Logo: wizard hat on a phone screen.
+
+## Tied to Claude today
+1. AI calls (engine, remix, interview, outlines) run on the viewer's Claude account. Standalone needs a small server holding an AI API key.
+2. Saved data (profile, stances, vault) lives in the viewer's Claude account. Standalone needs its own database.
+3. Sign-in uses the viewer's Claude login. Standalone needs its own sign-in.
+4. Word export already works in any browser.
+
+## Next
+Real connections to other LLMs and agents to pull conversations and profile directly. Real platform outlier data to weight topics. Google sign-in for a direct Save to Google Docs once standalone.
