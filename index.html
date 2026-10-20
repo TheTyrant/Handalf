@@ -2012,9 +2012,12 @@ $("#intro-go").addEventListener("click",endIntro);
 $("#intro").addEventListener("click",e=>{if(e.target.closest("[data-skip]")||e.target.closest("#iswipe"))endIntro()});
 $("#iswipe").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();endIntro()}});
 { const pg=$(".ipage"); let x0=null, dx=0;
-  pg.addEventListener("pointerdown",e=>{ if(!$("#ibook").classList.contains("read")||e.target.closest("button,a")) return; x0=e.clientX; dx=0; pg.classList.add("drag"); try{pg.setPointerCapture(e.pointerId)}catch(err){} });
-  pg.addEventListener("pointermove",e=>{ if(x0===null) return; dx=Math.min(0,e.clientX-x0); pg.style.transform=`translateX(${dx}px) rotateY(${Math.max(dx*.03,-18)}deg)`; });
-  const up=()=>{ if(x0===null) return; x0=null; pg.classList.remove("drag"); pg.style.transform="";
+  let cap=false;
+  pg.addEventListener("pointerdown",e=>{ if(!$("#ibook").classList.contains("read")||e.target.closest("button,a")) return; x0=e.clientX; dx=0; cap=false; });
+  pg.addEventListener("pointermove",e=>{ if(x0===null) return; dx=Math.min(0,e.clientX-x0);
+    if(!cap){ if(dx>-8) return; cap=true; pg.classList.add("drag"); try{pg.setPointerCapture(e.pointerId)}catch(err){} }
+    pg.style.transform=`translateX(${dx}px) rotateY(${Math.max(dx*.03,-18)}deg)`; });
+  const up=()=>{ if(x0===null) return; x0=null; if(!cap) return; cap=false; pg.classList.remove("drag"); pg.style.transform="";
     if(dx<-60){pg.classList.add("gone");endIntro()} };
   pg.addEventListener("pointerup",up); pg.addEventListener("pointercancel",up);
 }
