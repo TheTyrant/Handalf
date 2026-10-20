@@ -15,10 +15,11 @@ Tagline: Find the magic in your stories.
 4. Ownership only scores high when one of the creator's own stances backs the take, cited with their words.
 
 ## Current flow (v9, Oct 20, 2026)
-1. Landing page (also what Start over opens): "What are we talking about?" with Conjure content. An icon row switches the same space, one mode at a time, to the brand quiz (one question at a time with the wizard owl, 12 archetypes, then niche and expertise), link your LLM (copy a profile prompt into ChatGPT, Claude or Gemini and paste the answer back), upload a prompt or brief, or erase everything. Lines only, no pills or rounded boxes.
+1. The storybook (first visit): a full-screen book that opens from a leather cover. Chapter one introduces Handalf, chapter two is the brand quiz one question per page (each answer is inscribed on the page as you choose it, then the page turns), chapter three reveals the archetype (changeable), chapter four records niche, audience, expertise and platforms, and the last page starts conjuring. Settings: Retake the quiz reopens it at question one; Reread my story retells the answers as read-only pages. Skip closes it.
+1b. Landing page (also the home for the footer icons): "What are we talking about?" with Conjure content; the dialogue drifts between Conjure, Handalf's quiz invite and Link LLM or bio.
 2. Alchemy (the engine): topic in, consensus map plus ranked contrary takes shaped by archetype and expertise.
 3. Remix: add personal context or talk the take through with an interviewer; rebuilt takes cite stances pulled from that dialogue.
-4. Vault: no cap. Grouped by idea or by date. Each take is a single post with a date, or a 3 to 6 episode series with a start date and cadence.
+4. Vault: a library of books on shelves. The first shelf holds the Book of your brand (archetype, niche, expertise, elements, with Reread, Retake and Edit). Takes are shelved by idea or by date; series are thicker books; spine color marks the medium. Opening a book shows its planner: single post or 3 to 6 episode series with dates and cadence.
 5. Conjurings (export): pick concepts and choose one or more media per take (text, audio, video; several makes it mixed content with a version per medium). Each version gets an outline for its medium plus image prompts for image generators, and video versions get shot prompts for text-to-video tools. Filter by medium and download labeled Word docs: "Handalf video plan", "Handalf video prompt", and a "Shot and image prompts" pack.
 6. Start over: new search, redo brand setup, or erase everything.
 

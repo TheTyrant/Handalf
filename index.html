@@ -17,6 +17,7 @@
   --f-mono:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --pill:999px;
   --eye:#F3E6CF; --pupil:#2E1B10;
+  --cover:#3A2214; --cover-fg:#F3E6CF; --sp-text:#D9B45E; --sp-audio:#93A8F0; --sp-video:#E8897C;
   --book-cover:#FFFFFF; --book-page:#E9E7E1; --book-spine:#141414; --book-line:#141414; --book-face:#141414; --book-eye:#FFFFFF; --book-pupil:#141414;
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
   color-scheme:dark;
@@ -27,6 +28,7 @@
   --ultra:#9FCBEA; --ultra-soft:#34495A; --copper:#F1D46E; --copper-soft:#3C4A3B;
   --good:#A9DDB2; --risk:#F4A6A1; --band:#222E2A; --band-fg:#ECEAE2;
   --eye:#ECEAE2; --pupil:#22302B;
+  --cover:#1F2A26; --cover-fg:#ECEAE2; --sp-text:#F1D46E; --sp-audio:#9FCBEA; --sp-video:#F4A6A1;
   --book-cover:#4A2C18; --book-page:#F2E9D8; --book-spine:#2E1B10; --book-line:#2E1B10; --book-face:#D9B45E; --book-eye:#F3E6CF; --book-pupil:#2E1B10;
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
   color-scheme:dark;
@@ -47,6 +49,7 @@
   --ultra:#3A3A3A; --ultra-soft:#EDEDED; --copper:#141414; --copper-soft:#EFEFEF;
   --good:#2A2A2A; --risk:#141414; --band:#FFFFFF; --band-fg:#141414;
   --eye:#FFFFFF; --pupil:#141414;
+  --cover:#FFFFFF; --cover-fg:#141414; --sp-text:#141414; --sp-audio:#555555; --sp-video:#8A8A8A;
   --book-cover:#2B3A35; --book-page:#E9E7E1; --book-spine:#1E2925; --book-line:#141414; --book-face:#EDEBE3; --book-eye:#2B3A35; --book-pupil:#EDEBE3;
   --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
   color-scheme:light;
@@ -427,15 +430,39 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .ipage-in p{font-size:clamp(16px,1.6vw,19px);color:var(--ink)}
 .ipage-in .lq.sm{font-size:clamp(28px,4.2vw,48px)}
 .ipage-in .btn{justify-self:start;margin-top:8px}
-.ipage-in>*{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
-.ibook.read .ipage-in>*{opacity:1;transform:none}
-.ibook.read .ipage-in>*:nth-child(2){transition-delay:.2s}
-.ibook.read .ipage-in>*:nth-child(3){transition-delay:.6s}
-.ibook.read .ipage-in>*:nth-child(4){transition-delay:1s}
-.ibook.read .ipage-in>*:nth-child(5),.ibook.read .ipage-in>*:nth-child(6){transition-delay:1.4s}
 .iswipe{display:none;position:relative;height:96px;margin-top:6px;cursor:pointer}
 .fp{position:absolute;top:0;left:calc(100% - 40px);width:40px;height:48px;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round;opacity:0}
 .iswipe-copy{position:absolute;left:0;right:0;top:60px;margin:0;font-family:var(--f-title);font-weight:600;font-size:13px!important;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)!important;text-align:center;clip-path:inset(0 0 0 100%)}
+.ibook:not(.read) .ipage-in{opacity:0}
+.ipage-in.fresh>*{animation:pin .5s ease both}
+.ipage-in.fresh>*:nth-child(2){animation-delay:.12s}
+.ipage-in.fresh>*:nth-child(3){animation-delay:.3s}
+.ipage-in.fresh>*:nth-child(4){animation-delay:.5s}
+.ipage-in.fresh>*:nth-child(n+5){animation-delay:.7s}
+@keyframes pin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ipage{perspective:none}
+.ipage .pageleaf{z-index:3;background-color:var(--sheet)}
+.ipage .pageleaf .ipage-in{padding-top:32px}
+.inscribed{font-family:var(--f-head);font-style:italic;font-size:clamp(20px,2.4vw,26px)!important;color:var(--gold)!important;margin:2px 0 4px;padding-left:16px;border-left:2px solid var(--gold);line-height:1.35}
+.inscribed.write{animation:ink 1s cubic-bezier(.5,.1,.3,1) both}
+@keyframes ink{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.blank{font-family:var(--f-head);font-style:italic;color:var(--mute)!important;margin:2px 0}
+.bmute{color:var(--mute)!important;font-size:15px!important}
+.bq{font-family:var(--f-title);font-weight:600;font-size:14px!important;letter-spacing:.06em;color:var(--ink)!important;margin:0}
+.bqa{display:grid;gap:4px;padding:10px 0;border-bottom:1px solid var(--rule)}
+.bopts{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.bopts li{border-bottom:1px solid var(--rule)}
+.bopts button{width:100%;text-align:left;background:none;border:0;border-radius:0;padding:13px 4px;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;font-size:17px;line-height:1.4;color:var(--ink);cursor:pointer}
+.bopts button:hover{color:var(--gold)}
+.bopts.answered button{opacity:.45}
+.bopts.answered button[aria-pressed="true"]{opacity:1;color:var(--gold)}
+.bnav{display:flex;justify-content:space-between;gap:16px;min-height:22px}
+.bturn{display:grid;gap:8px;justify-items:start}
+.bturn2{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.bgrid b{font-size:14px}
+.ipage-in .lgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ipage-in .lfield input,.ipage-in .lfield textarea{font-family:var(--f-head);font-style:italic;font-size:19px;color:var(--gold)}
 .ibook.read .fp{animation:fpmove 2.6s cubic-bezier(.45,.05,.35,1) 1.9s infinite}
 .ibook.read .iswipe-copy{animation:fpcopy 2.6s cubic-bezier(.45,.05,.35,1) 1.9s infinite}
 @keyframes fpmove{0%{left:calc(100% - 40px);opacity:0}12%{left:calc(100% - 40px);opacity:1}72%{left:0;opacity:1}88%,100%{left:0;opacity:0}}
@@ -443,7 +470,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .ipage.drag{transition:none}
 .ipage{transform-origin:0 50%;transition:transform .45s cubic-bezier(.3,.8,.3,1)}
 .ipage.gone{transform:translateX(-105%) rotateY(18deg)}
-@media (max-width:640px),(pointer:coarse){.ipage-in #intro-go{display:none}.iswipe{display:block}.ipage{touch-action:pan-y}}
+@media (max-width:640px),(pointer:coarse){.bturn>.btn[data-bnext]{display:none}.iswipe{display:block}.ipage{touch-action:pan-y}.ipage-in .lgrid{grid-template-columns:1fr}}
 .icover{position:absolute;inset:0;z-index:2;transform-origin:0 50%;transform-style:preserve-3d;transition:transform 1.5s cubic-bezier(.6,.05,.3,1),opacity .5s ease 1s}
 .ibook.open .icover{transform:rotateY(-180deg);opacity:0;pointer-events:none}
 .iface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-content:center;justify-items:center;text-align:center;gap:14px}
@@ -458,6 +485,32 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .iowner-line{font-family:var(--f-head);font-style:italic;font-size:clamp(15px,1.6vw,19px);margin:0}
 .iowner{font-family:var(--f-display);color:var(--gold);font-size:clamp(28px,4vw,48px);margin:0;padding:0 18px 4px;border-bottom:1px solid var(--rule)}
 @media (prefers-reduced-motion:reduce){.ibook,.icover,.ipage-in>*{transition:none!important}}
+
+/* vault bookshelf */
+.shelf{margin-bottom:34px}
+.shelf-row{display:flex;flex-wrap:wrap;gap:18px 16px;align-items:flex-end;padding:14px 4px 0}
+.shelf-board{height:12px;margin-top:-2px;border-radius:2px;background:linear-gradient(var(--rule),color-mix(in srgb,var(--rule) 60%,var(--ink)));box-shadow:0 6px 10px -6px rgba(0,0,0,.45)}
+.vbook{position:relative;width:134px;height:186px;flex:none;display:grid;grid-template-rows:auto 1fr auto;gap:6px;text-align:left;padding:14px 12px 12px 22px;border:1px solid color-mix(in srgb,var(--cover-fg) 18%,transparent);border-radius:2px 7px 7px 2px;background-color:var(--cover);background-image:var(--noise);background-size:200px 200px;color:var(--cover-fg);cursor:pointer;box-shadow:inset -6px 0 10px -6px rgba(0,0,0,.4),0 4px 10px rgba(0,0,0,.28);transition:transform .25s ease,box-shadow .25s ease;transform-origin:50% 100%}
+.vbook.thick{width:150px}
+.vbook::after{content:"";position:absolute;inset:8px 8px 8px 18px;border:1px solid color-mix(in srgb,var(--spine) 70%,transparent);border-radius:1px 4px 4px 1px;pointer-events:none}
+.vb-spine{position:absolute;left:0;top:0;bottom:0;width:12px;background:var(--spine);border-radius:2px 0 0 2px;opacity:.9}
+.vbook.thick .vb-spine{width:16px}
+.vbook:hover{transform:translateY(-6px) rotate(-1.5deg)}
+.vbook.open{transform:translateY(-10px)}
+.vbook:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
+.vb-date{font-family:var(--f-title);font-weight:600;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--cover-fg) 70%,transparent)}
+.vb-title{font-family:var(--f-head);font-weight:600;font-size:17px;line-height:1.18;color:var(--spine);overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical}
+.vb-foot{display:grid;gap:2px}
+.vb-mult{font-family:var(--f-title);font-weight:700;font-size:15px;color:var(--spine)}
+.vb-media{font-size:10.5px;color:color-mix(in srgb,var(--cover-fg) 75%,transparent)}
+.brandbook{--spine:var(--sp-text);width:150px}
+.brandbook .vb-title{font-family:var(--f-display);font-weight:400;font-size:22px}
+.vopen{margin-top:16px;padding:18px 20px;border-left:3px solid var(--gold);background:var(--sheet)}
+.vopen .vcard{border-bottom:0;padding-top:4px}
+.vopen-in{display:grid;gap:8px}
+.vopen-title{font-size:22px}
+.vclose{float:right}
+:root[data-skin="ink"] .vbook{border-color:var(--rule)}
 
 /* deepen panel */
 .deep{margin-top:14px;border:1px solid var(--rule);border-radius:18px;background:var(--sheet);padding:16px;display:grid;gap:10px}
@@ -525,7 +578,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   .status{width:100%;margin-left:0;padding-bottom:8px}
   .nav button{margin-right:10px;font-size:13px;letter-spacing:.03em;padding-right:4px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.owl .spark,.lpanel.lin,.perch *,.fp,.iswipe-copy,.sprout *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.inscribed.write,.ipage-in.fresh>*,.owl .spark,.lpanel.lin,.perch *,.fp,.iswipe-copy,.sprout *,.lpanel.late .lopts li,.modes::before,.modes::after{animation:none!important}}
 </style>
 
 <header class="band">
@@ -655,7 +708,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- VAULT -->
   <section class="view" id="v-vault" hidden>
-    <div class="vhead"><div><h2>Vault</h2><p class="lede">Takes you kept. Plan each one as a single post or a series, give it a date, and see what's coming up.</p></div>
+    <div class="vhead"><div><h2>Vault</h2><p class="lede">Your library. Your brand and every take you kept, shelved as books. Open one to plan it as a single post or a series.</p></div>
       <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Conjurings</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
     <div id="vault-list"></div>
   </section>
@@ -666,17 +719,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   <div class="ibook" id="ibook">
     <div class="ipage">
       <div class="itop"><span class="itop-mark">Handalf</span><button class="ltext iskip" type="button" data-skip>Skip</button></div>
-      <div class="ipage-in">
-        <p class="leyebrow">Chapter one</p>
-        <h2 class="lq sm">Every creator has a take nobody else can make.</h2>
-        <p>I'm Handalf. I read the crowd, then I read you, and together we find the story only you can tell.</p>
-        <p>Tell me who you are, give me a topic, and we'll conjure something worth saying.</p>
-        <button class="btn" type="button" id="intro-go">Turn the page</button>
-        <div class="iswipe" id="iswipe" role="button" tabindex="0" aria-label="Swipe left to turn the page">
-          <svg class="fp" viewBox="0 0 40 48" aria-hidden="true"><path d="M5 19a15 15 0 0 1 30 0M8 25c0-9 5-15 12-15s12 6 12 15v4M12 41c-2-4-3-8-3-13M12 22a8 8 0 0 1 16 0v9c0 5-1 9-3 13M16 23a4 4 0 0 1 8 0v9c0 5-2 9-4 12M20 24v9c0 4-1 7-3 10M28 36c0 3-1 6-2 8"/></svg>
-          <p class="iswipe-copy">Swipe left or tap to turn the page</p>
-        </div>
-      </div>
+      <div class="ipage-in" id="ipage-in"></div>
     </div>
     <div class="icover">
       <div class="iface ifront">
@@ -1077,7 +1120,7 @@ $("#modes").addEventListener("click",e=>{
   toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()}
 });
 function setMode(k){ mode=k; intro=false; waveNext=true; if(k==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)} renderStart(); toLanding(); if(k==="conjure"){const i=$("#l-topic");if(i)i.focus()} }
-function startQuiz(){mode="quiz";qi=0;qans=[];qpick=null;show("start")}
+function startQuiz(){openBook("quiz")}
 function openSetup(k){if(k==="link"||k==="upload"){if(k==="upload")llm="My bio";k="bio"}mode=k||"quiz";intro=false;if(mode==="quiz"){qi=-1;qans=[];qpick=null;askSeed=rnd(ASKS.length)}show("start")}
 /* idle rotation: the dialogue moves on by itself, at random, while nobody is using it */
 const ROT_MS=11250; let lastAct=Date.now(), hovering=false;
@@ -1157,7 +1200,7 @@ $("#quiz").addEventListener("submit",e=>{
 $("#quiz").addEventListener("click",async e=>{
   const m=e.target.closest("[data-mode]"); if(m) return setMode(m.dataset.mode);
   if(e.target.closest("[data-golast]")) return show("engine");
-  if(e.target.closest("[data-qstart]")){qi=0;waveNext=true;renderStart();toLanding();return}
+  if(e.target.closest("[data-qstart]")){openBook("quiz");return}
   const fu=e.target.closest("[data-full]"); if(fu){intro=false;renderStart();return}
   const o=e.target.closest("[data-q]"); if(o){qans[qi]=+o.dataset.q;qi++;qpick=null;waveNext=true;renderStart();toLanding();return}
   const a=e.target.closest("[data-arch]");
@@ -1593,34 +1636,70 @@ function vaultCard(v){
       <div class="actions"><button class="btn ghost" type="button" data-act="copy" data-key="${k}">Copy</button><button class="btn quiet" type="button" data-act="unsave" data-key="${k}">Remove</button></div>
     </div></article>`;
 }
+let vOpen=null;
+function bookCover(v){
+  const ms=exMedia(v), series=isSeries(v)||v.kind==="series", m=multiple(v);
+  const when=series?(v.planDate?`From ${dayLabel(v.planDate)}`:"Series"):(v.planDate?dayLabel(v.planDate):"Unscheduled");
+  return `<button type="button" class="vbook${series?" thick":""}${vOpen===v.key?" open":""}" data-vbook="${v.key}" aria-expanded="${vOpen===v.key}" style="--spine:var(--sp-${ms.includes("video")?"video":ms.includes("audio")?"audio":"text"})">
+    <span class="vb-spine"></span>
+    <span class="vb-date">${esc(when)}</span>
+    <span class="vb-title">${esc(v.title)}</span>
+    <span class="vb-foot"><span class="vb-mult">${fmt(m)}x</span><span class="vb-media">${ms.map(x=>MEDIA[x]).join(" · ")}${series&&v.episodes&&v.episodes.length?` · ${v.episodes.length} eps`:""}</span></span>
+  </button>`;
+}
+function brandBook(){
+  const p=state.profile;
+  return `<button type="button" class="vbook brandbook${vOpen==="__brand"?" open":""}" data-vbook="__brand" aria-expanded="${vOpen==="__brand"}">
+    <span class="vb-spine"></span>
+    <span class="vb-date">The book of</span>
+    <span class="vb-title">${esc(p.name||"Your brand")}</span>
+    <span class="vb-foot"><span class="vb-mult">${esc(p.archetype||"Unwritten")}</span><span class="vb-media">${state.stances.length} element${state.stances.length===1?"":"s"}</span></span>
+  </button>`;
+}
+function brandOpen(){
+  const p=state.profile, A=p.archetype&&ARCH[p.archetype], kv=(k,v)=>v?`<p class="kv"><b>${k}:</b> ${esc(v)}</p>`:"";
+  return `<div class="vopen-in"><p class="leyebrow">Your brand</p><h3 class="vopen-title">${esc(p.name||"Your brand")}</h3>
+    ${A?`<p><b style="color:var(--gold)">${esc(p.archetype)}</b>${p.archetype2?` with ${esc(p.archetype2)}`:""}. ${esc(A.style)}</p>`:`<p class="hint">Your story hasn't been written yet.</p>`}
+    ${kv("Niche",p.niche)}${kv("Who it's for",p.audience)}${kv("Expertise",p.expertise)}${kv("Where you post",p.platforms)}${kv("Voice",p.voice)}
+    <p class="kv"><b>Elements:</b> ${state.stances.length} in your bank</p>
+    <div class="actions"><button class="btn" type="button" data-vbrand="story">${A?"Reread your story":"Write your story"}</button>${A?`<button class="btn ghost" type="button" data-vbrand="quiz">Retake the quiz</button>`:""}<button class="btn ghost" type="button" data-vbrand="profile">Edit brand</button></div></div>`;
+}
+function shelf(title,meta,books,openHtml){
+  return `<section class="shelf"><div class="col-head"><h3>${esc(title)}</h3>${meta?`<span class="label">${esc(meta)}</span>`:""}</div>
+    <div class="shelf-row">${books}</div><div class="shelf-board" aria-hidden="true"></div>${openHtml||""}</section>`;
+}
+function openPanel(keys){
+  if(!vOpen||!keys.includes(vOpen)) return "";
+  if(vOpen==="__brand") return `<div class="vopen">${brandOpen()}</div>`;
+  const v=vfind(vOpen); return v?`<div class="vopen"><button class="ltext vclose" type="button" data-vclose>Close the book</button>${vaultCard(v)}</div>`:"";
+}
 function renderVault(){
   const v=state.vault;
   $("#n-vault").textContent=v.length?v.length:"";
   document.querySelectorAll("[data-vgroup]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.vgroup===vgroup));
-  if(!v.length){$("#vault-list").innerHTML=`<div class="empty"><strong>Vault is empty</strong>Save takes from an engine run. They collect here by idea, and you can plan each one as a single post or a series.</div>`;return}
+  let html=shelf("Your brand","",brandBook(),openPanel(["__brand"]));
+  if(!v.length){$("#vault-list").innerHTML=html+`<div class="empty"><strong>No takes on the shelves yet</strong>Save takes from an Alchemy run. Each one becomes a book here that you can plan as a single post or a series.</div>`;return}
   if(vgroup==="idea"){
     const groups=new Map();
     v.forEach(x=>{const t=x.topic||"Untitled";if(!groups.has(t))groups.set(t,[]);groups.get(t).push(x)});
     const ordered=[...groups.entries()].sort((a,b)=>Math.max(...b[1].map(x=>x.savedAt||0))-Math.max(...a[1].map(x=>x.savedAt||0)));
-    $("#vault-list").innerHTML=ordered.map(([topic,items])=>`<section class="vgroup"><div class="col-head"><h3>${esc(topic)}</h3><span class="label">${items.length} take${items.length===1?"":"s"} · last saved ${savedLabel(Math.max(...items.map(x=>x.savedAt||0)))}</span></div>
-      ${[...items].sort((a,b)=>multiple(b)-multiple(a)).map(vaultCard).join("")}</section>`).join("");
-    return;
+    html+=ordered.map(([topic,items])=>{const s=[...items].sort((a,b)=>multiple(b)-multiple(a));
+      return shelf(topic,`${items.length} book${items.length===1?"":"s"} · last saved ${savedLabel(Math.max(...items.map(x=>x.savedAt||0)))}`,s.map(bookCover).join(""),openPanel(s.map(x=>x.key)))}).join("");
+  }else{
+    const today=todayISO(), buckets=new Map();
+    v.forEach(x=>{const d=x.planDate||"none"; if(!buckets.has(d))buckets.set(d,[]); buckets.get(d).push(x)});
+    const days=[...buckets.keys()].filter(d=>d!=="none").sort(); if(buckets.has("none")) days.push("none");
+    html+=days.map(d=>{const s=buckets.get(d);
+      return shelf(d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":d<today?" · Past":""),`${s.length} book${s.length===1?"":"s"}`,s.map(bookCover).join(""),openPanel(s.map(x=>x.key)))}).join("");
   }
-  const rows=[];
-  v.forEach(x=>{
-    if(x.kind==="series"&&x.episodes&&x.episodes.length) x.episodes.forEach((e,i)=>rows.push({date:e.planDate||"",title:e.title,sub:`Episode ${i+1} of ${x.episodes.length} · ${x.seriesTitle||x.title}`,key:x.key,topic:x.topic}));
-    else rows.push({date:x.planDate||"",title:x.title,sub:x.kind==="series"?"Series, episodes not built yet":`Single · ${x.format||"post"}`,key:x.key,topic:x.topic});
-  });
-  const today=todayISO(), byDay=new Map();
-  rows.forEach(r=>{const d=r.date||"none";if(!byDay.has(d))byDay.set(d,[]);byDay.get(d).push(r)});
-  const days=[...byDay.keys()].filter(d=>d!=="none").sort();
-  if(byDay.has("none")) days.push("none");
-  $("#vault-list").innerHTML=`<div class="agenda">${days.map(d=>`<div class="aday${d!=="none"&&d<today?" past":""}"><h3>${d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":"")}</h3><div>
-    ${byDay.get(d).map(r=>`<div class="arow"><div style="min-width:0"><b>${esc(r.title)}</b><span>${esc(r.sub)}</span><span class="mono">${esc(r.topic||"")}</span></div><button class="btn ghost" type="button" data-open="${r.key}">Plan</button></div>`).join("")}</div></div>`).join("")}</div>`;
+  $("#vault-list").innerHTML=html;
 }
 $("#vault-group").addEventListener("click",e=>{const b=e.target.closest("[data-vgroup]");if(!b)return;vgroup=b.dataset.vgroup;renderVault()});
 const vfind=k=>state.vault.find(x=>x.key===k);
 $("#vault-list").addEventListener("click",async e=>{
+  const bk=e.target.closest("[data-vbook]"); if(bk){vOpen=vOpen===bk.dataset.vbook?null:bk.dataset.vbook;renderVault();const o=$("#vault-list .vopen");if(o)o.scrollIntoView({block:"nearest",behavior:"smooth"});return}
+  if(e.target.closest("[data-vclose]")){vOpen=null;return renderVault()}
+  const vb=e.target.closest("[data-vbrand]"); if(vb){const k=vb.dataset.vbrand; if(k==="story") return openBook(answers().some(x=>x!=null)?"story":"first"); if(k==="quiz") return openBook("quiz"); return show("profile")}
   const o=e.target.closest("[data-open]");
   if(o){vgroup="idea";renderVault();const c=document.getElementById("vc-"+o.dataset.open);if(c)c.scrollIntoView({block:"start"});return}
   const kd=e.target.closest("[data-kind]");
@@ -1962,7 +2041,7 @@ function renderSettings(){
     ${row("Brand details",`${filled} of 8 filled`,"Name, niche, expertise, audience, platforms, voice, themes and off limits.",`<button class="btn" type="button" data-set="profile">Edit brand</button>`)}
     <p class="setgroup">App</p>
     ${row("Edition",SKINS[skin]||"Leather bound","You can also tap the book in the header.",`<div class="seg" role="group" aria-label="Edition"><button type="button" data-skin="leather" aria-pressed="${skin==="leather"}">Leather bound</button><button type="button" data-skin="ink" aria-pressed="${skin==="ink"}">Paperback</button><button type="button" data-skin="chalk" aria-pressed="${skin==="chalk"}">Chalkboard</button></div>`)}
-    ${row("Opening story","The book opening","The short story Handalf tells on your first visit.",`<button class="btn" type="button" data-set="intro">Watch again</button>`)}
+    ${row("Your story","The storybook",answers().some(x=>x!=null)?"Reread the story you wrote with Handalf: your quiz answers, your archetype and what you know.":"Handalf's opening story, where you answer the brand quiz.",`<button class="btn" type="button" data-set="intro">${answers().some(x=>x!=null)?"Reread my story":"Open the storybook"}</button>`)}
     <div class="setrow"><h3>Where your work is saved</h3><div class="val"><b id="sync-val">${esc(syncLine[0])}</b><p id="sync-sub">${esc(syncLine[1])}</p></div></div>
     ${row("Vault",`${state.vault.length} saved take${state.vault.length===1?"":"s"}`,"",`<button class="btn" type="button" data-set="vault">Open vault</button>`)}
     ${row("Erase everything","Start from zero","Deletes your brand, stances, vault and results.",`<button class="btn ghost" type="button" data-set="erase" style="color:var(--risk);border-color:var(--risk)">Erase</button>`)}
@@ -1985,45 +2064,191 @@ function settingsClick(e){
   const sk=e.target.closest("[data-skin]"); if(sk){skin=sk.dataset.skin;applySkin(skin);try{localStorage.setItem("handalf.skin",skin)}catch(err){}renderSettings();return}
   const b=e.target.closest("[data-set]"); if(!b) return;
   const k=b.dataset.set;
-  if(k==="quiz") return openSetup("quiz");
+  if(k==="quiz") return openBook("quiz");
   if(k==="bio") return openSetup("bio");
-  if(k==="intro") return playIntro();
+  if(k==="intro") return openBook("story");
   if(k==="erase") return openSetup("erase");
   show(k); logDiag({done:k,view});
 }
 $("#gear-btn").addEventListener("click",()=>show(view==="settings"?"start":"settings"));
 
-/* ---------- first-run book opening ---------- */
+/* ---------- the storybook: introduction, onboarding and brand quiz in one book ---------- */
 let introTimers=[];
-function playIntro(){
+const book={mode:"first",pages:[],i:0,pick:null,showGrid:false,draft:null};
+const NARRATIVE=new Set(["intro","story-intro","story1","story2","story-arch","story-niche"]);
+function bookPages(mode){
+  if(mode==="story") return ["story-intro","story1","story2","story-arch","story-niche","story-end"];
+  const q=QUIZ.map((_,i)=>"q"+i);
+  return mode==="quiz"?[...q,"reveal","niche","end"]:["intro",...q,"reveal","niche","end"];
+}
+const answers=()=>{const a=state.profile.quiz&&Array.isArray(state.profile.quiz.answers)?state.profile.quiz.answers:[];return a};
+function quizRank(ans){
+  const sc={}; Object.keys(ARCH).forEach(k=>sc[k]=0);
+  ans.forEach((a,i)=>{ if(a==null||!QUIZ[i]) return; Object.entries(QUIZ[i].o[a][1]).forEach(([k,v])=>sc[k]+=v) });
+  return Object.entries(sc).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+}
+const article=w=>/^[AEIOU]/i.test(w||"")?"an":"a";
+function turnHint(label){
+  return `<div class="bturn"><button class="btn" type="button" data-bnext>${label||"Turn the page"}</button>
+    <div class="iswipe" role="button" tabindex="0" data-bnext aria-label="Swipe left or tap to turn the page">
+      <svg class="fp" viewBox="0 0 40 48" aria-hidden="true"><path d="M5 19a15 15 0 0 1 30 0M8 25c0-9 5-15 12-15s12 6 12 15v4M12 41c-2-4-3-8-3-13M12 22a8 8 0 0 1 16 0v9c0 5-1 9-3 13M16 23a4 4 0 0 1 8 0v9c0 5-2 9-4 12M20 24v9c0 4-1 7-3 10M28 36c0 3-1 6-2 8"/></svg>
+      <p class="iswipe-copy">Swipe left or tap to turn the page</p>
+    </div></div>`;
+}
+function bookBack(){return book.i>0?`<button class="ltext bback" type="button" data-bprev>Back a page</button>`:""}
+function storyQA(from,to){
+  const a=answers();
+  return QUIZ.slice(from,to).map((Q,j)=>{const i=from+j, ans=a[i];
+    return `<div class="bqa"><p class="bq">${esc(Q.q)}</p>${ans!=null&&Q.o[ans]?`<p class="inscribed">${esc(Q.o[ans][0])}</p>`:`<p class="blank">This line is still blank.</p>`}</div>`}).join("");
+}
+function bookHTML(key){
+  const p=state.profile, a=answers(), n=QUIZ.length;
+  if(key==="intro") return `<p class="leyebrow">Chapter one</p>
+    <h2 class="lq sm">Every creator has a take nobody else can make.</h2>
+    <p>I'm Handalf. I read the crowd, then I read you, and together we find the story only you can tell.</p>
+    <p>First, let me get to know you. Six questions, a few notes, and this book becomes yours.</p>${turnHint()}`;
+  if(/^q\d$/.test(key)){
+    const i=+key.slice(1), Q=QUIZ[i], ans=a[i];
+    return `<p class="leyebrow">Chapter two · Question ${i+1} of ${n}</p>
+      <h2 class="lq sm">${esc(Q.q)}</h2>
+      ${ans!=null?`<p class="inscribed" data-ink>${esc(Q.o[ans][0])}</p>`:""}
+      <ol class="bopts${ans!=null?" answered":""}">${Q.o.map((o,j)=>`<li><button type="button" data-bans="${j}" aria-pressed="${ans===j}"><span class="lk">${"ABCD"[j]}</span><span>${esc(o[0])}</span></button></li>`).join("")}</ol>
+      <div class="bnav">${bookBack()}${ans!=null?`<button class="ltext" type="button" data-bnext>Next page</button>`:""}</div>`;
+  }
+  if(key==="reveal"){
+    const ranked=quizRank(a);
+    if(!book.pick) book.pick={primary:ranked[0]||p.archetype||"Creator",secondary:ranked[1]||""};
+    const A=ARCH[book.pick.primary];
+    return `<p class="leyebrow">Chapter three · Your archetype</p>
+      <h2 class="lq sm">You are ${article(book.pick.primary)} ${esc(book.pick.primary)}.</h2>
+      <p class="inscribed">${esc(A.line)}</p>
+      <p>${esc(A.style)}</p>
+      ${book.pick.secondary?`<p class="bmute">With a streak of ${esc(book.pick.secondary)}: ${esc(ARCH[book.pick.secondary].line.toLowerCase())}</p>`:""}
+      <button class="ltext" type="button" data-bgrid>${book.showGrid?"Close the list":"Not quite you? Choose another"}</button>
+      ${book.showGrid?`<div class="larch bgrid">${Object.entries(ARCH).map(([k,v])=>`<button type="button" data-barch="${k}" class="${book.pick.secondary===k?"second":""}" aria-pressed="${book.pick.primary===k}"><b>${k}</b><span>${esc(v.line)}</span></button>`).join("")}</div>`:""}
+      <div class="bnav">${bookBack()}</div>${turnHint("Keep "+book.pick.primary)}`;
+  }
+  if(key==="niche"){
+    const f=(id,label,ph,v,area)=>`<div class="lfield${area?" wide":""}"><label class="leyebrow" for="b-${id}">${label}</label>${area?`<textarea id="b-${id}" data-bfield="${id}" placeholder="${ph}">${esc(v||"")}</textarea>`:`<input id="b-${id}" data-bfield="${id}" value="${esc(v||"")}" placeholder="${ph}">`}</div>`;
+    return `<p class="leyebrow">Chapter four · What you know</p>
+      <h2 class="lq sm">Write down what you know that most creators in your space don't.</h2>
+      <div class="lgrid">${f("niche","Your niche","Illustration, comics, creative business",p.niche)}${f("audience","Who it's for","Indie artists who want to own their work",p.audience)}
+      ${f("expertise","Your expertise","What you know from doing it. Years in, things built, mistakes made.",p.expertise,1)}${f("platforms","Where you post","YouTube video essays, IG carousels, X threads",p.platforms)}</div>
+      <div class="bnav">${bookBack()}</div>${turnHint()}`;
+  }
+  if(key==="end") return `<p class="leyebrow">The end of the beginning</p>
+    <h2 class="lq sm">Your story is written, ${esc(p.name||"friend")}.</h2>
+    <p>You are ${article(p.archetype)} ${esc(p.archetype||"creator")}${p.niche?` in ${esc(p.niche)}`:""}. From here on, every take I conjure argues the way you do.</p>
+    <p class="bmute">You can reread this story or rewrite it any time from Settings.</p>
+    <div class="bnav">${bookBack()}</div><div class="bturn"><button class="btn" type="button" data-bclose>Start conjuring</button></div>`;
+  // the retelling
+  const has=a.some(x=>x!=null);
+  if(key==="story-intro") return `<p class="leyebrow">Chapter one, retold</p>
+    <h2 class="lq sm">${has?`Once, ${esc(p.name||"a creator")} came to Handalf with stories to tell.`:"This story hasn't been written yet."}</h2>
+    <p>${has?"These are the notes you left in the margins. Turn the pages to read them back.":"Take the brand quiz and Handalf will write it down as you answer."}</p>
+    ${has?turnHint():`<div class="bturn"><button class="btn" type="button" data-bretake>Write my story</button></div>`}`;
+  if(key==="story1") return `<p class="leyebrow">Chapter two · Your answers</p>${storyQA(0,3)}${turnHint()}`;
+  if(key==="story2") return `<p class="leyebrow">Chapter two, continued</p>${storyQA(3,QUIZ.length)}${turnHint()}`;
+  if(key==="story-arch"){const A=p.archetype&&ARCH[p.archetype];
+    return `<p class="leyebrow">Chapter three · Your archetype</p>
+    <h2 class="lq sm">${A?`You are ${article(p.archetype)} ${esc(p.archetype)}.`:"No archetype yet."}</h2>
+    ${A?`<p class="inscribed">${esc(A.line)}</p><p>${esc(A.style)}</p>${p.archetype2?`<p class="bmute">With a streak of ${esc(p.archetype2)}.</p>`:""}`:""}${turnHint()}`}
+  if(key==="story-niche"){const line=(l,v)=>`<div class="bqa"><p class="bq">${l}</p>${v?`<p class="inscribed">${esc(v)}</p>`:`<p class="blank">This line is still blank.</p>`}</div>`;
+    return `<p class="leyebrow">Chapter four · What you know</p>${line("Your niche",p.niche)}${line("Who it's for",p.audience)}${line("Your expertise",p.expertise)}${line("Where you post",p.platforms)}${turnHint()}`}
+  if(key==="story-end") return `<p class="leyebrow">The story so far</p>
+    <h2 class="lq sm">That's who you are, as Handalf knows you.</h2>
+    <p>If any of it has changed, rewrite the story and your takes will follow.</p>
+    <div class="bnav">${bookBack()}</div><div class="bturn bturn2"><button class="btn" type="button" data-bretake>Retake the quiz</button><button class="ltext" type="button" data-bclose>Close the book</button></div>`;
+  return "";
+}
+function renderBook(){
+  const key=book.pages[book.i], el=$("#ipage-in");
+  el.innerHTML=bookHTML(key);
+  el.dataset.kind=NARRATIVE.has(key)?"narrative":"choice";
+  el.classList.remove("fresh"); void el.offsetWidth; el.classList.add("fresh");
+  $("#ibook").dataset.key=key;
+  $(".ipage").scrollTop=0;
+  const ink=el.querySelector("[data-ink].new"); if(ink) ink.classList.add("write");
+}
+function bookTurn(dir){
+  const ni=book.i+dir; if(ni<0||ni>=book.pages.length) return;
+  if(book.pages[book.i]==="reveal"&&dir>0&&book.pick){ state.profile.archetype=book.pick.primary; state.profile.archetype2=book.pick.secondary||""; persist("profile"); }
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    const pg=$(".ipage"); pg.querySelectorAll(".pageleaf").forEach(x=>x.remove());
+    const leaf=document.createElement("div"); leaf.className="pageleaf "+(dir>0?"fwd":"back"); leaf.setAttribute("aria-hidden","true");
+    const c=$("#ipage-in").cloneNode(true); c.removeAttribute("id"); c.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id"));
+    leaf.appendChild(c); pg.appendChild(leaf); setTimeout(()=>leaf.remove(),760);
+  }
+  book.i=ni; book.showGrid=false; renderBook();
+}
+function openBook(mode){
   const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
+  book.mode=mode||"first"; book.pages=bookPages(book.mode); book.i=0; book.pick=null; book.showGrid=false;
+  if(book.mode!=="story"){ if(!state.profile.quiz||book.mode==="quiz") state.profile.quiz={answers:[],at:0}; }
   bk.className="ibook"; $(".ipage").classList.remove("gone"); o.classList.remove("out"); o.hidden=false;
   $("#intro-owner").textContent=state.profile.name||"you";
-  if(matchMedia("(prefers-reduced-motion: reduce)").matches){bk.classList.add("open","read");$("#intro-go").focus();return}
-  introTimers.push(setTimeout(()=>bk.classList.add("open"),900));
-  introTimers.push(setTimeout(()=>{bk.classList.add("read");$("#intro-go").focus()},2300));
+  renderBook();
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){bk.classList.add("open","read");return}
+  const fast=book.mode!=="first";
+  introTimers.push(setTimeout(()=>bk.classList.add("open"),fast?350:900));
+  introTimers.push(setTimeout(()=>bk.classList.add("read"),fast?1500:2300));
 }
+function playIntro(){openBook(state.profile.quiz&&answers().some(x=>x!=null)?"story":"first")}
 function endIntro(){
   const o=$("#intro"); if(o.hidden) return; introTimers.forEach(clearTimeout);
   o.classList.add("out"); setTimeout(()=>{o.hidden=true},600);
   try{localStorage.setItem("handalf.intro","1")}catch(e){}
   if(!state.profile.introSeen){state.profile.introSeen=true;persist("profile")}
+  renderProfile(); renderEngine(); if(view==="settings") renderSettings(); if(view==="vault") renderVault(); if(view==="start") renderStart();
   lastAct=Date.now(); if(view==="start"){const i=$("#l-topic");if(i)i.focus()}
 }
-$("#intro-go").addEventListener("click",endIntro);
-$("#intro").addEventListener("click",e=>{if(e.target.closest("[data-skip]")||e.target.closest("#iswipe"))endIntro()});
-$("#iswipe").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();endIntro()}});
-{ const pg=$(".ipage"); let x0=null, dx=0;
-  let cap=false;
-  pg.addEventListener("pointerdown",e=>{ if(!$("#ibook").classList.contains("read")||e.target.closest("button,a")) return; x0=e.clientX; dx=0; cap=false; });
-  pg.addEventListener("pointermove",e=>{ if(x0===null) return; dx=Math.min(0,e.clientX-x0);
-    if(!cap){ if(dx>-8) return; cap=true; pg.classList.add("drag"); try{pg.setPointerCapture(e.pointerId)}catch(err){} }
-    pg.style.transform=`translateX(${dx}px) rotateY(${Math.max(dx*.03,-18)}deg)`; });
-  const up=e=>{ if(x0===null) return; x0=null; if(!cap){ if(!(e&&e.target&&e.target.closest&&e.target.closest("button,a"))) endIntro(); return } cap=false; pg.classList.remove("drag"); pg.style.transform="";
-    if(dx<-60){pg.classList.add("gone");endIntro()} };
+function finishBook(){
+  const p=state.profile; p.onboarded=true; p.quizAt=Date.now(); if(p.quiz) p.quiz.at=Date.now(); persist("profile");
+  flash=`Your story is written. Takes will argue like ${article(p.archetype)} ${esc(p.archetype||"creator")}.`; mode="conjure";
+  endIntro();
+}
+$("#intro").addEventListener("click",e=>{
+  if(e.target.closest("[data-skip]")) return endIntro();
+  if(e.target.closest("[data-bclose]")) return book.pages[book.i]==="end"?finishBook():endIntro();
+  if(e.target.closest("[data-bretake]")){ book.mode="quiz"; book.pages=bookPages("quiz"); book.i=-1; state.profile.quiz={answers:[],at:0}; book.pick=null; return bookTurn(1); }
+  if(e.target.closest("[data-bprev]")) return bookTurn(-1);
+  if(e.target.closest("[data-bnext]")) return bookTurn(1);
+  if(e.target.closest("[data-bgrid]")){book.showGrid=!book.showGrid;return renderBook()}
+  const ar=e.target.closest("[data-barch]");
+  if(ar){const k=ar.dataset.barch; if(book.pick.primary!==k){book.pick.secondary=book.pick.primary;book.pick.primary=k} return renderBook()}
+  const an=e.target.closest("[data-bans]");
+  if(an){
+    const i=+book.pages[book.i].slice(1), j=+an.dataset.bans;
+    state.profile.quiz=state.profile.quiz||{answers:[],at:0}; state.profile.quiz.answers[i]=j; book.pick=null; persist("profile");
+    const el=$("#ipage-in"), ol=el.querySelector(".bopts");
+    let ink=el.querySelector("[data-ink]");
+    if(!ink){ ink=document.createElement("p"); ink.className="inscribed"; ink.setAttribute("data-ink",""); ol.before(ink); }
+    ink.textContent=QUIZ[i].o[j][0]; ink.classList.remove("write"); void ink.offsetWidth; ink.classList.add("write");
+    ol.classList.add("answered"); ol.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.bans===j)));
+    clearTimeout(book.adv); book.adv=setTimeout(()=>{ if(book.pages[book.i]==="q"+i) bookTurn(1) },1300);
+  }
+});
+$("#intro").addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.bfield; if(!k) return; state.profile[k]=e.target.value.trim(); persist("profile")});
+$("#intro").addEventListener("keydown",e=>{const s=e.target.closest&&e.target.closest(".iswipe"); if(s&&(e.key==="Enter"||e.key===" ")){e.preventDefault();bookTurn(1)}});
+{ const pg=$(".ipage"); let x0=null, dx=0, cap=false;
+  pg.addEventListener("pointerdown",e=>{ if(!$("#ibook").classList.contains("read")||e.target.closest("button,a,input,textarea,label")) return; x0=e.clientX; dx=0; cap=false; });
+  pg.addEventListener("pointermove",e=>{ if(x0===null) return; dx=e.clientX-x0;
+    if(!cap){ if(Math.abs(dx)<8) return; cap=true; pg.classList.add("drag"); try{pg.setPointerCapture(e.pointerId)}catch(err){} }
+    pg.style.transform=`translateX(${dx*.6}px)`; });
+  const up=e=>{ if(x0===null) return; x0=null;
+    const kind=$("#ipage-in").dataset.kind, key=book.pages[book.i];
+    const canNext=kind==="narrative"||key==="reveal"||key==="niche"||(/^q\d$/.test(key)&&answers()[+key.slice(1)]!=null);
+    if(!cap){ if(kind==="narrative"&&!(e&&e.target&&e.target.closest&&e.target.closest("button,a"))) bookTurn(1); return }
+    cap=false; pg.classList.remove("drag"); pg.style.transform="";
+    if(dx<-60&&canNext) bookTurn(1); else if(dx>60) bookTurn(-1); };
   pg.addEventListener("pointerup",up); pg.addEventListener("pointercancel",up);
 }
-addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#intro").hidden)endIntro()});
+addEventListener("keydown",e=>{ if($("#intro").hidden) return;
+  if(e.key==="Escape") endIntro();
+  if(e.target.matches&&e.target.matches("input,textarea")) return;
+  if(e.key==="ArrowRight"){const k=book.pages[book.i]; if(NARRATIVE.has(k)||k==="reveal"||k==="niche"||(/^q\d$/.test(k)&&answers()[+k.slice(1)]!=null)) bookTurn(1)}
+  if(e.key==="ArrowLeft") bookTurn(-1);
+});
 
 /* ---------- start over = landing ---------- */
 
@@ -2038,7 +2263,7 @@ function boot(){
   else {mode="conjure";show("start")}
 }
 boot(); booted=true;
-{ let seen=!!state.profile.introSeen; try{seen=seen||localStorage.getItem("handalf.intro")==="1"}catch(e){} if(!seen) playIntro(); }
+{ let seen=!!state.profile.introSeen; try{seen=seen||localStorage.getItem("handalf.intro")==="1"}catch(e){} if(!seen) openBook("first"); }
 initRuntime().then(()=>{ if(view==="start"&&!touched) renderStart(); });
 })();
 </script>
