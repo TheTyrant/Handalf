@@ -2438,7 +2438,7 @@ function storyQA(from,to){
     return `<div class="bqa"><p class="bq">${esc(Q.q)}</p>${ans!=null&&Q.o[ans]?`<p class="inscribed">${esc(Q.o[ans][0])}</p>`:`<p class="blank">This line is still blank.</p>`}</div>`}).join("");
 }
 function bookHTML(key){
-  if(/^t-/.test(key)) return takeHTML(key);
+  if(/^t-/.test(key)) return takeBookHTML(key);
   const p=state.profile, a=answers(), n=QUIZ.length;
   if(key==="intro") return `<p class="leyebrow">Chapter one</p>
     <h2 class="lq sm">Every creator has a take nobody else can make.</h2>
@@ -2556,7 +2556,7 @@ function setCover(){
     <p class="itag">${esc(v.topic||"A take from your library")}</p>
     <p class="tcov-mult">${fmt(m)}x · ${esc(tn)}</p>`;
 }
-function takeHTML(key){
+function takeBookHTML(key){
   const v=vfind(book.vkey); if(!v) return `<p class="leyebrow">Library</p><h2 class="lq sm">This book is no longer on the shelf.</h2><div class="bturn"><button class="btn" type="button" data-skip>Close the book</button></div>`;
   const m=multiple(v),[tn,tc]=tier(m), series=v.kind==="series", eps=v.episodes||[], k=v.key;
   if(key==="t-take") return `<p class="leyebrow">Chapter one · ${esc(v.topic||"The take")}</p>
