@@ -829,6 +829,7 @@ const EXAMPLE={example:true,topic:"AI image tools and the future of illustrators
   {title:"Use AI for finals and humans for sketches",hook:"Everyone says ideate with AI. I do the opposite.",angle:"Inverts the compromise take: the sketch holds the intent, so it should stay human; polish is where automation belongs.",against:"c5",stances:[{text:"The thumbnail sketch is where the idea lives.",quote:"if the sketch is dead the final is dead"}],format:"Short",divergence:7,ownership:6,defensibility:6,fit:7,risk:"Needs a real before and after to land."},
   {title:"Entry-level work was already dying",hook:"AI didn't kill the junior illustrator job. Template marketplaces did, five years ago.",angle:"Reframes the replacement fear with timeline evidence about stock and template platforms.",against:"c1",stances:[],format:"Video essay",divergence:5,ownership:2,defensibility:7,fit:6,risk:"Lands as a history lesson without your own story in it."}
  ]};
+EXAMPLE.takes.forEach((t,i)=>{t.key="ex"+(i+1)});
 
 /* ---------- storage: per-account db when available, browser storage otherwise ---------- */
 let db=null, uid=null, sample=null, dl=null, sync="browser";
@@ -1751,11 +1752,11 @@ function takeHTML(t,ctx){
       ${back||(t.ownership<=3?`<div class="backing" style="border-color:var(--risk)">No stance of yours backs this yet.</div>`:"")}
       <div class="bars">${bars}</div>
       ${t.risk?`<p class="risk">Risk: ${esc(t.risk)}</p>`:""}
-      ${ctx.example?"":`<div class="actions">
+      ${`<div class="actions">
         <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In library":"Save to library"}</button>
         ${ctx.vault?`<button class="btn ghost" data-act="copy" data-key="${t.key}" type="button">Copy</button><button class="btn quiet" data-act="unsave" data-key="${t.key}" type="button">Remove</button>`:`<button class="btn ghost" data-act="remix" data-key="${t.key}" type="button" aria-expanded="${open.has(t.key)}">${open.has(t.key)?"Close":(t.thread&&t.thread.length?"Continue":"Remix")}</button>`}
       </div>`}
-      ${ctx.example||ctx.vault?"":`<div id="panel-${t.key}">${open.has(t.key)?deepHTML(t):""}</div>`}
+      ${ctx.vault?"":`<div id="panel-${t.key}">${open.has(t.key)?deepHTML(t):""}</div>`}
     </div></article>`;
 }
 function renderEngine(){
@@ -1766,7 +1767,7 @@ function renderEngine(){
       +`<div class="empty"><strong>Ready for a new topic</strong>Type an idea above and press Find outliers. Your library${state.vault.length?` still holds ${state.vault.length} saved take${state.vault.length===1?"":"s"}`:" is ready for whatever you keep"}.</div>`;
     return;
   }
-  const takes=(run.takes||[]).map(t=>t.key?t:{...t,key:"ex"+Math.random()});
+  const takes=run.takes||[];
   // keep remixes under their parent; rank parents by multiple
   const parents=takes.filter(t=>!t.remixOf).sort((a,b)=>multiple(b)-multiple(a));
   let ordered=[];
@@ -1789,12 +1790,14 @@ function renderEngine(){
       ${ordered.length?ordered.map(t=>takeHTML(t,{consensus:run.consensus,example:run.example})).join(""):`<p class="empty">No takes match this filter.</p>`}
     </div>
   </div>`;
-  if(state.last&&!$("#topic").value) $("#topic").value=state.last.topic;
+  if(state.last&&!state.last.example&&!$("#topic").value) $("#topic").value=state.last.topic;
 }
 $("#results").addEventListener("click",e=>{
   if(e.target.closest("[data-setup]")){openSetup();return}
   const f=e.target.closest("[data-filter]"); if(f){filter=f.dataset.filter;renderEngine();return}
-  const b=e.target.closest("[data-act]"); if(!b) return;
+  const b=e.target.closest("button[data-act]"); if(!b) return;
+  // the sample run becomes yours the moment you save or remix one of its takes
+  if(!state.last&&/^ex\d/.test(b.dataset.key||"")){ state.last=JSON.parse(JSON.stringify(EXAMPLE)); state.last.at=Date.now(); persist("last") }
   const t=state.last&&state.last.takes.find(x=>x.key===b.dataset.key);
   if(b.dataset.act==="remix"){const k=b.dataset.key;open.has(k)?open.delete(k):open.add(k);b.textContent=open.has(k)?"Close":"Remix";b.setAttribute("aria-expanded",open.has(k));renderPanel(k);const ta=document.getElementById("ctx-"+k);if(ta)ta.focus();return}
   if(b.dataset.act==="talk"){ask(b.dataset.key);return}
