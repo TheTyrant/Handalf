@@ -515,6 +515,24 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .iowl{width:clamp(110px,16vw,190px);height:auto}
 .ititle{font-family:var(--f-display);font-size:clamp(48px,9vw,110px);line-height:1;margin:0}
 .itag{font-family:var(--f-title);font-weight:600;font-size:clamp(13px,1.5vw,18px);letter-spacing:.08em;margin:0}
+/* library books open as their own storybook */
+.vbook.lift{transform:translateY(-14px) rotate(-2deg) scale(1.04);box-shadow:inset -6px 0 10px -6px rgba(0,0,0,.4),0 14px 24px rgba(0,0,0,.35)}
+.ibook[data-cover="take"] .ifront{background-color:var(--cover);color:var(--cover-fg);padding:0 56px 0 64px}
+.ibook[data-cover="take"] .ifront::before{border-color:var(--spine);inset:max(22px,env(safe-area-inset-top,0px)) 22px 22px 48px}
+.ibook[data-cover="take"] .ifront::after{width:30px;background:linear-gradient(90deg,var(--spine) 0 22px,rgba(0,0,0,.35) 22px,rgba(0,0,0,0) 30px)}
+.ibook[data-cover="take"] .iskip-cover{color:var(--cover-fg)}
+.tcov-eye{font-family:var(--f-title);font-weight:600;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--spine);margin:0}
+.tcov-title{font-family:var(--f-head);font-size:clamp(30px,5.4vw,64px);line-height:1.08;margin:0;max-width:16ch;text-wrap:balance}
+.tcov-rule{width:64px;height:2px;background:var(--spine);margin:4px 0}
+.tcov-mult{font-family:var(--f-title);font-weight:600;font-size:14px;letter-spacing:.1em;color:var(--spine);margin:0}
+.ibook[data-cover="take"] .itag{color:var(--cover-fg);opacity:.85;max-width:40ch}
+.tmeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:14px;color:var(--mute)}
+.tmeta b{color:var(--ink);font-weight:600}
+.tscore{font-family:var(--f-display);font-size:34px;line-height:1;color:var(--gold)}
+.tscore small{font-size:.5em}
+.tplan{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.ipage-in .eps{margin:0}
+.tremove{color:var(--mute)}
 .iback{transform:rotateY(180deg);background:var(--sheet);color:var(--mute)}
 .iowner-line{font-family:var(--f-head);font-style:italic;font-size:clamp(15px,1.6vw,19px);margin:0}
 .iowner{font-family:var(--f-display);color:var(--gold);font-size:clamp(28px,4vw,48px);margin:0;padding:0 18px 4px;border-bottom:1px solid var(--rule)}
@@ -1398,9 +1416,10 @@ function renderStart(){
       ${f.parsed?`<ul class="lfound">
         <li>${f.arch?`Brand archetype: <b style="color:var(--gold)">${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}`:"No clear archetype. The brand quiz can find one."}</li>
         <li>${f.fields.length?`Filled in ${esc(f.fields.join(", "))}`:"No new brand fields. Your existing ones were kept."}</li>
-        <li>${f.stances} contrary stance${f.stances===1?"":"s"} added to your bank</li></ul>`:""}
-      <p class="lhint">You can edit any of it in the Brand tab.</p>
-      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button><button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine with the quiz":"Take the brand quiz"}</button></div>`;
+        <li>${f.stances} contrary stance${f.stances===1?"":"s"} added to your bank</li>
+        ${f.quiz?`<li>Your brand story was written from your bio, as if you took the quiz</li>`:""}</ul>`:""}
+      <p class="lhint">You can edit any of it in the Spell book tab.</p>
+      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button>${answers().some(x=>x!=null)?`<button class="ltext" type="button" data-qstart>Read my story</button>`:`<button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine with the quiz":"Take the brand quiz"}</button>`}</div>`;
   }
   const active=mode==="done"?"":mode; const wasAnim=animIn; animIn=false; const wv=waveNext; waveNext=false; if(!(mode==="quiz"&&qi>=0)) perchTilt=0;
   $("#quiz").innerHTML=`<div class="ltop"><div class="perchrow"><div class="perch${wv?" waving":""}" style="--tilt:${perchTilt}deg" aria-hidden="true">${PERCH}</div><p class="sprout${wv?" grow":""}"><svg class="leaf" viewBox="0 0 22 14" aria-hidden="true"><path d="M0 9C5 9 7 8 9 7" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-linecap="round"/><path d="M8 7C10 2 16 0 21 1C19 7 13 10 8 7Z" fill="var(--gold)"/></svg><span>${esc(ebText)}</span></p></div><div class="lpanel${wasAnim||wv?" lin":""}${wv?" late":""}">${panel}</div></div>
@@ -1452,8 +1471,11 @@ return `Below is text a content creator gave us about themselves: either a brief
 
 Rules: use only what the text says. Use an empty string for anything missing or marked unknown. Never invent. archetype and archetype2 must each be one of: ${Object.keys(ARCH).join(", ")}, or empty. Write plainly, no em dashes.
 
+Also answer the brand quiz below the way this creator would, judging from the text. For each question give the number of the option that fits them best. Use -1 only when the text gives no signal at all for that question.
+${QUIZ.map((Q,i)=>`Q${i+1}. ${Q.q}\n${Q.o.map((o,j)=>`  ${j}: ${o[0]}`).join("\n")}`).join("\n")}
+
 Reply with only JSON:
-{"profile":{"name":"","niche":"","expertise":"","audience":"","platforms":"","voice":"","pillars":"","off":""},"archetype":"","archetype2":"","stances":[{"stance":"first person, one sentence","against":"the common view it pushes against","quote":"their words if given, else empty","topic":"2 to 4 words","strength":1-5}]}
+{"profile":{"name":"","niche":"","expertise":"","audience":"","platforms":"","voice":"","pillars":"","off":""},"archetype":"","archetype2":"","quiz":[${QUIZ.map(()=>0).join(",")}],"stances":[{"stance":"first person, one sentence","against":"the common view it pushes against","quote":"their words if given, else empty","topic":"2 to 4 words","strength":1-5}]}
 
 TEXT
 ${text.slice(0,60000)}`;
@@ -1478,6 +1500,14 @@ async function readProfile(text,source){
     let arch="",arch2="";
     if(ARCH[out.archetype]&&!p.archetype){p.archetype=out.archetype;arch=out.archetype;if(ARCH[out.archetype2]&&out.archetype2!==out.archetype){p.archetype2=out.archetype2;arch2=out.archetype2}}
     else if(p.archetype){arch=p.archetype;arch2=p.archetype2||""}
+    // the bio answers the brand quiz, so the story gets written as if the quiz was taken
+    let quizFilled=false;
+    const qa=(Array.isArray(out.quiz)?out.quiz:[]).slice(0,QUIZ.length).map((x,i)=>{const n=parseInt(x,10);return Number.isInteger(n)&&n>=0&&QUIZ[i]&&n<QUIZ[i].o.length?n:null});
+    if(!answers().some(x=>x!=null)&&qa.some(x=>x!=null)){
+      while(qa.length<QUIZ.length) qa.push(null);
+      p.quiz={answers:qa,at:Date.now(),from:"bio"}; p.quizAt=Date.now(); quizFilled=true;
+      if(!p.archetype){const r=quizRank(qa); p.archetype=r[0]; p.archetype2=r[1]||""; arch=p.archetype; arch2=p.archetype2}
+    }
     syncNextId(); const seen=new Set(state.stances.map(s=>s.stance.toLowerCase())); let n=0;
     (Array.isArray(out.stances)?out.stances:[]).forEach(s=>{
       if(!s||!s.stance||seen.has(String(s.stance).toLowerCase())) return; seen.add(String(s.stance).toLowerCase());
@@ -1486,7 +1516,7 @@ async function readProfile(text,source){
     p.onboarded=true; persist("profile"); if(n) persist("stances");
     renderProfile(); renderStances(); renderEngine();
     p.linked={source,at:Date.now()}; persist("profile");
-    found={source,parsed:true,arch,arch2,fields,stances:n}; mode="done"; renderStart();
+    found={source,parsed:true,arch,arch2,fields,stances:n,quiz:quizFilled}; mode="done"; renderStart();
   }catch(e){
     btn.disabled=false; btn.textContent="Read my bio";
     hint.textContent=errCopy(e)||"Reading failed. Try again.";
@@ -1994,33 +2024,40 @@ function renderVault(){
       return shelf(d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":d<today?" · Past":""),`${s.length} book${s.length===1?"":"s"}`,s.map(bookCover).join(""),openPanel(s.map(x=>x.key)))}).join("");
   }
   $("#vault-list").innerHTML=html;
+  refreshTakeBook();
 }
 $("#vault-group").addEventListener("click",e=>{const b=e.target.closest("[data-vgroup]");if(!b)return;vgroup=b.dataset.vgroup;renderVault()});
 const vfind=k=>state.vault.find(x=>x.key===k);
 $("#vault-list").addEventListener("click",async e=>{
-  const bk=e.target.closest("[data-vbook]"); if(bk){vOpen=vOpen===bk.dataset.vbook?null:bk.dataset.vbook;renderVault();const o=$("#vault-list .vopen");if(o)o.scrollIntoView({block:"nearest",behavior:"smooth"});return}
+  const bk=e.target.closest("button[data-vbook]");
+  if(bk){const k=bk.dataset.vbook; if(k==="__brand"){bk.classList.add("lift");setTimeout(()=>{bk.classList.remove("lift");openBook(answers().some(x=>x!=null)?"story":"first")},260);return} return openTake(k,bk)}
+  return vaultAct(e);
+});
+async function vaultAct(e){
   if(e.target.closest("[data-vclose]")){vOpen=null;return renderVault()}
   const vb=e.target.closest("[data-vbrand]"); if(vb){const k=vb.dataset.vbrand; if(k==="story") return openBook(answers().some(x=>x!=null)?"story":"first"); if(k==="quiz") return openBook("quiz"); return show("profile")}
   const o=e.target.closest("[data-open]");
-  if(o){vgroup="idea";renderVault();const c=document.getElementById("vc-"+o.dataset.open);if(c)c.scrollIntoView({block:"start"});return}
-  const kd=e.target.closest("[data-kind]");
-  if(kd){const v=vfind(kd.dataset.key);if(v&&v.kind!==kd.dataset.kind){v.kind=kd.dataset.kind;persist("vault");renderVault()}return}
-  const b=e.target.closest("[data-act]"); if(!b) return;
-  const t=vfind(b.dataset.key); if(!t) return;
-  if(b.dataset.act==="unsave"){state.vault=state.vault.filter(x=>x.key!==t.key);persist("vault");renderVault();renderEngine()}
+  if(o){ if(view!=="vault") show("vault"); return openTake(o.dataset.open) }
+  const kd=e.target.closest("button[data-kind]");
+  if(kd){const v=vfind(kd.dataset.key);if(v&&v.kind!==kd.dataset.kind){v.kind=kd.dataset.kind;persist("vault");renderVault()}return true}
+  const b=e.target.closest("button[data-act]"); if(!b) return false;
+  const t=vfind(b.dataset.key); if(!t) return false;
+  if(b.dataset.act==="unsave"){state.vault=state.vault.filter(x=>x.key!==t.key);persist("vault");if(book.mode==="take"&&book.vkey===t.key)endIntro();renderVault();renderEngine()}
   if(b.dataset.act==="copy"){
     let txt=`${t.title}\n\n${t.hook}\n\n${t.angle}\n\nFormat: ${t.format}${t.planDate?`\nPlanned: ${t.planDate}`:""}`;
     if(t.kind==="series"&&t.episodes&&t.episodes.length) txt+=`\n\n${t.seriesTitle||"Series"}\n`+t.episodes.map((x,i)=>`\nEp ${i+1}: ${x.title}${x.planDate?` (${x.planDate})`:""}\n${x.hook}\n${x.angle||""}`).join("\n");
     try{await navigator.clipboard.writeText(txt);b.textContent="Copied"}catch(err){b.textContent="Copy blocked"}
   }
   if(b.dataset.act==="series") buildSeries(t,b);
-});
-$("#vault-list").addEventListener("change",e=>{
+  return true;
+}
+$("#vault-list").addEventListener("change",e=>vaultChange(e));
+function vaultChange(e){
   const el=e.target;
   if(el.dataset.pdate){const v=vfind(el.dataset.pdate);if(!v)return;v.planDate=el.value;if(v.kind==="series")spaceEpisodes(v);persist("vault");renderVault()}
   if(el.dataset.cad){const v=vfind(el.dataset.cad);if(!v)return;v.cadence=el.value;spaceEpisodes(v);persist("vault");renderVault()}
   if(el.dataset.epdate){const v=vfind(el.dataset.epdate);if(!v||!v.episodes)return;const ep=v.episodes[+el.dataset.ep];if(ep){ep.planDate=el.value;persist("vault")}}
-});
+}
 async function buildSeries(v,btn){
   if(!sample){btn.textContent="Open inside Claude to build";return}
   const n=+(document.getElementById("epn-"+v.key)||{}).value||4;
@@ -2372,8 +2409,10 @@ document.addEventListener("click",e=>{ if(e.target.closest&&e.target.closest("#g
 /* ---------- the storybook: introduction, onboarding and brand quiz in one book ---------- */
 let introTimers=[];
 const book={mode:"first",pages:[],i:0,pick:null,showGrid:false,draft:null};
-const NARRATIVE=new Set(["intro","story-intro","story1","story2","story-arch","story-niche"]);
+const NARRATIVE=new Set(["intro","story-intro","story1","story2","story-arch","story-niche","t-take"]);
+const TAKE_NEXT=new Set(["t-take","t-plan","t-eps"]);
 function bookPages(mode){
+  if(mode==="take"){const v=vfind(book.vkey); return ["t-take","t-plan",...(v&&v.kind==="series"?["t-eps"]:[]),"t-end"]}
   if(mode==="story") return ["story-intro","story1","story2","story-arch","story-niche","story-end"];
   const q=QUIZ.map((_,i)=>"q"+i);
   return mode==="quiz"?[...q,"reveal","niche","end"]:["intro",...q,"reveal","niche","end"];
@@ -2399,6 +2438,7 @@ function storyQA(from,to){
     return `<div class="bqa"><p class="bq">${esc(Q.q)}</p>${ans!=null&&Q.o[ans]?`<p class="inscribed">${esc(Q.o[ans][0])}</p>`:`<p class="blank">This line is still blank.</p>`}</div>`}).join("");
 }
 function bookHTML(key){
+  if(/^t-/.test(key)) return takeHTML(key);
   const p=state.profile, a=answers(), n=QUIZ.length;
   if(key==="intro") return `<p class="leyebrow">Chapter one</p>
     <h2 class="lq sm">Every creator has a take nobody else can make.</h2>
@@ -2442,7 +2482,7 @@ function bookHTML(key){
   const has=a.some(x=>x!=null);
   if(key==="story-intro") return `<p class="leyebrow">Chapter one, retold</p>
     <h2 class="lq sm">${has?`Once, ${esc(p.name||"a creator")} came to Handalf with stories to tell.`:"This story hasn't been written yet."}</h2>
-    <p>${has?"These are the notes you left in the margins. Turn the pages to read them back.":"Take the brand quiz and Handalf will write it down as you answer."}</p>
+    <p>${has?(p.quiz&&p.quiz.from==="bio"?"Handalf read your bio and filled in the margins for you. Turn the pages to read them back, and change anything that isn't you.":"These are the notes you left in the margins. Turn the pages to read them back."):"Take the brand quiz and Handalf will write it down as you answer."}</p>
     ${has?turnHint():`<div class="bturn"><button class="btn" type="button" data-bretake>Write my story</button></div>`}`;
   if(key==="story1") return `<p class="leyebrow">Chapter two · Your answers</p>${storyQA(0,3)}${turnHint()}`;
   if(key==="story2") return `<p class="leyebrow">Chapter two, continued</p>${storyQA(3,QUIZ.length)}${turnHint()}`;
@@ -2460,7 +2500,7 @@ function bookHTML(key){
 }
 function renderBook(){
   const key=book.pages[book.i], el=$("#ipage-in");
-  $("#itop").innerHTML=`<span class="itop-mark">Handalf</span>`+(book.mode==="first"?`<button class="ltext iskip" type="button" data-skip>Skip</button>`
+  $("#itop").innerHTML=`<span class="itop-mark">${book.mode==="take"?"Library":"Handalf"}</span>`+(book.mode==="first"?`<button class="ltext iskip" type="button" data-skip>Skip</button>`
     :`<span class="itop-acts">${book.mode==="story"?`<button class="iicon" type="button" data-bedit aria-label="Edit this part of your story" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-4.6L16.5 4.1a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8z M14.5 6l3.5 3.5 M4 20l4.6-1.2"/></svg></button>`:""}<button class="iicon" type="button" data-skip aria-label="Close the book" title="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>`);
   el.innerHTML=bookHTML(key);
   el.dataset.kind=NARRATIVE.has(key)?"narrative":"choice";
@@ -2489,10 +2529,11 @@ function bookTurn(dir,to){
   book.i=ni; book.showGrid=false; renderBook();
   if(under){ const leaf=document.createElement("div"); leaf.className="pageleaf back"; leaf.setAttribute("aria-hidden","true"); leaf.append(...bookClone()); pg.appendChild(leaf); setTimeout(()=>{leaf.remove();under.remove()},760) }
 }
-function openBook(mode){
+function openBook(mode,key){
   const o=$("#intro"), bk=$("#ibook"); introTimers.forEach(clearTimeout); introTimers=[];
-  book.mode=mode||"first"; book.pages=bookPages(book.mode); book.i=0; book.pick=null; book.showGrid=false;
-  if(book.mode!=="story"){ if(!state.profile.quiz||book.mode==="quiz") state.profile.quiz={answers:[],at:0}; }
+  book.mode=mode||"first"; book.vkey=key||null; book.pages=bookPages(book.mode); book.i=0; book.pick=null; book.showGrid=false;
+  if(book.mode==="first"||book.mode==="quiz"){ if(!state.profile.quiz||book.mode==="quiz") state.profile.quiz={answers:[],at:0}; }
+  setCover(); if(fab.ctx) fab.ctx.clearRect(0,0,innerWidth,160);
   bk.className="ibook"; $(".ipage").classList.remove("gone"); o.classList.remove("out"); o.hidden=false;
   $("#intro-owner").textContent=state.profile.name||"you";
   renderBook();
@@ -2500,6 +2541,62 @@ function openBook(mode){
   const fast=book.mode!=="first";
   introTimers.push(setTimeout(()=>bk.classList.add("open"),fast?350:900));
   introTimers.push(setTimeout(()=>bk.classList.add("read"),fast?1500:2300));
+}
+const COVER_DEFAULT=$(".ifront").innerHTML;
+function setCover(){
+  const bk=$("#ibook"), f=$(".ifront"), v=book.mode==="take"&&vfind(book.vkey);
+  $("#intro").setAttribute("aria-label",v?"Library book: "+v.title:"Welcome to Handalf");
+  if(!v){ bk.removeAttribute("data-cover"); bk.style.removeProperty("--spine"); f.innerHTML=COVER_DEFAULT; return }
+  const ms=exMedia(v), series=v.kind==="series", m=multiple(v), [tn]=tier(m);
+  bk.dataset.cover="take"; bk.style.setProperty("--spine",`var(--sp-${ms.includes("video")?"video":ms.includes("audio")?"audio":"text"})`);
+  f.innerHTML=`<button class="ltext iskip iskip-cover" type="button" data-skip>Close</button>
+    <p class="tcov-eye">${esc(ms.map(x=>MEDIA[x]).join(" · "))}${series?" · Series":""}</p>
+    <p class="tcov-title">${esc(v.title)}</p>
+    <p class="tcov-rule" aria-hidden="true"></p>
+    <p class="itag">${esc(v.topic||"A take from your library")}</p>
+    <p class="tcov-mult">${fmt(m)}x · ${esc(tn)}</p>`;
+}
+function takeHTML(key){
+  const v=vfind(book.vkey); if(!v) return `<p class="leyebrow">Library</p><h2 class="lq sm">This book is no longer on the shelf.</h2><div class="bturn"><button class="btn" type="button" data-skip>Close the book</button></div>`;
+  const m=multiple(v),[tn,tc]=tier(m), series=v.kind==="series", eps=v.episodes||[], k=v.key;
+  if(key==="t-take") return `<p class="leyebrow">Chapter one · ${esc(v.topic||"The take")}</p>
+    <h2 class="lq sm">${esc(v.title)}</h2>
+    <p class="inscribed">${esc(v.hook||"")}</p>
+    ${v.angle?`<p>${esc(v.angle)}</p>`:""}
+    <div class="tmeta"><span class="tscore">${fmt(m)}<small>x</small></span><span class="tier ${tc}">${tn}</span><span>Format <b>${esc(v.format||"n/a")}</b></span>${v.againstText?`<span>Against <b>${esc(v.againstText)}</b></span>`:""}<span>Saved <b>${savedLabel(v.savedAt)}</b></span></div>
+    ${turnHint()}`;
+  if(key==="t-plan") return `<p class="leyebrow">Chapter two · The plan</p>
+    <h2 class="lq sm">${series?"When does the series begin?":"When does this one go out?"}</h2>
+    <div class="plan tplan">
+      <div class="seg" role="group" aria-label="Plan as"><button type="button" data-kind="single" data-key="${k}" aria-pressed="${!series}">Single</button><button type="button" data-kind="series" data-key="${k}" aria-pressed="${series}">Series</button></div>
+      <label class="label" for="pd-${k}">${series?"Starts":"Post on"}</label>
+      <input type="date" id="pd-${k}" data-pdate="${k}" value="${esc(v.planDate||"")}">
+      ${series?`<label class="label" for="cad-${k}">Cadence</label><select id="cad-${k}" data-cad="${k}">${Object.entries(CADENCE).map(([c,[l]])=>`<option value="${c}"${(v.cadence||"weekly")===c?" selected":""}>${l}</option>`).join("")}</select>`:""}
+    </div>
+    <p class="bmute">${series?"Set a start date and the episodes get spaced out for you.":"Pick a day and this book moves to that shelf when you sort by date."}</p>
+    <div class="bnav">${bookBack()}</div>${turnHint(series?"See the episodes":"Turn the page")}`;
+  if(key==="t-eps") return `<p class="leyebrow">Chapter three · The episodes</p>
+    <h2 class="lq sm">${esc(eps.length?(v.seriesTitle||"The series"):"Plan the arc")}</h2>
+    ${eps.length?`<ol class="eps">${eps.map((e,i)=>`<li><div><b>Ep ${i+1} · ${esc(e.title)}</b><span>${esc(e.hook)}</span><span class="mono">${esc(e.format||"")}</span></div><input type="date" aria-label="Episode ${i+1} date" data-epdate="${k}" data-ep="${i}" value="${esc(e.planDate||"")}"></li>`).join("")}</ol>
+      <div class="buildrow"><label class="label" for="epn-${k}">Episodes</label><select id="epn-${k}">${[3,4,5,6].map(n=>`<option${n===eps.length?" selected":""}>${n}</option>`).join("")}</select><button class="btn ghost" type="button" data-act="series" data-key="${k}">Rebuild series</button></div>`
+     :`<p>Handalf plans an arc of episodes from this take, each one building on the last.</p>
+      <div class="buildrow"><label class="label" for="epn-${k}">Episodes</label><select id="epn-${k}">${[3,4,5,6].map(n=>`<option${n===4?" selected":""}>${n}</option>`).join("")}</select><button class="btn" type="button" data-act="series" data-key="${k}">Build the series</button></div>`}
+    <div class="bnav">${bookBack()}</div>${turnHint()}`;
+  const when=series?(v.planDate?`starts ${dayLabel(v.planDate)}`:"has no start date yet"):(v.planDate?`goes out ${dayLabel(v.planDate)}`:"isn't scheduled yet");
+  return `<p class="leyebrow">The last page</p>
+    <h2 class="lq sm">This ${series?"series":"take"} ${when}.</h2>
+    <p>${esc(v.title)}${series&&eps.length?`, told in ${eps.length} episodes`:""}.</p>
+    <div class="bturn bturn2"><button class="btn" type="button" data-act="copy" data-key="${v.key}">Copy it</button><button class="ltext" type="button" data-skip>Close the book</button><button class="ltext tremove" type="button" data-act="unsave" data-key="${v.key}">Take it off the shelf</button></div>
+    <div class="bnav">${bookBack()}</div>`;
+}
+function refreshTakeBook(){
+  if(book.mode!=="take"||$("#intro").hidden) return;
+  book.pages=bookPages("take"); if(book.i>=book.pages.length) book.i=book.pages.length-1;
+  $("#ipage-in").innerHTML=bookHTML(book.pages[book.i]);
+}
+function openTake(key,btn){
+  if(btn){btn.classList.add("lift"); setTimeout(()=>btn.classList.remove("lift"),900)}
+  setTimeout(()=>openBook("take",key),btn&&!matchMedia("(prefers-reduced-motion: reduce)").matches?260:0);
 }
 function playIntro(){openBook(state.profile.quiz&&answers().some(x=>x!=null)?"story":"first")}
 function playBrandStory(){openBook(answers().some(x=>x!=null)?"story":"quiz")}
@@ -2519,6 +2616,7 @@ function finishBook(){
 }
 $("#intro").addEventListener("click",e=>{
   if(e.target.closest("[data-skip]")) return endIntro();
+  if(book.mode==="take"&&e.target.closest("button[data-act],button[data-kind]")){ vaultAct(e); return }
   if(e.target.closest("[data-bedit]")){
     const key=book.pages[book.i], target={"story-intro":"q0",story1:"q0",story2:"q3","story-arch":"reveal","story-niche":"niche","story-end":"q0"}[key]||"q0";
     book.mode="quiz"; book.pages=bookPages("quiz"); book.pick=null; return bookTurn(1,book.pages.indexOf(target));
@@ -2533,7 +2631,7 @@ $("#intro").addEventListener("click",e=>{
   const an=e.target.closest("[data-bans]");
   if(an){
     const i=+book.pages[book.i].slice(1), j=+an.dataset.bans;
-    state.profile.quiz=state.profile.quiz||{answers:[],at:0}; state.profile.quiz.answers[i]=j; book.pick=null; persist("profile");
+    state.profile.quiz=state.profile.quiz||{answers:[],at:0}; state.profile.quiz.answers[i]=j; delete state.profile.quiz.from; book.pick=null; persist("profile");
     const el=$("#ipage-in"), ol=el.querySelector(".bopts");
     let ink=el.querySelector("[data-ink]");
     if(!ink){ ink=document.createElement("p"); ink.className="inscribed"; ink.setAttribute("data-ink",""); ol.before(ink); }
@@ -2542,6 +2640,7 @@ $("#intro").addEventListener("click",e=>{
     clearTimeout(book.adv); book.adv=setTimeout(()=>{ if(book.pages[book.i]==="q"+i) bookTurn(1) },1300);
   }
 });
+$("#intro").addEventListener("change",e=>{ if(book.mode==="take") vaultChange(e) });
 $("#intro").addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.bfield; if(!k) return; state.profile[k]=e.target.value.trim(); persist("profile")});
 $("#intro").addEventListener("keydown",e=>{const s=e.target.closest&&e.target.closest(".iswipe"); if(s&&(e.key==="Enter"||e.key===" ")){e.preventDefault();bookTurn(1)}});
 { const pg=$(".ipage"); let x0=null, dx=0, cap=false;
@@ -2551,7 +2650,7 @@ $("#intro").addEventListener("keydown",e=>{const s=e.target.closest&&e.target.cl
     pg.style.transform=`translateX(${dx*.6}px)`; });
   const up=e=>{ if(x0===null) return; x0=null;
     const kind=$("#ipage-in").dataset.kind, key=book.pages[book.i];
-    const canNext=kind==="narrative"||key==="reveal"||key==="niche"||(/^q\d$/.test(key)&&answers()[+key.slice(1)]!=null);
+    const canNext=kind==="narrative"||TAKE_NEXT.has(key)||key==="reveal"||key==="niche"||(/^q\d$/.test(key)&&answers()[+key.slice(1)]!=null);
     if(!cap){ if(kind==="narrative"&&!(e&&e.target&&e.target.closest&&e.target.closest("button,a"))) bookTurn(1); return }
     cap=false; pg.classList.remove("drag"); pg.style.transform="";
     if(dx<-60&&canNext) bookTurn(1); else if(dx>60) bookTurn(-1); };
@@ -2560,7 +2659,7 @@ $("#intro").addEventListener("keydown",e=>{const s=e.target.closest&&e.target.cl
 addEventListener("keydown",e=>{ if($("#intro").hidden) return;
   if(e.key==="Escape") endIntro();
   if(e.target.matches&&e.target.matches("input,textarea")) return;
-  if(e.key==="ArrowRight"){const k=book.pages[book.i]; if(NARRATIVE.has(k)||k==="reveal"||k==="niche"||(/^q\d$/.test(k)&&answers()[+k.slice(1)]!=null)) bookTurn(1)}
+  if(e.key==="ArrowRight"){const k=book.pages[book.i]; if(NARRATIVE.has(k)||TAKE_NEXT.has(k)||k==="reveal"||k==="niche"||(/^q\d$/.test(k)&&answers()[+k.slice(1)]!=null)) bookTurn(1)}
   if(e.key==="ArrowLeft") bookTurn(-1);
 });
 
