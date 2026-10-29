@@ -564,6 +564,31 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .salt{display:flex;gap:10px;flex-wrap:wrap}
 .salt input{flex:1 1 240px;background:var(--sheet);border:1.5px solid var(--gold);padding:8px 16px;border-radius:var(--pill);min-width:0;font:inherit;color:var(--ink)}
 @media (max-width:640px){.cl-slots{grid-template-columns:1fr}.mixidea{grid-template-columns:60px minmax(0,1fr)}}
+/* elements, alchemy batches, spell book archive */
+.combine-bar{display:flex;justify-content:space-between;align-items:center;gap:12px 18px;flex-wrap:wrap;margin:12px 0;padding:14px 16px;border:1px solid var(--gold);border-radius:16px;background:color-mix(in srgb,var(--gold) 7%,var(--sheet));position:sticky;top:8px;z-index:2}
+.combine-bar .hint{margin:2px 0 0}
+.cl-go{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.epick{background:none;border:1.5px solid var(--rule);border-radius:var(--pill);padding:3px 10px;cursor:pointer;color:var(--ink);font:inherit}
+.epick:hover{border-color:var(--gold)}
+.epick[aria-pressed="true"]{background:var(--gold);border-color:var(--gold)}
+.epick[aria-pressed="true"] .sid{color:var(--on-gold)}
+.stance.picked{background:color-mix(in srgb,var(--gold) 8%,transparent);box-shadow:inset 3px 0 0 var(--gold)}
+.batch{margin-top:30px;padding-top:18px;border-top:2px solid var(--gold)}
+.batch-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.batch-head>.ltext{white-space:nowrap}
+.batch-head h3{font-size:clamp(22px,2.6vw,30px);margin:2px 0 6px}
+.batch-from{display:flex;flex-wrap:wrap;gap:6px;margin:0;font-size:13px;color:var(--mute)}
+.batch-from span{border:1px solid var(--rule);border-radius:var(--pill);padding:3px 10px;color:var(--ink);max-width:46ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alch-filter{align-items:center;gap:10px 18px;flex-wrap:wrap}
+.alch-filter .hint{max-width:62ch;margin:0}
+.remix-of{font-family:var(--f-title);font-weight:600;font-size:12px!important;letter-spacing:.1em;text-transform:uppercase;color:var(--sp-audio)!important;margin:0 0 4px}
+.ctx-note{font-size:14px;color:var(--ink);border-left:2px solid var(--sp-audio);padding-left:10px;margin:6px 0}
+.sb-head{margin-top:20px}
+.take.chosen .leyebrow{margin:0 0 4px}
+.props button span small{display:block;font-size:13px;color:var(--mute);margin-top:4px;font-weight:400}
+.props button span b{font-weight:500}
+.props button[aria-pressed="true"]{background:color-mix(in srgb,var(--gold) 12%,transparent);box-shadow:inset 3px 0 0 var(--gold)}
+@media (max-width:640px){.batch-from span{white-space:normal}}
 .iback{transform:rotateY(180deg);background:var(--sheet);color:var(--mute)}
 .iowner-line{font-family:var(--f-head);font-style:italic;font-size:clamp(15px,1.6vw,19px);margin:0}
 .iowner{font-family:var(--f-display);color:var(--gold);font-size:clamp(28px,4vw,48px);margin:0;padding:0 18px 4px;border-bottom:1px solid var(--rule)}
@@ -702,8 +727,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       </button>
     </div>
     <nav class="nav" role="tablist"><span class="navhi" aria-hidden="true"></span>
-      <button role="tab" data-view="engine" aria-selected="true">Alchemy</button>
       <button role="tab" data-view="stances" aria-selected="false">Elements<span class="count" id="n-stances"></span></button>
+      <button role="tab" data-view="engine" aria-selected="true">Alchemy<span class="count" id="n-alchemy"></span></button>
       <button role="tab" data-view="profile" aria-selected="false">Spell book</button>
       <button role="tab" data-view="vault" aria-selected="false">Library<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Conjurings</button>
@@ -720,18 +745,15 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- ENGINE -->
   <section class="view" id="v-engine" hidden>
-    <form class="run" id="run-form">
-      <input id="topic" type="text" placeholder="What are we talking about?" autocomplete="off" aria-label="What are we talking about?">
-      <button class="btn" id="run-btn" type="submit">Conjure content</button>
-    </form>
-    <p class="hint" id="run-hint">Each run maps what most creators would say about the topic (the 1x baseline), then ranks contrary takes by how far they move from it and how well your own stances back them.</p>
+    <div><h2>Alchemy</h2><p class="lede">Spells conjured from your elements land here. Each batch maps what most creators would say (the 1x baseline), then ranks content ideas by how far they move from it and how well your elements back them. Remix the ones that feel close, choose the keepers for your spell book, and add any to the library to plan.</p></div>
+    <p class="hint" id="run-hint"></p>
     <div id="run-notice"></div>
     <div id="results"></div>
   </section>
 
   <!-- STANCES -->
   <section class="view" id="v-stances" hidden>
-    <div><h2>Your elements</h2><p class="lede">Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
+    <div><h2>Your elements</h2><p class="lede">Elements are the stances you build with. Choose a few and combine them into spells. Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
     <div class="split">
       <details class="panel addpanel" id="addpanel">
         <summary><span class="label">Add conversations</span><span class="addchev" aria-hidden="true"></span></summary>
@@ -752,6 +774,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
       </details>
       <div>
         <div class="col-head"><h3>Element bank</h3><span class="label" id="stance-meta"></span></div>
+        <div class="combine-bar" id="combine-bar"></div>
         <div class="add" style="margin:10px 0">
           <input id="add-stance" placeholder="Add a stance by hand: I think…" aria-label="Stance">
           <input id="add-against" placeholder="Against what consensus?" aria-label="Against">
@@ -764,7 +787,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- PROFILE -->
   <section class="view" id="v-profile" hidden>
-    <div><h2>Your spell book</h2><p class="lede">Spells are the ideas your brand keeps coming back to: evergreen topics, your top rated takes, and alternative takes on topics you choose. Pick two or three and mix them into something new.</p></div>
+    <div><h2>Your spell book</h2><p class="lede">The archive of spells you chose in Alchemy. Ideas you haven't chosen stay brewing in Alchemy. Add any spell here to the library when you're ready to plan it.</p></div>
     <div class="arch-readout" id="arch-readout"></div>
     <div id="spells"></div>
     <details class="panel addpanel" id="brandpanel">
@@ -848,7 +871,7 @@ function tier(m){return m>=5?["Outlier","t-out"]:m>=2.5?["Strong","t-str"]:m>=1.
 const fmt=m=>m>=10?m.toFixed(0):m.toFixed(1);
 
 /* ---------- state ---------- */
-const state={profile:{},stances:[],vault:[],sources:[],last:null,spells:[],mix:null};
+const state={profile:{},stances:[],vault:[],sources:[],last:null,batches:[],chosen:[]};
 let queue=[]; // [{name, messages:[string]}]  unsent corpus
 let filter="all";
 
@@ -873,7 +896,7 @@ let db=null, uid=null, sample=null, dl=null, sync="browser";
 function setSync(k){ sync=k; const v=document.getElementById("sync-val"); if(v&&typeof syncCopy==="function"){const c=syncCopy();v.textContent=c[0];document.getElementById("sync-sub").textContent=c[1]} }
 const LS="handalf.v1";
 function lsLoad(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j)Object.assign(state,j)}catch(e){}}
-function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,last:state.last,spells:state.spells,mix:state.mix}))}catch(e){}}
+function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,batches:state.batches,chosen:state.chosen}))}catch(e){}}
 const writing={};const pending={};
 function persist(key){
   lsSave();
@@ -886,8 +909,8 @@ function persist(key){
       const body= key==="profile"?{profile:state.profile}
         : key==="stances"?{stances:state.stances,sources:state.sources}
         : key==="vault"?{vault:state.vault}
-        : key==="spells"?{spells:state.spells,mix:state.mix}
-        : {last:state.last};
+        : key==="spells"?{chosen:state.chosen}
+        : {batches:state.batches,last:null};
       await db.doc("data/users/"+uid+"/"+key).set(JSON.parse(JSON.stringify(body)));
       setSync("account");
     }catch(e){ if(e&&e.code==="quota_exceeded") showNotice("Account storage is full. Remove a few vault items or sources.",true); else setSync("failed"); }
@@ -917,12 +940,12 @@ async function initRuntime(){
     }
   }
 }
-function hasLocal(k){if(k==="spells")return (state.spells||[]).length>0;return k==="profile"?Object.keys(state.profile).length:k==="stances"?state.stances.length:k==="vault"?state.vault.length:!!state.last}
+function hasLocal(k){if(k==="spells")return (state.chosen||[]).length>0;if(k==="last")return (state.batches||[]).length>0||!!state.last;return k==="profile"?Object.keys(state.profile).length:k==="stances"?state.stances.length:k==="vault"?state.vault.length:false}
 
 /* ---------- nav ---------- */
 document.querySelectorAll(".nav [data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
 let view="engine";
-const ORDER={start:0,engine:1,stances:2,profile:3,vault:4,export:5,settings:6};
+const ORDER={start:0,stances:1,engine:2,profile:3,vault:4,export:5,settings:6};
 let booted=false;
 function cloneScroller(){
   const sc=$("#scroller"), c=sc.cloneNode(true); c.removeAttribute("id"); c.className="leaf-sc"; c.querySelectorAll("[id]").forEach(n=>n.removeAttribute("id"));
@@ -1427,8 +1450,8 @@ function renderStart(){
     flash="";
     ebText="Conjure";
     panel=`<h2 class="lq">${esc(say("conjure"))}</h2>
-      <form class="lrow" id="l-form"><input id="l-topic" type="text" placeholder="A topic, an idea, a hunch" autocomplete="off" aria-label="${esc(say("conjure"))}"><button class="lbtn" type="submit">Conjure content</button></form>
-      <p class="lhint">${msg}${state.last?` <button class="ltext" type="button" data-golast>Back to “${esc(state.last.topic)}”</button>`:""}</p>
+      <form class="lrow" id="l-form"><input id="l-topic" type="text" placeholder="A topic, an idea, a hunch" autocomplete="off" aria-label="${esc(say("conjure"))}"><button class="lbtn" type="submit">Conjure stances</button></form>
+      <p class="lhint">${msg}${(state.batches||[]).length?` <button class="ltext" type="button" data-golast>Back to Alchemy</button>`:""}</p>
       ${sample?"":`<p class="lhint">Conjuring runs on Claude, so open this page inside Claude to use it.</p>`}`;
   }else if(mode==="quiz"){
     panel=quizPanel();
@@ -1449,6 +1472,14 @@ function renderStart(){
     panel=`<h2 class="lq sm">Start over from zero?</h2>
       <p class="lhint" style="font-size:17px">This deletes your spell book, elements, library and results. It can't be undone.</p>
       <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo danger" type="button" data-erase>Erase everything</button><button class="ltext" type="button" data-mode="conjure">Keep my data</button></div>`;
+  }else if(mode==="propose"){
+    ebText="Conjure";
+    const P=propose;
+    panel=P.busy?`<h2 class="lq sm">Turning “${esc(P.idea)}” over…</h2><p class="lhint">Handalf is working out the stances you could take on it. This takes about 20 seconds.</p>`
+      :P.err?`<h2 class="lq sm">That idea slipped away.</h2><p class="lhint">${esc(P.err)}</p><div class="lnav" style="justify-content:flex-start"><button class="lbtn solo" type="button" data-mode="conjure">Try again</button></div>`
+      :`<h2 class="lq sm">Which of these do you actually believe about “${esc(P.idea)}”?</h2>
+      <ol class="lopts props">${P.list.map((x,i)=>`<li style="--i:${i}"><button type="button" data-prop="${i}" aria-pressed="${P.pick.has(i)}"><span class="lk">✦</span><span><b>${esc(x.stance)}</b>${x.against?`<small>Against: ${esc(x.against)}</small>`:""}</span></button></li>`).join("")}</ol>
+      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-padd ${P.pick.size?"":"disabled"}>${P.pick.size?`Add ${P.pick.size} to my elements`:"Choose the stances you hold"}</button><button class="ltext" type="button" data-mode="conjure">Try another idea</button></div>`;
   }else if(mode==="done"){
     const f=found||{};
     ebText=f.source||"Profile";
@@ -1566,11 +1597,13 @@ $("#quiz").addEventListener("submit",e=>{
   if(e.target.id!=="l-form") return; e.preventDefault();
   const t=$("#l-topic").value.trim(); if(!t){$("#l-topic").focus();return}
   if(!sample){const h=$("#quiz .lhint");if(h)h.textContent="Conjuring runs on Claude, so open this page inside Claude to use it.";return}
-  $("#topic").value=t; show("engine"); $("#run-form").requestSubmit();
+  proposeStances(t);
 });
 $("#quiz").addEventListener("click",async e=>{
   const m=e.target.closest("[data-mode]"); if(m) return setMode(m.dataset.mode);
   if(e.target.closest("[data-golast]")) return show("engine");
+  const pp=e.target.closest("button[data-prop]"); if(pp){const i=+pp.dataset.prop; propose.pick.has(i)?propose.pick.delete(i):propose.pick.add(i); pp.setAttribute("aria-pressed",propose.pick.has(i)); const a=$("[data-padd]"); if(a){a.disabled=!propose.pick.size; a.textContent=propose.pick.size?`Add ${propose.pick.size} to my elements`:"Choose the stances you hold"} return}
+  if(e.target.closest("[data-padd]")) return addProposed();
   if(e.target.closest("[data-qstart]")){playBrandStory();return}
   const fu=e.target.closest("[data-full]"); if(fu){intro=false;renderStart();return}
   const o=e.target.closest("[data-q]"); if(o){qans[qi]=+o.dataset.q;qi++;qpick=null;waveNext=true;renderStart();toLanding();return}
@@ -1597,9 +1630,9 @@ $("#quiz").addEventListener("click",async e=>{
   if(r){ readProfile($("#bio-text").value,"Your bio"); return }
   if(e.target.closest("[data-erase]")){
     if(runCtl)runCtl.abort();
-    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;state.spells=[];state.mix=null;spellSel=[];queue=[];open.clear();
+    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;state.batches=[];state.chosen=[];elSel.clear();queue=[];open.clear();
     ["profile","stances","vault","last","spells"].forEach(persist);
-    $("#topic").value=""; showNotice(""); renderAll(); setRunAvail();
+    showNotice(""); renderAll(); setRunAvail();
     flash="Everything was erased. This is a fresh start."; setMode("conjure");
   }
 });
@@ -1609,11 +1642,39 @@ $("#quiz").addEventListener("dragover",e=>{const d=e.target.closest(".ldrop");if
 $("#quiz").addEventListener("dragleave",e=>{const d=e.target.closest(".ldrop");if(d)d.classList.remove("over")});
 $("#quiz").addEventListener("drop",e=>{const d=e.target.closest(".ldrop");if(!d)return;e.preventDefault();d.classList.remove("over");const f=e.dataTransfer.files[0];if(f)loadBrief(f)});
 
+/* ---------- conjure: an idea becomes stances you can choose ---------- */
+const propose={idea:"",list:[],pick:new Set(),busy:false,err:""};
+async function proposeStances(idea){
+  Object.assign(propose,{idea,list:[],pick:new Set(),busy:true,err:""}); mode="propose"; waveNext=true; renderStart();
+  try{
+    const out=await sample.json(`You are Handalf, a content strategist. A creator has an idea: "${idea}". Develop 6 stances they could take on it: positions that go against how most creators treat it, written in the first person, shaped by their brand and consistent with what they already believe. Make them distinct from each other. Write plainly, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+STANCES THEY ALREADY HOLD
+${stanceText()}
+
+Reply with only JSON: {"stances":[{"stance":"first person, one sentence","against":"the common view it pushes against","topic":"2 to 4 words","strength":1-5}]}`,{cache:false});
+    propose.list=(out&&Array.isArray(out.stances)?out.stances:[]).filter(x=>x&&x.stance).slice(0,8);
+    if(!propose.list.length) propose.err="No stances came back. Try the idea again or phrase it another way.";
+  }catch(e){ propose.err=errCopy(e)||"Conjuring failed. Try again." }
+  propose.busy=false; if(mode==="propose") renderStart();
+}
+function addProposed(){
+  if(!propose.pick.size) return;
+  syncNextId(); elSel.clear();
+  [...propose.pick].sort().forEach(i=>{const x=propose.list[i]; const id="s"+(nextId++);
+    state.stances.push({id,stance:String(x.stance),against:String(x.against||""),quote:"",topic:String(x.topic||""),strength:Math.max(1,Math.min(5,+x.strength||3)),source:"Conjured: "+propose.idea}); if(elSel.size<5) elSel.add(id)});
+  persist("stances"); renderStances(); mode="conjure"; flash=`Added to your elements and chosen, ready to combine.`; show("stances");
+}
+
 /* ---------- engine ---------- */
 function setRunAvail(){
   const ok=!!sample;
-  $("#run-btn").disabled=!ok; $("#mine-btn").disabled=!ok||!queue.length;
-  $("#run-hint").textContent=ok?"Each run maps what most creators would say about the topic (the 1x baseline), then ranks contrary takes by how far they move from it and how well your own stances back them.":"AI runs work when this page is open inside Claude. You can still build your profile and queue conversations.";
+  $("#mine-btn").disabled=!ok||!queue.length;
+  $("#run-hint").textContent=ok?"":"AI runs work when this page is open inside Claude. You can still build your profile and queue conversations.";
+  if(typeof renderCombine==="function") renderCombine();
 }
 function showNotice(msg,err){$("#run-notice").innerHTML=msg?`<p class="notice${err?" err":""}">${esc(msg)}</p>`:""}
 function errCopy(e){
@@ -1658,23 +1719,43 @@ Reply with only JSON in this shape:
 Give 5 consensus items and 8 takes.`;
 }
 let runCtl=null;
-$("#run-form").addEventListener("submit",async ev=>{
-  ev.preventDefault();
-  const topic=$("#topic").value.trim(); if(!topic||!sample) return;
-  if(runCtl){runCtl.abort();}
-  runCtl=new AbortController();
-  const btn=$("#run-btn"); btn.disabled=true; btn.textContent="Mapping the baseline…";
-  showNotice("");
-  $("#results").innerHTML=`<p class="empty"><strong>Thinking</strong>Mapping the consensus on “${esc(topic)}”, then scoring contrary takes against your stances. This usually takes 30 to 60 seconds.</p>`;
+function combinePrompt(els){
+return `You are Handalf, a content strategy engine. A creator picked some of their own stances (their elements) and wants content ideas that combine them.
+
+Method, adapted from outlier research on video platforms: a video's outlier score is its views divided by the channel's normal views. Here the "normal" is the consensus take. First name the territory these elements share, then map the consensus: the takes most creators would make there (the 1x baseline). Then create content ideas that combine the chosen elements and move away from that baseline. Every idea must use at least two of the chosen elements when more than one was chosen, and cite them by id.
+
+CREATOR PROFILE
+${profileText()}
+
+CHOSEN ELEMENTS
+${els.map(x=>`${x.id}: ${x.stance} (against: ${x.against||"n/a"})`).join("\n")}
+
+OTHER STANCES THEY HOLD (may also be cited)
+${stanceText()}
+
+Shape every idea to the creator's archetype and lean on their stated expertise. Vary the formats.
+
+Scoring rules: divergence = distance from the consensus. ownership = how directly the cited stances back it. defensibility = can it survive pushback with evidence or lived experience. fit = match to the audience, voice and platforms. Score honestly; most ideas should land between 4 and 7. Write plainly, no em dashes.
+
+Reply with only JSON in this shape:
+{"topic":"a short name for the territory these elements share, 3 to 7 words","consensus":[{"id":"c1","take":"the common take in one sentence","why":"why most creators say it"}],"takes":[${TAKE_SCHEMA}]}
+Give 5 consensus items and 8 ideas.`;
+}
+async function runCombine(){
+  const els=[...elSel].map(id=>state.stances.find(s=>s.id===id)).filter(Boolean);
+  if(!els.length||!sample) return;
+  if(runCtl) runCtl.abort();
+  runCtl=new AbortController(); combining=true; renderCombine(); showNotice("");
   try{
-    const out=await sample.json(enginePrompt(topic),{signal:runCtl.signal,cache:false});
+    const out=await sample.json(combinePrompt(els),{signal:runCtl.signal,cache:false});
     if(!out||!Array.isArray(out.takes)) throw {code:"invalid_json"};
-    state.last={topic,consensus:out.consensus||[],takes:out.takes.map(normTake),at:Date.now()};
+    const b={id:"b"+Date.now().toString(36),topic:String(out.topic||els.map(x=>x.topic||x.stance).slice(0,2).join(" + ")),from:els.map(x=>x.id),fromText:els.map(x=>x.stance),consensus:out.consensus||[],takes:out.takes.map(normTake),at:Date.now()};
+    state.batches.unshift(b);
     if(!state.profile.ran){state.profile.ran=true;persist("profile")}
-    persist("last"); renderEngine();
-  }catch(e){ showNotice(errCopy(e),true); renderEngine(); }
-  finally{btn.disabled=false;btn.textContent="Conjure content";runCtl=null}
-});
+    elSel.clear(); persist("last"); renderStances(); renderEngine(); show("engine");
+  }catch(e){ const m=$("#combine-msg"); if(m) m.textContent=errCopy(e); }
+  finally{ combining=false; runCtl=null; renderCombine() }
+}
 let tk=0;
 function normTake(t){
   const ids=Array.isArray(t.stances)?t.stances:[];
@@ -1684,7 +1765,13 @@ function normTake(t){
 }
 /* ---------- deepen: add your context, talk it through, rebuild ---------- */
 const open=new Set(); const busy={};
-const findTake=key=>state.last&&state.last.takes.find(x=>x.key===key);
+function migrateRuns(){
+  state.batches=Array.isArray(state.batches)?state.batches:[]; state.chosen=Array.isArray(state.chosen)?state.chosen:[];
+  if(state.last&&state.last.takes&&!state.last.example&&!state.batches.length){ state.batches=[{id:"b"+(state.last.at||Date.now()).toString(36),...state.last}]; state.last=null; persist("last") }
+  else if(state.last) state.last=null;
+}
+const batchOf=key=>state.batches.find(b=>b.takes.some(x=>x.key===key));
+const findTake=key=>{const b=batchOf(key);return b&&b.takes.find(x=>x.key===key)};
 function threadText(t){return (t.thread||[]).map(m=>(m.role==="user"?"CREATOR: ":"INTERVIEWER: ")+m.content).join("\n")}
 function deepHTML(t){
   const th=t.thread||[];
@@ -1706,7 +1793,7 @@ function renderPanel(key){
   const th=document.getElementById("thread-"+key); if(th) th.scrollTop=th.scrollHeight;
 }
 function interviewInstr(t){
-  const run=state.last;
+  const run=batchOf(t.key)||{topic:""};
   return `You are Handalf's interviewer, a sharp content strategist helping a creator deepen one contrary take they feel personally. Your goal is to pull out the lived experience that makes this take theirs and nobody else's.
 
 Ask ONE question at a time, under 40 words. Dig for: the specific moment they noticed this, concrete examples from their own work, what they used to believe, who would disagree and whether that person has a point, and what is at stake for their audience. When an answer lands, reflect it back in one short sentence, then ask the next question. Do not write the content yet. Plain language, no em dashes.
@@ -1734,7 +1821,7 @@ async function ask(key){
   const inp=document.getElementById("say-"+key); if(inp) inp.focus();
 }
 async function build(key){
-  const run=state.last, t=findTake(key); if(!run||!t||!sample) return;
+  const run=batchOf(key), t=findTake(key); if(!run||!t||!sample) return;
   const hasTalk=(t.thread||[]).some(m=>m.role==="user");
   if(!t.context&&!hasTalk){showNotice("Add some context or talk it through first, so the remix has something of yours to work with.",true);return}
   busy[key]=true; renderPanel(key);
@@ -1766,12 +1853,13 @@ Reply with only JSON: {"stances":[{"id":"n1","stance":"first person, one sentenc
       state.stances.push({id,stance:String(s.stance),against:String(s.against||""),quote:String(s.quote||""),topic:String(s.topic||""),strength:Math.max(1,Math.min(5,+s.strength||4)),source:"Dialogue: "+t.title});
     });
     if(Object.keys(map).length){persist("stances");renderStances()}
-    const news=(out.takes||[]).slice(0,3).map(x=>{const n=normTake({...x,stances:(x.stances||[]).map(id=>map[String(id).trim()]||id),remixOf:key});n.deepened=true;return n});
+    const ctxNote=[t.context||"",hasTalk?threadText(t).split("\n").filter(l=>/^CREATOR: /.test(l)).map(l=>l.slice(9)).join(" "):""].filter(Boolean).join(" ").slice(0,1200);
+    const news=(out.takes||[]).slice(0,3).map(x=>{const n=normTake({...x,stances:(x.stances||[]).map(id=>map[String(id).trim()]||id),remixOf:key});n.deepened=true;n.remixOfTitle=t.title;n.context=ctxNote;return n});
     const i=run.takes.findIndex(x=>x.key===key);
     let j=i+1; while(j<run.takes.length&&run.takes[j].remixOf===key) j++;
     run.takes.splice(j,0,...news);
     busy[key]=false; persist("last"); renderEngine();
-    showNotice(`Added ${news.length} takes under “${t.title}”${Object.keys(map).length?` and ${Object.keys(map).length} new stances to your bank`:""}.`);
+    showNotice(`Added ${news.length} remixes under “${t.title}”${Object.keys(map).length?`, and ${Object.keys(map).length} new elements to your bank`:""}. Each remix can be chosen or added to the library as its own book.`);
   }catch(e){ busy[key]=false; renderPanel(key); showNotice(errCopy(e),true) }
 }
 function takeHTML(t,ctx){
@@ -1784,6 +1872,7 @@ function takeHTML(t,ctx){
   return `<article class="take${t.remixOf?" remix":""}">
     <div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
     <div style="min-width:0">
+      ${t.remixOfTitle?`<p class="remix-of">Remix of “${esc(t.remixOfTitle)}”</p>`:""}
       <h4>${esc(t.title)}${t.deepened?`<span class="badge">From your context</span>`:""}</h4>
       <p class="hook">${esc(t.hook)}</p>
       <p class="angle">${esc(t.angle)}</p>
@@ -1792,59 +1881,75 @@ function takeHTML(t,ctx){
       <div class="bars">${bars}</div>
       ${t.risk?`<p class="risk">Risk: ${esc(t.risk)}</p>`:""}
       ${`<div class="actions">
-        <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In library":"Save to library"}</button>
+        <button class="btn" data-act="choose" data-key="${t.key}" type="button">Choose spell</button>
+        <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In library":"Add to library"}</button>
         ${ctx.vault?`<button class="btn ghost" data-act="copy" data-key="${t.key}" type="button">Copy</button><button class="btn quiet" data-act="unsave" data-key="${t.key}" type="button">Remove</button>`:`<button class="btn ghost" data-act="remix" data-key="${t.key}" type="button" aria-expanded="${open.has(t.key)}">${open.has(t.key)?"Close":(t.thread&&t.thread.length?"Continue":"Remix")}</button>`}
       </div>`}
       ${ctx.vault?"":`<div id="panel-${t.key}">${open.has(t.key)?deepHTML(t):""}</div>`}
     </div></article>`;
 }
-function renderEngine(){
-  const run=state.last||(state.profile.ran?null:EXAMPLE);
-  if(!run){
-    const p0=state.profile, thin0=!p0.archetype&&!p0.niche&&!p0.expertise&&!p0.brief;
-    $("#results").innerHTML=(thin0?`<p class="notice">Ideas will be more detailed once Handalf knows about you and your brand. <button class="btn ghost" data-setup type="button">Add your brand</button></p>`:"")
-      +`<div class="empty"><strong>Ready for a new topic</strong>Type an idea above and press Find outliers. Your library${state.vault.length?` still holds ${state.vault.length} saved take${state.vault.length===1?"":"s"}`:" is ready for whatever you keep"}.</div>`;
-    return;
-  }
+function batchHTML(run){
   const takes=run.takes||[];
-  // keep remixes under their parent; rank parents by multiple
-  const parents=takes.filter(t=>!t.remixOf).sort((a,b)=>multiple(b)-multiple(a));
+  const parents=takes.filter(t=>!t.remixOf||!takes.some(x=>x.key===t.remixOf)).sort((a,b)=>multiple(b)-multiple(a));
   let ordered=[];
   parents.forEach(p=>{ordered.push(p); ordered.push(...takes.filter(t=>t.remixOf===p.key).sort((a,b)=>multiple(b)-multiple(a)))});
   ordered=ordered.filter(t=>{const m=multiple(t);return filter==="all"||(filter==="out"&&m>=5)||(filter==="owned"&&t.ownership>=6)||(filter==="safe"&&t.defensibility>=7)});
-  const p=state.profile, thin=!p.archetype&&!p.niche&&!p.expertise&&!p.brief;
-  const head=(thin?`<p class="notice">Ideas will be more detailed once Handalf knows about you and your brand. <button class="btn ghost" data-setup type="button">Add your brand</button></p>`:"")
-    +(run.example?`<p class="notice">Example run on a sample topic. Mine your stances, then run your own topic.</p>`:"");
-  $("#results").innerHTML=`${head}
-  <div class="results">
+  const from=(run.fromText||[]).length?`<p class="batch-from">From ${run.fromText.map(x=>`<span>${esc(x)}</span>`).join("")}</p>`:"";
+  return `<section class="batch" id="batch-${esc(run.id)}">
+    <div class="batch-head"><div><p class="leyebrow">${run.example?"Example batch":"Conjured "+savedLabel(run.at)}</p><h3>${esc(run.topic)}</h3>${from}</div>${run.example?"":`<button class="ltext" type="button" data-bdel="${esc(run.id)}">Clear this batch</button>`}</div>
+    <div class="results">
     <aside>
       <div class="col-head"><h3>Consensus</h3><span class="baseline">= 1x</span></div>
       <ul class="cons">${(run.consensus||[]).map(c=>`<li><span class="cid">${esc(c.id)}</span><div><strong>${esc(c.take)}</strong><span>${esc(c.why)}</span></div></li>`).join("")}</ul>
-      <p class="hint" style="margin-top:12px">The multiple compares each take to this baseline: divergence × ownership × defensibility, adjusted for fit. 5x and up is an outlier.</p>
     </aside>
     <div style="min-width:0">
-      <div class="col-head"><h3>Takes · ${esc(run.topic)}</h3>
-        <div class="filters">${[["all","All"],["out","5x+"],["owned","Backed by you"],["safe","Defensible"]].map(([k,l])=>`<button class="chip" data-filter="${k}" aria-pressed="${filter===k}" type="button">${l}</button>`).join("")}</div>
-      </div>
-      ${ordered.length?ordered.map(t=>takeHTML(t,{consensus:run.consensus,example:run.example})).join(""):`<p class="empty">No takes match this filter.</p>`}
+      ${ordered.length?ordered.map(t=>takeHTML(t,{consensus:run.consensus})).join(""):`<p class="empty">${takes.length?"No ideas match this filter.":"Every idea in this batch was chosen."}</p>`}
     </div>
-  </div>`;
-  if(state.last&&!state.last.example&&!$("#topic").value) $("#topic").value=state.last.topic;
+  </div></section>`;
+}
+function renderEngine(){
+  migrateRuns();
+  const n=state.batches.reduce((a,b)=>a+b.takes.length,0); const ct=$("#n-alchemy"); if(ct) ct.textContent=n?n:"";
+  const runs=state.batches.length?state.batches:(state.profile.ran?[]:[EXAMPLE]);
+  if(!runs.length){
+    $("#results").innerHTML=`<div class="empty"><strong>The cauldron is empty</strong>Choose elements and press Combine into spells. New content ideas land here.<br><button class="btn" type="button" data-goel style="margin-top:12px">Go to Elements</button></div>`;
+    return;
+  }
+  const p=state.profile, thin=!p.archetype&&!p.niche&&!p.expertise&&!p.brief;
+  const head=(thin?`<p class="notice">Ideas will be more detailed once Handalf knows about you and your brand. <button class="btn ghost" data-setup type="button">Add your brand</button></p>`:"")
+    +(runs[0].example?`<p class="notice">Example batch on a sample topic. Choose elements and combine them to conjure your own.</p>`:"");
+  $("#results").innerHTML=`${head}
+    <div class="col-head alch-filter"><span class="hint">The multiple compares each idea to its batch's consensus: divergence × ownership × defensibility, adjusted for fit. 5x and up is an outlier.</span>
+      <div class="filters">${[["all","All"],["out","5x+"],["owned","Backed by you"],["safe","Defensible"]].map(([k,l])=>`<button class="chip" data-filter="${k}" aria-pressed="${filter===k}" type="button">${l}</button>`).join("")}</div></div>
+    ${runs.map(batchHTML).join("")}`;
+}
+function vaultEntry(t,run){
+  const {thread,...rest}=t;
+  return {...rest,topic:run.topic,againstText:((run.consensus||[]).find(c=>c.id===t.against)||{}).take||t.againstText||"",savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]};
+}
+function chooseTake(key){
+  const run=batchOf(key); if(!run) return; const t=run.takes.find(x=>x.key===key);
+  const {thread,...rest}=t;
+  state.chosen.unshift({...rest,topic:run.topic,batchId:run.id,fromText:run.fromText||[],againstText:((run.consensus||[]).find(c=>c.id===t.against)||{}).take||"",chosenAt:Date.now()});
+  run.takes=run.takes.filter(x=>x.key!==key).map(x=>x.remixOf===key?{...x,remixOf:null}:x); open.delete(key);
+  persist("last"); persist("spells"); renderEngine(); renderSpellbook();
+  showNotice(`“${t.title}” moved to your spell book.`);
 }
 $("#results").addEventListener("click",e=>{
   if(e.target.closest("[data-setup]")){openSetup();return}
+  if(e.target.closest("[data-goel]")){show("stances");return}
   const f=e.target.closest("[data-filter]"); if(f){filter=f.dataset.filter;renderEngine();return}
+  const bd=e.target.closest("button[data-bdel]"); if(bd){state.batches=state.batches.filter(x=>x.id!==bd.dataset.bdel);persist("last");renderEngine();return}
   const b=e.target.closest("button[data-act]"); if(!b) return;
-  // the sample run becomes yours the moment you save or remix one of its takes
-  if(!state.last&&/^ex\d/.test(b.dataset.key||"")){ state.last=JSON.parse(JSON.stringify(EXAMPLE)); state.last.at=Date.now(); persist("last") }
-  const t=state.last&&state.last.takes.find(x=>x.key===b.dataset.key);
-  if(b.dataset.act==="remix"){const k=b.dataset.key;open.has(k)?open.delete(k):open.add(k);b.textContent=open.has(k)?"Close":"Remix";b.setAttribute("aria-expanded",open.has(k));renderPanel(k);const ta=document.getElementById("ctx-"+k);if(ta)ta.focus();return}
-  if(b.dataset.act==="talk"){ask(b.dataset.key);return}
-  if(b.dataset.act==="build"){build(b.dataset.key);return}
-  if(b.dataset.act==="save"&&t&&!state.vault.some(v=>v.key===t.key)){
-    const {thread,...rest}=t;
-    state.vault.push({...rest,topic:state.last.topic,againstText:(state.last.consensus.find(c=>c.id===t.against)||{}).take||"",savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]});
-    persist("vault"); renderEngine(); renderVault();
+  // the sample batch becomes yours the moment you act on one of its ideas
+  if(/^ex\d/.test(b.dataset.key||"")&&!batchOf(b.dataset.key)){ const ex=JSON.parse(JSON.stringify(EXAMPLE)); delete ex.example; ex.id="b-example"; ex.at=Date.now(); state.batches.unshift(ex); persist("last") }
+  const k=b.dataset.key, run=batchOf(k), t=findTake(k);
+  if(b.dataset.act==="remix"){open.has(k)?open.delete(k):open.add(k);b.textContent=open.has(k)?"Close":"Remix";b.setAttribute("aria-expanded",open.has(k));renderPanel(k);const ta=document.getElementById("ctx-"+k);if(ta)ta.focus();return}
+  if(b.dataset.act==="talk"){ask(k);return}
+  if(b.dataset.act==="build"){build(k);return}
+  if(b.dataset.act==="choose"&&t){chooseTake(k);return}
+  if(b.dataset.act==="save"&&t&&run&&!state.vault.some(v=>v.key===t.key)){
+    state.vault.push(vaultEntry(t,run)); persist("vault"); renderEngine(); renderVault();
   }
 });
 
@@ -1955,18 +2060,31 @@ $("#add-btn").addEventListener("click",()=>{
   state.stances.push({id:"s"+(nextId++),stance:s,against:$("#add-against").value.trim(),quote:"",topic:"",strength:4,source:"Added by hand"});
   $("#add-stance").value="";$("#add-against").value=""; persist("stances"); renderStances();
 });
+const elSel=new Set(); let combining=false;
+function renderCombine(){
+  const bar=$("#combine-bar"); if(!bar) return;
+  [...elSel].forEach(id=>{if(!state.stances.some(s=>s.id===id))elSel.delete(id)});
+  const n=elSel.size;
+  bar.innerHTML=`<div><span class="label">Combine elements</span><p class="hint" id="combine-msg">${n?`${n} element${n===1?"":"s"} chosen. Handalf combines them into content ideas in Alchemy.`:"Tap elements below to choose up to five, then combine them into spells."}</p></div>
+    <div class="cl-go">${n?`<button class="ltext" type="button" data-eclear>Clear</button>`:""}<button class="btn" type="button" data-combine ${!n||combining||!sample?"disabled":""}>${combining?"Combining…":"Combine into spells"}</button></div>`;
+}
 function renderStances(){
   syncNextId();
   const list=[...state.stances].sort((a,b)=>(b.strength||0)-(a.strength||0));
   $("#n-stances").textContent=list.length?list.length:"";
   $("#stance-meta").textContent=list.length?`${list.length} stances · strongest first`:"";
-  $("#stance-list").innerHTML=list.length?list.map(s=>`<div class="stance">
-      <div><span class="sid">${esc(s.id)}</span><div class="dots">${[1,2,3,4,5].map(i=>`<i class="${i<=s.strength?"on":""}"></i>`).join("")}</div></div>
+  $("#stance-list").innerHTML=list.length?list.map(s=>`<div class="stance${elSel.has(s.id)?" picked":""}">
+      <div><button type="button" class="epick" data-epick="${esc(s.id)}" aria-pressed="${elSel.has(s.id)}" aria-label="Choose ${esc(s.id)} to combine"><span class="sid">${esc(s.id)}</span></button><div class="dots">${[1,2,3,4,5].map(i=>`<i class="${i<=s.strength?"on":""}"></i>`).join("")}</div></div>
       <div style="min-width:0"><p>${esc(s.stance)}</p>${s.against?`<span class="vs">Against: ${esc(s.against)}</span>`:""}${s.quote?`<q>${esc(s.quote)}</q>`:""}<span class="mono" style="color:var(--mute)">${esc([s.topic,s.source].filter(Boolean).join(" · "))}</span></div>
       <button class="btn quiet" data-del="${esc(s.id)}" type="button">Remove</button></div>`).join("")
-    :`<div class="empty"><strong>No stances yet</strong>Drop a conversation export on the left and press Mine stances, or add one by hand above. Each stance gets an id like s4 that takes cite as evidence.</div>`;
+    :`<div class="empty"><strong>No elements yet</strong>Conjure an idea, open Add conversations and mine your chats, or add one by hand above. Each element gets an id like s4 that ideas cite as evidence.</div>`;
+  renderCombine();
 }
-$("#stance-list").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;state.stances=state.stances.filter(s=>s.id!==b.dataset.del);persist("stances");renderStances()});
+$("#stance-list").addEventListener("click",e=>{
+  const pk=e.target.closest("button[data-epick]");
+  if(pk){const id=pk.dataset.epick; if(elSel.has(id)) elSel.delete(id); else if(elSel.size<5) elSel.add(id); else {const m=$("#combine-msg"); if(m) m.textContent="Five elements is the most one spell can hold."; return} return renderStances()}
+  const b=e.target.closest("[data-del]");if(!b)return;elSel.delete(b.dataset.del);state.stances=state.stances.filter(s=>s.id!==b.dataset.del);persist("stances");renderStances()});
+$("#combine-bar").addEventListener("click",e=>{ if(e.target.closest("[data-combine]")) runCombine(); if(e.target.closest("[data-eclear]")){elSel.clear();renderStances()} });
 
 /* ---------- profile ---------- */
 const pf=$("#profile-form");
@@ -1975,137 +2093,38 @@ function renderProfile(){
   const p=state.profile, A=p.archetype&&ARCH[p.archetype];
   $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-story>Read my story</button><button class="btn ghost" type="button" data-retake>Rewrite my story</button></div>`
     :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Write my brand story</button><button class="btn ghost" type="button" data-setup>Add a bio</button></div>`;
-  renderSpells();
+  renderSpellbook();
 }
 $("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-story]"))playBrandStory();if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("bio")});
 pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
 
-/* ---------- spells: evergreen topics, top rated takes and alternative takes, mixed into new ideas ---------- */
-let spellSel=[], spellBusy="";
-const SPELL_KIND={ever:"Evergreen",top:"Top rated",alt:"Alternative take",mix:"Mixed"};
-function topSpells(){
-  const seen=new Set(), all=[...state.vault,...((state.last&&state.last.takes)||[])];
-  return all.filter(t=>t&&t.title&&!seen.has(t.key)&&seen.add(t.key)).map(t=>({id:"top:"+t.key,kind:"top",title:t.title,line:t.hook||"",topic:t.topic||(state.last&&state.last.topic)||"",mult:multiple(t)}))
-    .sort((a,b)=>b.mult-a.mult).slice(0,6);
+/* ---------- spell book: the archive of chosen spells ---------- */
+function spellCardHTML(t){
+  const m=multiple(t),[tn,tc]=tier(m), saved=state.vault.some(v=>v.key===t.key);
+  return `<article class="take chosen"><div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
+    <div style="min-width:0">
+      <p class="leyebrow">${esc(t.topic||"Spell")} · chosen ${savedLabel(t.chosenAt)}</p>
+      ${t.remixOfTitle?`<p class="remix-of">Remix of “${esc(t.remixOfTitle)}”</p>`:""}
+      <h4>${esc(t.title)}</h4><p class="hook">${esc(t.hook||"")}</p>${t.angle?`<p class="angle">${esc(t.angle)}</p>`:""}
+      ${t.context?`<p class="ctx-note"><b>Your context:</b> ${esc(t.context)}</p>`:""}
+      <div class="meta">${t.againstText?`<span>Against <b>${esc(t.againstText)}</b></span>`:""}<span>Format <b>${esc(t.format||"n/a")}</b></span></div>
+      <div class="actions"><button class="btn ghost" type="button" data-sb="save" data-key="${t.key}">${saved?"In library":"Add to library"}</button><button class="btn ghost" type="button" data-sb="back" data-key="${t.key}">Back to Alchemy</button><button class="btn quiet" type="button" data-sb="del" data-key="${t.key}">Remove</button></div>
+    </div></article>`;
 }
-function allSpells(){return [...(state.spells||[]),...topSpells()]}
-const spellById=id=>allSpells().find(x=>x.id===id);
-function spellCard(sp){
-  const on=spellSel.includes(sp.id), [tn,tc]=sp.mult!=null?tier(sp.mult):["",""];
-  return `<div class="spell k-${sp.kind}${on?" on":""}">
-    <button type="button" class="spell-pick" data-spell="${esc(sp.id)}" aria-pressed="${on}">
-      <span class="spell-eye">${SPELL_KIND[sp.kind]||"Spell"}${sp.mult!=null?` · ${fmt(sp.mult)}x`:""}${sp.topic&&sp.kind==="alt"?` · ${esc(sp.topic)}`:""}</span>
-      <span class="spell-title">${esc(sp.title)}</span>
-      ${sp.line?`<span class="spell-line">${esc(sp.line)}</span>`:""}
-    </button>
-    <div class="spell-acts">${sp.kind!=="alt"?`<button type="button" class="ltext" data-salt="${esc(sp.id)}">Alternatives</button>`:""}${sp.kind!=="top"?`<button type="button" class="ltext sdel" data-sdel="${esc(sp.id)}" aria-label="Remove this spell">Remove</button>`:""}</div>
-  </div>`;
-}
-function spellShelf(title,hint,items,empty,tools){
-  return `<section class="sshelf"><div class="col-head"><h3>${title}</h3>${tools||""}</div>${hint?`<p class="hint">${hint}</p>`:""}
-    ${items.length?`<div class="spell-grid">${items.map(spellCard).join("")}</div>`:`<p class="sempty">${empty}</p>`}</section>`;
-}
-function mixCard(t,i){
-  const m=multiple(t),[tn,tc]=tier(m), saved=state.vault.some(v=>v.key===t.key), kept=(state.spells||[]).some(x=>x.id==="mix:"+t.key);
-  return `<article class="mixidea"><div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
-    <div style="min-width:0"><h4>${esc(t.title)}</h4><p class="hook">${esc(t.hook||"")}</p>${t.angle?`<p class="angle">${esc(t.angle)}</p>`:""}
-    <div class="meta"><span>Format <b>${esc(t.format||"n/a")}</b></span></div>
-    <div class="actions"><button class="btn ghost" type="button" data-msave="${i}">${saved?"In library":"Save to library"}</button><button class="btn ghost" type="button" data-mkeep="${i}">${kept?"In your spell book":"Keep as a spell"}</button></div></div></article>`;
-}
-function renderSpells(){
-  const el=$("#spells"); if(!el) return;
-  state.spells=state.spells||[];
-  spellSel=spellSel.filter(id=>spellById(id));
-  const ever=state.spells.filter(x=>x.kind==="ever"), alts=state.spells.filter(x=>x.kind==="alt"), mixed=state.spells.filter(x=>x.kind==="mix");
-  const topics=[...new Set([...state.vault.map(v=>v.topic),state.last&&!state.last.example?state.last.topic:"",...ever.map(x=>x.title)].filter(Boolean))];
-  const sel=spellSel.map(spellById).filter(Boolean), mix=state.mix;
-  el.innerHTML=`<div class="cauldron" aria-live="polite">
-      <div class="cl-head"><span class="label">The cauldron</span><span class="hint">${sel.length?`${sel.length} of 3 spells`:"Tap up to three spells to drop them in"}</span></div>
-      <div class="cl-slots">${[0,1,2].map(i=>sel[i]?`<button type="button" class="cl-slot full" data-spell="${esc(sel[i].id)}" title="Take it out"><span>${esc(sel[i].title)}</span><i aria-hidden="true">×</i></button>`:`<span class="cl-slot"></span>`).join("")}</div>
-      <div class="cl-go"><button class="btn" type="button" data-mix ${sel.length<2||spellBusy?"disabled":""}>${spellBusy==="mix"?"Mixing…":"Mix spells"}</button>${sel.length===1?`<span class="hint">Add one more spell to mix.</span>`:""}</div>
-      ${mix&&mix.ideas&&mix.ideas.length?`<div class="mixout"><p class="leyebrow">Mixed from ${esc(mix.from.join(" + "))}</p>${mix.ideas.map(mixCard).join("")}</div>`:""}
-    </div>
-    ${spellShelf("Evergreen","Topics you can return to for years, each with the angle only you can take.",ever,"No evergreen spells yet. Handalf can find them from your brand story and elements.",`<button class="btn ghost" type="button" data-ever ${spellBusy?"disabled":""}>${spellBusy==="ever"?"Conjuring…":ever.length?"Conjure more":"Conjure evergreen spells"}</button>`)}
-    ${spellShelf("Top rated","Your highest scoring takes from Alchemy and your library.",topSpells(),"Run a topic in Alchemy or save takes to your library and the best ones collect here.","")}
-    <section class="sshelf"><div class="col-head"><h3>Alternative takes</h3></div><p class="hint">Choose a topic and Handalf finds takes that go the other way.</p>
-      <form class="salt" id="alt-form"><input id="alt-topic" list="alt-topics" placeholder="A topic you want to flip" aria-label="Topic" autocomplete="off"><datalist id="alt-topics">${topics.map(t=>`<option value="${esc(t)}">`).join("")}</datalist><button class="btn ghost" type="submit" ${spellBusy?"disabled":""}>${spellBusy==="alt"?"Finding…":"Find alternatives"}</button></form>
-      ${alts.length?`<div class="spell-grid">${alts.map(spellCard).join("")}</div>`:""}</section>
-    ${mixed.length?spellShelf("Mixed","Ideas you kept from the cauldron.",mixed,"",""):""}
-    <p class="hint" id="spell-msg"></p>`;
-}
-function spellMsg(t,bad){const m=$("#spell-msg"); if(m){m.textContent=t||""; m.style.color=bad?"var(--risk)":""}}
-async function spellAI(kind,prompt){
-  if(!sample){spellMsg("Spells are conjured by Claude, so open this page inside Claude to use it.",true);return null}
-  spellBusy=kind; renderSpells();
-  try{ return await sample.json(prompt,{cache:false}) }
-  catch(e){ spellMsg(errCopy(e)||"That spell fizzled. Try again.",true); return null }
-  finally{ spellBusy=""; }
-}
-const sid=()=>"sp"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-async function conjureEvergreen(){
-  const have=(state.spells||[]).filter(x=>x.kind==="ever").map(x=>x.title);
-  const out=await spellAI("ever",`You are Handalf, a content strategist. Find 6 evergreen topics this creator can return to again and again for years. Each must come from their niche, expertise and stances, and carry the contrary angle only they can take. Write plainly, no em dashes.
-
-CREATOR PROFILE
-${profileText()}
-
-CREATOR STANCES
-${stanceText()}
-${have.length?`\nALREADY IN THEIR SPELL BOOK (do not repeat)\n${have.join("\n")}`:""}
-
-Reply with only JSON: {"spells":[{"title":"the topic in 2 to 6 words","line":"one sentence: the angle only this creator can take on it"}]}`);
-  const list=out&&Array.isArray(out.spells)?out.spells:[];
-  list.forEach(x=>{ if(x&&x.title) state.spells.push({id:sid(),kind:"ever",title:String(x.title),line:String(x.line||""),at:Date.now()}) });
-  if(list.length){persist("spells"); spellMsg("")}
-  renderSpells();
-}
-async function conjureAlts(topic){
-  topic=String(topic||"").trim(); if(!topic) return;
-  const out=await spellAI("alt",`You are Handalf, a content strategist. The creator chose this topic: "${topic}". Give 3 alternative takes on it that go against how most creators treat it. Each must be something this creator can own, backed by their stances where possible. Write plainly, no em dashes.
-
-CREATOR PROFILE
-${profileText()}
-
-CREATOR STANCES
-${stanceText()}
-
-Reply with only JSON: {"spells":[{"title":"the take as a short publishable title","line":"its opening hook, under 25 words"}]}`);
-  const list=out&&Array.isArray(out.spells)?out.spells:[];
-  list.forEach(x=>{ if(x&&x.title) state.spells.push({id:sid(),kind:"alt",title:String(x.title),line:String(x.line||""),topic,at:Date.now()}) });
-  if(list.length){persist("spells"); spellMsg("")}
-  renderSpells();
-}
-async function mixSpells(){
-  const sel=spellSel.map(spellById).filter(Boolean); if(sel.length<2) return;
-  const out=await spellAI("mix",`You are Handalf, a content strategist. Mix these spells into 3 new content ideas for this creator. Every idea must need all of the spells: combine them, collide them, or use one to reframe another. Each idea should still go against the common view and be something this creator can own. Write plainly, no em dashes.
-
-SPELLS
-${sel.map((x,i)=>`${i+1}. ${x.title}${x.line?`: ${x.line}`:""}`).join("\n")}
-
-CREATOR PROFILE
-${profileText()}
-
-CREATOR STANCES
-${stanceText()}
-
-Score each idea against what most creators would say about these topics. Reply with only JSON: {"takes":[${TAKE_SCHEMA}]} with "against" as a short phrase naming the common view.`);
-  const list=out&&Array.isArray(out.takes)?out.takes:[];
-  if(list.length){ state.mix={from:sel.map(x=>x.title),ideas:list.map(t=>({...normTake(t),againstText:String(t.against||"")})),at:Date.now()}; persist("spells"); spellMsg("") }
-  renderSpells();
+function renderSpellbook(){
+  const el=$("#spells"); if(!el) return; migrateRuns();
+  const list=state.chosen;
+  el.innerHTML=`<div class="col-head sb-head"><h3>Chosen spells</h3><span class="label">${list.length?`${list.length} spell${list.length===1?"":"s"}`:""}</span></div>
+    ${list.length?list.map(spellCardHTML).join(""):`<div class="empty"><strong>No spells chosen yet</strong>In Alchemy, press Choose spell on the ideas you want to keep. They move here, out of the way of the ones still brewing.</div>`}`;
 }
 $("#spells").addEventListener("click",e=>{
-  const pk=e.target.closest("button[data-spell]");
-  if(pk){const id=pk.dataset.spell; if(spellSel.includes(id)) spellSel=spellSel.filter(x=>x!==id); else if(spellSel.length<3) spellSel.push(id); else {spellMsg("The cauldron holds three spells. Take one out first.");return} spellMsg(""); return renderSpells()}
-  if(e.target.closest("button[data-mix]")) return mixSpells();
-  if(e.target.closest("button[data-ever]")) return conjureEvergreen();
-  const al=e.target.closest("button[data-salt]"); if(al){const sp=spellById(al.dataset.salt); if(sp) conjureAlts(sp.kind==="top"&&sp.topic?sp.topic:sp.title); return}
-  const dl_=e.target.closest("button[data-sdel]"); if(dl_){state.spells=state.spells.filter(x=>x.id!==dl_.dataset.sdel); spellSel=spellSel.filter(x=>x!==dl_.dataset.sdel); persist("spells"); return renderSpells()}
-  const ms=e.target.closest("button[data-msave]");
-  if(ms&&state.mix){const t=state.mix.ideas[+ms.dataset.msave]; if(t&&!state.vault.some(v=>v.key===t.key)){state.vault.push({...t,topic:"Mixed: "+state.mix.from.join(" + "),savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]}); persist("vault"); renderVault()} return renderSpells()}
-  const mk=e.target.closest("button[data-mkeep]");
-  if(mk&&state.mix){const t=state.mix.ideas[+mk.dataset.mkeep]; if(t&&!state.spells.some(x=>x.id==="mix:"+t.key)){state.spells.push({id:"mix:"+t.key,kind:"mix",title:t.title,line:t.hook||"",at:Date.now()}); persist("spells")} return renderSpells()}
+  const b=e.target.closest("button[data-sb]"); if(!b) return;
+  const i=state.chosen.findIndex(x=>x.key===b.dataset.key); if(i<0) return; const t=state.chosen[i];
+  if(b.dataset.sb==="save"){ if(!state.vault.some(v=>v.key===t.key)){ const {chosenAt,batchId,...r}=t; state.vault.push({...r,savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]}); persist("vault"); renderVault() } }
+  if(b.dataset.sb==="back"){ state.chosen.splice(i,1); const {chosenAt,batchId,topic,fromText,...r}=t; let run=state.batches.find(x=>x.id===batchId); if(!run){run={id:"b"+Date.now().toString(36),topic:topic||"Returned spells",fromText:fromText||[],consensus:[],takes:[],at:Date.now()}; state.batches.unshift(run)} run.takes.push(r); persist("last"); renderEngine() }
+  if(b.dataset.sb==="del"){ state.chosen.splice(i,1) }
+  persist("spells"); renderSpellbook();
 });
-$("#spells").addEventListener("submit",e=>{ if(e.target.id!=="alt-form") return; e.preventDefault(); conjureAlts($("#alt-topic").value) });
 
 /* ---------- vault planner ---------- */
 let vgroup="idea";
@@ -2194,7 +2213,7 @@ function renderVault(){
       return shelf(d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":d<today?" · Past":""),`${s.length} book${s.length===1?"":"s"}`,s.map(bookCover).join(""),openPanel(s.map(x=>x.key)))}).join("");
   }
   $("#vault-list").innerHTML=html;
-  refreshTakeBook(); if(view==="profile") renderSpells();
+  refreshTakeBook(); if(view==="profile") renderSpellbook();
 }
 $("#vault-group").addEventListener("click",e=>{const b=e.target.closest("[data-vgroup]");if(!b)return;vgroup=b.dataset.vgroup;renderVault()});
 const vfind=k=>state.vault.find(x=>x.key===k);
@@ -2720,7 +2739,7 @@ function setCover(){
   const ms=exMedia(v), series=v.kind==="series", m=multiple(v), [tn]=tier(m);
   bk.dataset.cover="take"; bk.style.setProperty("--spine",`var(--sp-${ms.includes("video")?"video":ms.includes("audio")?"audio":"text"})`);
   f.innerHTML=`<button class="ltext iskip iskip-cover" type="button" data-skip>Close</button>
-    <p class="tcov-eye">${esc(ms.map(x=>MEDIA[x]).join(" · "))}${series?" · Series":""}</p>
+    <p class="tcov-eye">${v.remixOfTitle?"Remix · ":""}${esc(ms.map(x=>MEDIA[x]).join(" · "))}${series?" · Series":""}</p>
     <p class="tcov-title">${esc(v.title)}</p>
     <p class="tcov-rule" aria-hidden="true"></p>
     <p class="itag">${esc(v.topic||"A take from your library")}</p>
@@ -2730,9 +2749,11 @@ function takeBookHTML(key){
   const v=vfind(book.vkey); if(!v) return `<p class="leyebrow">Library</p><h2 class="lq sm">This book is no longer on the shelf.</h2><div class="bturn"><button class="btn" type="button" data-skip>Close the book</button></div>`;
   const m=multiple(v),[tn,tc]=tier(m), series=v.kind==="series", eps=v.episodes||[], k=v.key;
   if(key==="t-take") return `<p class="leyebrow">Chapter one · ${esc(v.topic||"The take")}</p>
+    ${v.remixOfTitle?`<p class="remix-of">Remix of “${esc(v.remixOfTitle)}”</p>`:""}
     <h2 class="lq sm">${esc(v.title)}</h2>
     <p class="inscribed">${esc(v.hook||"")}</p>
     ${v.angle?`<p>${esc(v.angle)}</p>`:""}
+    ${v.context?`<p class="ctx-note"><b>Your context:</b> ${esc(v.context)}</p>`:""}
     <div class="tmeta"><span class="tscore">${fmt(m)}<small>x</small></span><span class="tier ${tc}">${tn}</span><span>Format <b>${esc(v.format||"n/a")}</b></span>${v.againstText?`<span>Against <b>${esc(v.againstText)}</b></span>`:""}<span>Saved <b>${savedLabel(v.savedAt)}</b></span></div>
     ${turnHint()}`;
   if(key==="t-plan") return `<p class="leyebrow">Chapter two · The plan</p>
