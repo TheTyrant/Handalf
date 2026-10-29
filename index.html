@@ -533,6 +533,37 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .tplan{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 .ipage-in .eps{margin:0}
 .tremove{color:var(--mute)}
+/* spell book */
+.arch-readout{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 20px;padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+#v-profile .addpanel{margin-top:8px}
+.cauldron{margin:22px 0 8px;padding:18px;border:1px solid var(--gold);border-radius:18px;background:color-mix(in srgb,var(--gold) 7%,var(--sheet));display:grid;gap:12px}
+.cl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.cl-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cl-slot{min-height:54px;border:1.5px dashed color-mix(in srgb,var(--gold) 60%,transparent);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:none;font:inherit;color:var(--ink);text-align:left}
+.cl-slot.full{border-style:solid;border-color:var(--gold);background:var(--sheet);cursor:pointer;font-family:var(--f-head);font-style:italic;color:var(--gold);font-size:16px;line-height:1.25}
+.cl-slot.full i{font-style:normal;color:var(--mute);font-size:18px}
+.cl-go{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mixout{display:grid;gap:4px;border-top:1px solid var(--rule);padding-top:10px}
+.mixidea{display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.mixidea h4{margin:0 0 4px}
+.sshelf{margin-top:26px;display:grid;gap:8px}
+.sshelf .col-head .btn{padding:7px 14px;font-size:13px}
+.spell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.spell{position:relative;display:grid;grid-template-rows:1fr auto;border:1px solid var(--rule);border-radius:14px;background:var(--sheet);transition:border-color .2s,box-shadow .2s,transform .2s}
+.spell:hover{border-color:var(--gold)}
+.spell.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold);transform:translateY(-2px)}
+.spell-pick{display:grid;gap:6px;align-content:start;text-align:left;background:none;border:0;padding:14px 14px 8px;cursor:pointer;font:inherit;color:var(--ink)}
+.spell-eye{font-family:var(--f-title);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.k-top .spell-eye{color:var(--sp-video)}
+.k-alt .spell-eye{color:var(--sp-audio)}
+.spell-title{font-family:var(--f-head);font-size:19px;line-height:1.25;color:var(--ink)}
+.spell-line{font-size:14px;color:var(--mute);line-height:1.4}
+.spell-acts{display:flex;gap:14px;padding:0 14px 12px;font-size:13px}
+.spell-acts .sdel{color:var(--mute);margin-left:auto}
+.sempty{color:var(--mute);font-size:15px;padding:12px 0}
+.salt{display:flex;gap:10px;flex-wrap:wrap}
+.salt input{flex:1 1 240px;background:var(--sheet);border:1.5px solid var(--gold);padding:8px 16px;border-radius:var(--pill);min-width:0;font:inherit;color:var(--ink)}
+@media (max-width:640px){.cl-slots{grid-template-columns:1fr}.mixidea{grid-template-columns:60px minmax(0,1fr)}}
 .iback{transform:rotateY(180deg);background:var(--sheet);color:var(--mute)}
 .iowner-line{font-family:var(--f-head);font-style:italic;font-size:clamp(15px,1.6vw,19px);margin:0}
 .iowner{font-family:var(--f-display);color:var(--gold);font-size:clamp(28px,4vw,48px);margin:0;padding:0 18px 4px;border-bottom:1px solid var(--rule)}
@@ -733,19 +764,25 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- PROFILE -->
   <section class="view" id="v-profile" hidden>
-    <div><h2>Your spell book</h2><p class="lede">The engine scores fit against this. Write it the way you would brief a collaborator.</p></div>
-    <form class="form" id="profile-form">
-      <div class="arch-readout" id="arch-readout"></div>
-      <div class="field"><label class="label" for="p-name">Name or brand</label><input id="p-name" name="name"></div>
-      <div class="field"><label class="label" for="p-platforms">Platforms and formats</label><input id="p-platforms" name="platforms" placeholder="YouTube video essays, IG carousels, X threads"></div>
-      <div class="field"><label class="label" for="p-niche">Niche</label><input id="p-niche" name="niche" placeholder="Design, comics, creative business"></div>
-      <div class="field"><label class="label" for="p-audience">Audience</label><input id="p-audience" name="audience" placeholder="Who watches and what they want"></div>
-      <div class="field wide"><label class="label" for="p-expertise">Expertise</label><textarea id="p-expertise" name="expertise" placeholder="What you know from doing it, not from reading about it. Years, projects, scars."></textarea></div>
-      <div class="field wide"><label class="label" for="p-voice">Voice</label><textarea id="p-voice" name="voice" placeholder="How you sound. Words you use, tone, references you lean on."></textarea></div>
-      <div class="field wide"><label class="label" for="p-pillars">Content pillars</label><textarea id="p-pillars" name="pillars" placeholder="The 3 to 5 territories you keep coming back to"></textarea></div>
-      <div class="field wide"><label class="label" for="p-off">Off limits</label><textarea id="p-off" name="off" placeholder="Takes you will never make, topics you avoid"></textarea></div>
-    </form>
-    <p class="hint" id="profile-saved"></p>
+    <div><h2>Your spell book</h2><p class="lede">Spells are the ideas your brand keeps coming back to: evergreen topics, your top rated takes, and alternative takes on topics you choose. Pick two or three and mix them into something new.</p></div>
+    <div class="arch-readout" id="arch-readout"></div>
+    <div id="spells"></div>
+    <details class="panel addpanel" id="brandpanel">
+      <summary><span class="label">Brand details</span><span class="addchev" aria-hidden="true"></span></summary>
+      <div class="addbody">
+        <form class="form" id="profile-form">
+          <div class="field"><label class="label" for="p-name">Name or brand</label><input id="p-name" name="name"></div>
+          <div class="field"><label class="label" for="p-platforms">Platforms and formats</label><input id="p-platforms" name="platforms" placeholder="YouTube video essays, IG carousels, X threads"></div>
+          <div class="field"><label class="label" for="p-niche">Niche</label><input id="p-niche" name="niche" placeholder="Design, comics, creative business"></div>
+          <div class="field"><label class="label" for="p-audience">Audience</label><input id="p-audience" name="audience" placeholder="Who watches and what they want"></div>
+          <div class="field wide"><label class="label" for="p-expertise">Expertise</label><textarea id="p-expertise" name="expertise" placeholder="What you know from doing it, not from reading about it. Years, projects, scars."></textarea></div>
+          <div class="field wide"><label class="label" for="p-voice">Voice</label><textarea id="p-voice" name="voice" placeholder="How you sound. Words you use, tone, references you lean on."></textarea></div>
+          <div class="field wide"><label class="label" for="p-pillars">Content pillars</label><textarea id="p-pillars" name="pillars" placeholder="The 3 to 5 territories you keep coming back to"></textarea></div>
+          <div class="field wide"><label class="label" for="p-off">Off limits</label><textarea id="p-off" name="off" placeholder="Takes you will never make, topics you avoid"></textarea></div>
+        </form>
+        <p class="hint" id="profile-saved"></p>
+      </div>
+    </details>
   </section>
 
   <!-- SETTINGS -->
@@ -811,7 +848,7 @@ function tier(m){return m>=5?["Outlier","t-out"]:m>=2.5?["Strong","t-str"]:m>=1.
 const fmt=m=>m>=10?m.toFixed(0):m.toFixed(1);
 
 /* ---------- state ---------- */
-const state={profile:{},stances:[],vault:[],sources:[],last:null};
+const state={profile:{},stances:[],vault:[],sources:[],last:null,spells:[],mix:null};
 let queue=[]; // [{name, messages:[string]}]  unsent corpus
 let filter="all";
 
@@ -836,7 +873,7 @@ let db=null, uid=null, sample=null, dl=null, sync="browser";
 function setSync(k){ sync=k; const v=document.getElementById("sync-val"); if(v&&typeof syncCopy==="function"){const c=syncCopy();v.textContent=c[0];document.getElementById("sync-sub").textContent=c[1]} }
 const LS="handalf.v1";
 function lsLoad(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j)Object.assign(state,j)}catch(e){}}
-function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,last:state.last}))}catch(e){}}
+function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,last:state.last,spells:state.spells,mix:state.mix}))}catch(e){}}
 const writing={};const pending={};
 function persist(key){
   lsSave();
@@ -849,6 +886,7 @@ function persist(key){
       const body= key==="profile"?{profile:state.profile}
         : key==="stances"?{stances:state.stances,sources:state.sources}
         : key==="vault"?{vault:state.vault}
+        : key==="spells"?{spells:state.spells,mix:state.mix}
         : {last:state.last};
       await db.doc("data/users/"+uid+"/"+key).set(JSON.parse(JSON.stringify(body)));
       setSync("account");
@@ -865,7 +903,7 @@ async function initRuntime(){
     if(uid){
       db=d;
       try{
-        const keys=["profile","stances","vault","last"];
+        const keys=["profile","stances","vault","last","spells"];
         const snaps=await Promise.all(keys.map(k=>db.doc("data/users/"+uid+"/"+k).get()));
         snaps.forEach((sn,i)=>{
           if(sn.exists){
@@ -879,7 +917,7 @@ async function initRuntime(){
     }
   }
 }
-function hasLocal(k){return k==="profile"?Object.keys(state.profile).length:k==="stances"?state.stances.length:k==="vault"?state.vault.length:!!state.last}
+function hasLocal(k){if(k==="spells")return (state.spells||[]).length>0;return k==="profile"?Object.keys(state.profile).length:k==="stances"?state.stances.length:k==="vault"?state.vault.length:!!state.last}
 
 /* ---------- nav ---------- */
 document.querySelectorAll(".nav [data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -1244,6 +1282,7 @@ const QUIZ=[
 /* ---------- landing: one mode at a time ---------- */
 const ICON={
  wand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 15 9"/><path d="M17 2.5l1.3 3 3 1.3-3 1.3-1.3 3-1.3-3-3-1.3 3-1.3z"/><path d="M8 4v2M7 5h2M20 15v2M19 16h2"/></svg>',
+ book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5.5A2.5 2.5 0 0 1 6.5 3H20v14.5H6.5A2.5 2.5 0 0 0 4 20a1.5 1.5 0 0 0 1.5 1.5H20v-4"/><path d="M12 6.8l.8 1.8 1.8.8-1.8.8-.8 1.8-.8-1.8-1.8-.8 1.8-.8z"/></svg>',
  hat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19.5h19"/><path d="M6 19.5c1.6-5 3.6-10.5 8.5-16 1.4-.8 3-.3 3.5.7-1.6-.2-2.6.6-2.8 1.8.3 4.5 1.3 9 2.8 13.5"/><path d="M11 13.5l.6 1.3 1.3.6-1.3.6-.6 1.3-.6-1.3-1.3-.6 1.3-.6z"/></svg>',
  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
  page:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5h8l4.5 4.5v14.5H6z"/><path d="M14 2.5V7h4.5"/><path d="M12.2 18v-6.5M9.4 14.2l2.8-2.8 2.8 2.8"/></svg>',
@@ -1303,7 +1342,7 @@ const PERCH=`<svg viewBox="0 0 200 179" role="img" aria-label="Handalf the owl, 
 </svg>`;
 let waveNext=true, perchTilt=0, ebText="";
 const TILT=[-7,5,-3,7,-5,3,0,0];
-const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand quiz",ICON.hat],["bio","Add a bio",ICON.page],["erase","Erase everything",ICON.reset]];
+const MODES=[["conjure","Conjure",ICON.wand],["quiz","Brand story",ICON.book],["bio","Add a bio",ICON.page],["erase","Erase everything",ICON.reset]];
 let mode="conjure", llm="ChatGPT", found=null, flash="", intro=false, askSeed=0, animIn=false;
 /* the landing talks: several ways to pose each question, picked at random */
 const PHR={
@@ -1345,7 +1384,7 @@ function owlHead(eyebrow,q,n){
 function quizPanel(){
   const total=QUIZ.length+2, bar=n=>`<div class="lbar"><b style="width:${n/total*100}%"></b></div>`;
   if(qi<0){
-    return `${owlHead("Handalf offers a quiz",say("quiz"),rnd(6))}
+    return `${owlHead("Handalf offers to tell your story",say("quiz"),rnd(6))}
       <ol class="lopts">
         <li style="--i:0"><button type="button" data-qstart><span class="lk">✦</span><span>Yes, ask away</span></button></li>
         <li style="--i:1"><button type="button" data-qnav="skip"><span class="lk">✦</span><span>I already know my archetype</span></button></li>
@@ -1415,12 +1454,12 @@ function renderStart(){
     ebText=f.source||"Profile";
     panel=`<h2 class="lq sm">${f.parsed?"Here's what Handalf picked up.":"Saved. Handalf will read this on every run."}</h2>
       ${f.parsed?`<ul class="lfound">
-        <li>${f.arch?`Brand archetype: <b style="color:var(--gold)">${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}`:"No clear archetype. The brand quiz can find one."}</li>
+        <li>${f.arch?`Brand archetype: <b style="color:var(--gold)">${esc(f.arch)}</b>${f.arch2?` with ${esc(f.arch2)}`:""}`:"No clear archetype yet. Your brand story can find one."}</li>
         <li>${f.fields.length?`Filled in ${esc(f.fields.join(", "))}`:"No new brand fields. Your existing ones were kept."}</li>
         <li>${f.stances} contrary stance${f.stances===1?"":"s"} added to your bank</li>
-        ${f.quiz?`<li>Your brand story was written from your bio, as if you took the quiz</li>`:""}</ul>`:""}
+        ${f.quiz?`<li>Your brand story was written from your bio, as if you wrote it yourself</li>`:""}</ul>`:""}
       <p class="lhint">You can edit any of it in the Spell book tab.</p>
-      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button>${answers().some(x=>x!=null)?`<button class="ltext" type="button" data-qstart>Read my story</button>`:`<button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine with the quiz":"Take the brand quiz"}</button>`}</div>`;
+      <div class="lnav" style="justify-content:flex-start;gap:28px"><button class="lbtn solo" type="button" data-mode="conjure">Start conjuring</button>${answers().some(x=>x!=null)?`<button class="ltext" type="button" data-qstart>Read my story</button>`:`<button class="ltext" type="button" data-mode="quiz">${f.arch?"Refine my story":"Write my brand story"}</button>`}</div>`;
   }
   const active=mode==="done"?"":mode; const wasAnim=animIn; animIn=false; const wv=waveNext; waveNext=false; if(!(mode==="quiz"&&qi>=0)) perchTilt=0;
   $("#quiz").innerHTML=`<div class="ltop"><div class="perchrow"><div class="perch${wv?" waving":""}" style="--tilt:${perchTilt}deg" aria-hidden="true">${PERCH}</div><p class="sprout${wv?" grow":""}"><svg class="leaf" viewBox="0 0 22 14" aria-hidden="true"><path d="M0 9C5 9 7 8 9 7" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-linecap="round"/><path d="M8 7C10 2 16 0 21 1C19 7 13 10 8 7Z" fill="var(--gold)"/></svg><span>${esc(ebText)}</span></p></div><div class="lpanel${wasAnim||wv?" lin":""}${wv?" late":""}">${panel}</div></div>
@@ -1558,8 +1597,8 @@ $("#quiz").addEventListener("click",async e=>{
   if(r){ readProfile($("#bio-text").value,"Your bio"); return }
   if(e.target.closest("[data-erase]")){
     if(runCtl)runCtl.abort();
-    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;queue=[];open.clear();
-    ["profile","stances","vault","last"].forEach(persist);
+    state.profile={};state.stances=[];state.vault=[];state.sources=[];state.last=null;state.spells=[];state.mix=null;spellSel=[];queue=[];open.clear();
+    ["profile","stances","vault","last","spells"].forEach(persist);
     $("#topic").value=""; showNotice(""); renderAll(); setRunAvail();
     flash="Everything was erased. This is a fresh start."; setMode("conjure");
   }
@@ -1934,11 +1973,139 @@ const pf=$("#profile-form");
 function renderProfile(){
   [...pf.elements].forEach(el=>{if(el.name)el.value=state.profile[el.name]||""});
   const p=state.profile, A=p.archetype&&ARCH[p.archetype];
-  $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-retake>Retake quiz</button><button class="btn ghost" type="button" data-setup>Add a bio</button></div>`
-    :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Take the brand quiz</button><button class="btn ghost" type="button" data-setup>Add a bio</button></div>`;
+  $("#arch-readout").innerHTML=A?`<div><span class="label">Brand archetype</span><br><strong>${esc(p.archetype)}</strong>${p.archetype2?` <span class="hint">with ${esc(p.archetype2)}</span>`:""}<p class="hint" style="margin-top:4px;max-width:60ch">${esc(A.style)}</p></div><div class="actions" style="margin:0"><button class="btn ghost" type="button" data-story>Read my story</button><button class="btn ghost" type="button" data-retake>Rewrite my story</button></div>`
+    :`<div><span class="label">Brand archetype</span><br><span class="hint">Not set yet. It decides how your contrary takes argue.</span></div><div class="actions" style="margin:0"><button class="btn" type="button" data-retake>Write my brand story</button><button class="btn ghost" type="button" data-setup>Add a bio</button></div>`;
+  renderSpells();
 }
-$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("bio")});
+$("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-story]"))playBrandStory();if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("bio")});
 pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
+
+/* ---------- spells: evergreen topics, top rated takes and alternative takes, mixed into new ideas ---------- */
+let spellSel=[], spellBusy="";
+const SPELL_KIND={ever:"Evergreen",top:"Top rated",alt:"Alternative take",mix:"Mixed"};
+function topSpells(){
+  const seen=new Set(), all=[...state.vault,...((state.last&&state.last.takes)||[])];
+  return all.filter(t=>t&&t.title&&!seen.has(t.key)&&seen.add(t.key)).map(t=>({id:"top:"+t.key,kind:"top",title:t.title,line:t.hook||"",topic:t.topic||(state.last&&state.last.topic)||"",mult:multiple(t)}))
+    .sort((a,b)=>b.mult-a.mult).slice(0,6);
+}
+function allSpells(){return [...(state.spells||[]),...topSpells()]}
+const spellById=id=>allSpells().find(x=>x.id===id);
+function spellCard(sp){
+  const on=spellSel.includes(sp.id), [tn,tc]=sp.mult!=null?tier(sp.mult):["",""];
+  return `<div class="spell k-${sp.kind}${on?" on":""}">
+    <button type="button" class="spell-pick" data-spell="${esc(sp.id)}" aria-pressed="${on}">
+      <span class="spell-eye">${SPELL_KIND[sp.kind]||"Spell"}${sp.mult!=null?` · ${fmt(sp.mult)}x`:""}${sp.topic&&sp.kind==="alt"?` · ${esc(sp.topic)}`:""}</span>
+      <span class="spell-title">${esc(sp.title)}</span>
+      ${sp.line?`<span class="spell-line">${esc(sp.line)}</span>`:""}
+    </button>
+    <div class="spell-acts">${sp.kind!=="alt"?`<button type="button" class="ltext" data-salt="${esc(sp.id)}">Alternatives</button>`:""}${sp.kind!=="top"?`<button type="button" class="ltext sdel" data-sdel="${esc(sp.id)}" aria-label="Remove this spell">Remove</button>`:""}</div>
+  </div>`;
+}
+function spellShelf(title,hint,items,empty,tools){
+  return `<section class="sshelf"><div class="col-head"><h3>${title}</h3>${tools||""}</div>${hint?`<p class="hint">${hint}</p>`:""}
+    ${items.length?`<div class="spell-grid">${items.map(spellCard).join("")}</div>`:`<p class="sempty">${empty}</p>`}</section>`;
+}
+function mixCard(t,i){
+  const m=multiple(t),[tn,tc]=tier(m), saved=state.vault.some(v=>v.key===t.key), kept=(state.spells||[]).some(x=>x.id==="mix:"+t.key);
+  return `<article class="mixidea"><div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
+    <div style="min-width:0"><h4>${esc(t.title)}</h4><p class="hook">${esc(t.hook||"")}</p>${t.angle?`<p class="angle">${esc(t.angle)}</p>`:""}
+    <div class="meta"><span>Format <b>${esc(t.format||"n/a")}</b></span></div>
+    <div class="actions"><button class="btn ghost" type="button" data-msave="${i}">${saved?"In library":"Save to library"}</button><button class="btn ghost" type="button" data-mkeep="${i}">${kept?"In your spell book":"Keep as a spell"}</button></div></div></article>`;
+}
+function renderSpells(){
+  const el=$("#spells"); if(!el) return;
+  state.spells=state.spells||[];
+  spellSel=spellSel.filter(id=>spellById(id));
+  const ever=state.spells.filter(x=>x.kind==="ever"), alts=state.spells.filter(x=>x.kind==="alt"), mixed=state.spells.filter(x=>x.kind==="mix");
+  const topics=[...new Set([...state.vault.map(v=>v.topic),state.last&&!state.last.example?state.last.topic:"",...ever.map(x=>x.title)].filter(Boolean))];
+  const sel=spellSel.map(spellById).filter(Boolean), mix=state.mix;
+  el.innerHTML=`<div class="cauldron" aria-live="polite">
+      <div class="cl-head"><span class="label">The cauldron</span><span class="hint">${sel.length?`${sel.length} of 3 spells`:"Tap up to three spells to drop them in"}</span></div>
+      <div class="cl-slots">${[0,1,2].map(i=>sel[i]?`<button type="button" class="cl-slot full" data-spell="${esc(sel[i].id)}" title="Take it out"><span>${esc(sel[i].title)}</span><i aria-hidden="true">×</i></button>`:`<span class="cl-slot"></span>`).join("")}</div>
+      <div class="cl-go"><button class="btn" type="button" data-mix ${sel.length<2||spellBusy?"disabled":""}>${spellBusy==="mix"?"Mixing…":"Mix spells"}</button>${sel.length===1?`<span class="hint">Add one more spell to mix.</span>`:""}</div>
+      ${mix&&mix.ideas&&mix.ideas.length?`<div class="mixout"><p class="leyebrow">Mixed from ${esc(mix.from.join(" + "))}</p>${mix.ideas.map(mixCard).join("")}</div>`:""}
+    </div>
+    ${spellShelf("Evergreen","Topics you can return to for years, each with the angle only you can take.",ever,"No evergreen spells yet. Handalf can find them from your brand story and elements.",`<button class="btn ghost" type="button" data-ever ${spellBusy?"disabled":""}>${spellBusy==="ever"?"Conjuring…":ever.length?"Conjure more":"Conjure evergreen spells"}</button>`)}
+    ${spellShelf("Top rated","Your highest scoring takes from Alchemy and your library.",topSpells(),"Run a topic in Alchemy or save takes to your library and the best ones collect here.","")}
+    <section class="sshelf"><div class="col-head"><h3>Alternative takes</h3></div><p class="hint">Choose a topic and Handalf finds takes that go the other way.</p>
+      <form class="salt" id="alt-form"><input id="alt-topic" list="alt-topics" placeholder="A topic you want to flip" aria-label="Topic" autocomplete="off"><datalist id="alt-topics">${topics.map(t=>`<option value="${esc(t)}">`).join("")}</datalist><button class="btn ghost" type="submit" ${spellBusy?"disabled":""}>${spellBusy==="alt"?"Finding…":"Find alternatives"}</button></form>
+      ${alts.length?`<div class="spell-grid">${alts.map(spellCard).join("")}</div>`:""}</section>
+    ${mixed.length?spellShelf("Mixed","Ideas you kept from the cauldron.",mixed,"",""):""}
+    <p class="hint" id="spell-msg"></p>`;
+}
+function spellMsg(t,bad){const m=$("#spell-msg"); if(m){m.textContent=t||""; m.style.color=bad?"var(--risk)":""}}
+async function spellAI(kind,prompt){
+  if(!sample){spellMsg("Spells are conjured by Claude, so open this page inside Claude to use it.",true);return null}
+  spellBusy=kind; renderSpells();
+  try{ return await sample.json(prompt,{cache:false}) }
+  catch(e){ spellMsg(errCopy(e)||"That spell fizzled. Try again.",true); return null }
+  finally{ spellBusy=""; }
+}
+const sid=()=>"sp"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+async function conjureEvergreen(){
+  const have=(state.spells||[]).filter(x=>x.kind==="ever").map(x=>x.title);
+  const out=await spellAI("ever",`You are Handalf, a content strategist. Find 6 evergreen topics this creator can return to again and again for years. Each must come from their niche, expertise and stances, and carry the contrary angle only they can take. Write plainly, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+CREATOR STANCES
+${stanceText()}
+${have.length?`\nALREADY IN THEIR SPELL BOOK (do not repeat)\n${have.join("\n")}`:""}
+
+Reply with only JSON: {"spells":[{"title":"the topic in 2 to 6 words","line":"one sentence: the angle only this creator can take on it"}]}`);
+  const list=out&&Array.isArray(out.spells)?out.spells:[];
+  list.forEach(x=>{ if(x&&x.title) state.spells.push({id:sid(),kind:"ever",title:String(x.title),line:String(x.line||""),at:Date.now()}) });
+  if(list.length){persist("spells"); spellMsg("")}
+  renderSpells();
+}
+async function conjureAlts(topic){
+  topic=String(topic||"").trim(); if(!topic) return;
+  const out=await spellAI("alt",`You are Handalf, a content strategist. The creator chose this topic: "${topic}". Give 3 alternative takes on it that go against how most creators treat it. Each must be something this creator can own, backed by their stances where possible. Write plainly, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+CREATOR STANCES
+${stanceText()}
+
+Reply with only JSON: {"spells":[{"title":"the take as a short publishable title","line":"its opening hook, under 25 words"}]}`);
+  const list=out&&Array.isArray(out.spells)?out.spells:[];
+  list.forEach(x=>{ if(x&&x.title) state.spells.push({id:sid(),kind:"alt",title:String(x.title),line:String(x.line||""),topic,at:Date.now()}) });
+  if(list.length){persist("spells"); spellMsg("")}
+  renderSpells();
+}
+async function mixSpells(){
+  const sel=spellSel.map(spellById).filter(Boolean); if(sel.length<2) return;
+  const out=await spellAI("mix",`You are Handalf, a content strategist. Mix these spells into 3 new content ideas for this creator. Every idea must need all of the spells: combine them, collide them, or use one to reframe another. Each idea should still go against the common view and be something this creator can own. Write plainly, no em dashes.
+
+SPELLS
+${sel.map((x,i)=>`${i+1}. ${x.title}${x.line?`: ${x.line}`:""}`).join("\n")}
+
+CREATOR PROFILE
+${profileText()}
+
+CREATOR STANCES
+${stanceText()}
+
+Score each idea against what most creators would say about these topics. Reply with only JSON: {"takes":[${TAKE_SCHEMA}]} with "against" as a short phrase naming the common view.`);
+  const list=out&&Array.isArray(out.takes)?out.takes:[];
+  if(list.length){ state.mix={from:sel.map(x=>x.title),ideas:list.map(t=>({...normTake(t),againstText:String(t.against||"")})),at:Date.now()}; persist("spells"); spellMsg("") }
+  renderSpells();
+}
+$("#spells").addEventListener("click",e=>{
+  const pk=e.target.closest("button[data-spell]");
+  if(pk){const id=pk.dataset.spell; if(spellSel.includes(id)) spellSel=spellSel.filter(x=>x!==id); else if(spellSel.length<3) spellSel.push(id); else {spellMsg("The cauldron holds three spells. Take one out first.");return} spellMsg(""); return renderSpells()}
+  if(e.target.closest("button[data-mix]")) return mixSpells();
+  if(e.target.closest("button[data-ever]")) return conjureEvergreen();
+  const al=e.target.closest("button[data-salt]"); if(al){const sp=spellById(al.dataset.salt); if(sp) conjureAlts(sp.kind==="top"&&sp.topic?sp.topic:sp.title); return}
+  const dl_=e.target.closest("button[data-sdel]"); if(dl_){state.spells=state.spells.filter(x=>x.id!==dl_.dataset.sdel); spellSel=spellSel.filter(x=>x!==dl_.dataset.sdel); persist("spells"); return renderSpells()}
+  const ms=e.target.closest("button[data-msave]");
+  if(ms&&state.mix){const t=state.mix.ideas[+ms.dataset.msave]; if(t&&!state.vault.some(v=>v.key===t.key)){state.vault.push({...t,topic:"Mixed: "+state.mix.from.join(" + "),savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]}); persist("vault"); renderVault()} return renderSpells()}
+  const mk=e.target.closest("button[data-mkeep]");
+  if(mk&&state.mix){const t=state.mix.ideas[+mk.dataset.mkeep]; if(t&&!state.spells.some(x=>x.id==="mix:"+t.key)){state.spells.push({id:"mix:"+t.key,kind:"mix",title:t.title,line:t.hook||"",at:Date.now()}); persist("spells")} return renderSpells()}
+});
+$("#spells").addEventListener("submit",e=>{ if(e.target.id!=="alt-form") return; e.preventDefault(); conjureAlts($("#alt-topic").value) });
 
 /* ---------- vault planner ---------- */
 let vgroup="idea";
@@ -1996,7 +2163,7 @@ function brandOpen(){
     ${A?`<p><b style="color:var(--gold)">${esc(p.archetype)}</b>${p.archetype2?` with ${esc(p.archetype2)}`:""}. ${esc(A.style)}</p>`:`<p class="hint">Your story hasn't been written yet.</p>`}
     ${kv("Niche",p.niche)}${kv("Who it's for",p.audience)}${kv("Expertise",p.expertise)}${kv("Where you post",p.platforms)}${kv("Voice",p.voice)}
     <p class="kv"><b>Elements:</b> ${state.stances.length} in your bank</p>
-    <div class="actions"><button class="btn" type="button" data-vbrand="story">${A?"Reread your story":"Write your story"}</button>${A?`<button class="btn ghost" type="button" data-vbrand="quiz">Retake the quiz</button>`:""}<button class="btn ghost" type="button" data-vbrand="profile">Edit spell book</button></div></div>`;
+    <div class="actions"><button class="btn" type="button" data-vbrand="story">${A?"Reread your story":"Write your story"}</button>${A?`<button class="btn ghost" type="button" data-vbrand="quiz">Rewrite my story</button>`:""}<button class="btn ghost" type="button" data-vbrand="profile">Edit spell book</button></div></div>`;
 }
 function shelf(title,meta,books,openHtml){
   return `<section class="shelf"><div class="col-head"><h3>${esc(title)}</h3>${meta?`<span class="label">${esc(meta)}</span>`:""}</div>
@@ -2027,7 +2194,7 @@ function renderVault(){
       return shelf(d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":d<today?" · Past":""),`${s.length} book${s.length===1?"":"s"}`,s.map(bookCover).join(""),openPanel(s.map(x=>x.key)))}).join("");
   }
   $("#vault-list").innerHTML=html;
-  refreshTakeBook();
+  refreshTakeBook(); if(view==="profile") renderSpells();
 }
 $("#vault-group").addEventListener("click",e=>{const b=e.target.closest("[data-vgroup]");if(!b)return;vgroup=b.dataset.vgroup;renderVault()});
 const vfind=k=>state.vault.find(x=>x.key===k);
@@ -2377,7 +2544,7 @@ function renderSettings(){
   const syncLine=syncCopy();
   $("#settings-body").innerHTML=`<div class="sets">
     <p class="setgroup">Your story</p>
-    ${row("Brand story",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not written yet",A?esc(A.style)+(p.quizAt?` Written ${when(p.quizAt)}.`:""):"Handalf's storybook, where you answer the brand quiz and learn your archetype.",`${answers().some(x=>x!=null)?`<button class="btn" type="button" data-set="intro">Reread my story</button>`:""}<button class="btn${answers().some(x=>x!=null)?" ghost":""}" type="button" data-set="quiz">${A?"Retake the quiz":"Take the quiz"}</button>`)}
+    ${row("Brand story",A?esc(p.archetype)+(p.archetype2?` <span style="color:var(--mute);font-size:15px">with ${esc(p.archetype2)}</span>`:""):"Not written yet",A?esc(A.style)+(p.quizAt?` Written ${when(p.quizAt)}.`:""):"Handalf's storybook, where you answer six questions and learn your archetype.",`${answers().some(x=>x!=null)?`<button class="btn" type="button" data-set="intro">Reread my story</button>`:""}<button class="btn${answers().some(x=>x!=null)?" ghost":""}" type="button" data-set="quiz">${A?"Rewrite my story":"Write my story"}</button>`)}
     <p class="setgroup">Your account</p>
     <div class="setrow"><h3>Where your work is saved</h3><div class="val"><b id="sync-val">${esc(syncLine[0])}</b><p id="sync-sub">${esc(syncLine[1])}</p></div></div>
   </div>`;
@@ -2485,7 +2652,7 @@ function bookHTML(key){
   const has=a.some(x=>x!=null);
   if(key==="story-intro") return `<p class="leyebrow">Chapter one, retold</p>
     <h2 class="lq sm">${has?`Once, ${esc(p.name||"a creator")} came to Handalf with stories to tell.`:"This story hasn't been written yet."}</h2>
-    <p>${has?(p.quiz&&p.quiz.from==="bio"?"Handalf read your bio and filled in the margins for you. Turn the pages to read them back, and change anything that isn't you.":"These are the notes you left in the margins. Turn the pages to read them back."):"Take the brand quiz and Handalf will write it down as you answer."}</p>
+    <p>${has?(p.quiz&&p.quiz.from==="bio"?"Handalf read your bio and filled in the margins for you. Turn the pages to read them back, and change anything that isn't you.":"These are the notes you left in the margins. Turn the pages to read them back."):"Answer six questions and Handalf will write your story down as you go."}</p>
     ${has?turnHint():`<div class="bturn"><button class="btn" type="button" data-bretake>Write my story</button></div>`}`;
   if(key==="story1") return `<p class="leyebrow">Chapter two · Your answers</p>${storyQA(0,3)}${turnHint()}`;
   if(key==="story2") return `<p class="leyebrow">Chapter two, continued</p>${storyQA(3,QUIZ.length)}${turnHint()}`;
@@ -2498,7 +2665,7 @@ function bookHTML(key){
   if(key==="story-end") return `<p class="leyebrow">The story so far</p>
     <h2 class="lq sm">That's who you are, as Handalf knows you.</h2>
     <p>If any of it has changed, rewrite the story and your takes will follow.</p>
-    <div class="bnav">${bookBack()}</div><div class="bturn bturn2"><button class="btn" type="button" data-bretake>Retake the quiz</button><button class="ltext" type="button" data-bclose>Close the book</button></div>`;
+    <div class="bnav">${bookBack()}</div><div class="bturn bturn2"><button class="btn" type="button" data-bretake>Rewrite my story</button><button class="ltext" type="button" data-bclose>Close the book</button></div>`;
   return "";
 }
 function renderBook(){
