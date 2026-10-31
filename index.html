@@ -535,7 +535,8 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .ipage-in .eps{margin:0}
 .tremove{color:var(--mute)}
 /* spell book */
-.arch-readout{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 20px;padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+#v-stances .arch-readout{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px 20px;padding:0;margin:4px 0 12px;border:0;border-radius:0;background:none}
+#v-stances .arch-readout .hint{max-width:62ch}
 #v-profile .addpanel{margin-top:8px}
 .cauldron{margin:22px 0 8px;padding:18px;border:1px solid var(--gold);border-radius:18px;background:color-mix(in srgb,var(--gold) 7%,var(--sheet));display:grid;gap:12px}
 .cl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -784,7 +785,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
     <nav class="nav" role="tablist"><span class="navhi" aria-hidden="true"></span>
       <button role="tab" data-view="stances" aria-selected="false">Elements<span class="count" id="n-stances"></span></button>
       <button role="tab" data-view="engine" aria-selected="true">Alchemy<span class="count" id="n-alchemy"></span></button>
-      <button role="tab" data-view="profile" aria-selected="false">Spell book</button>
+      <button role="tab" data-view="profile" aria-selected="false">Spell book<span class="count" id="n-spells"></span></button>
       <button role="tab" data-view="vault" aria-selected="false">Library<span class="count" id="n-vault"></span></button>
       <button role="tab" data-view="export" aria-selected="false">Conjurings</button>
     </nav>
@@ -808,7 +809,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- STANCES -->
   <section class="view" id="v-stances" hidden>
-    <div><h2>Your elements</h2><p class="lede">Elements are the stances you build with. Choose a few and combine them into spells. Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
+    <div><h2>Your elements</h2><div class="arch-readout" id="arch-readout"></div><p class="lede">Elements are the stances you build with. Choose a few and combine them into spells. Feed Handalf your AI conversation exports. It reads only your side of each chat and pulls out the positions where you pushed back on the assistant, on standard advice, or on your industry. These become the evidence behind every take.</p></div>
     <div class="split">
       <details class="panel addpanel" id="addpanel">
         <summary><span class="label">Add conversations</span><span class="addchev" aria-hidden="true"></span></summary>
@@ -843,7 +844,6 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
   <!-- PROFILE -->
   <section class="view" id="v-profile" hidden>
     <div><h2>Your spell book</h2><p class="lede">Your working spells: the five you use most, the newest you chose in Alchemy, and your evergreen spells, the core brand principles you can reshare again and again with new visuals or copy. Ideas you haven't chosen stay brewing in Alchemy.</p></div>
-    <div class="arch-readout" id="arch-readout"></div>
     <div id="spells"></div>
     <details class="panel addpanel" id="brandpanel">
       <summary><span class="label">Brand details</span><span class="addchev" aria-hidden="true"></span></summary>
@@ -1039,6 +1039,7 @@ function cssColorFix(v){
     return `rgba(${c(r)},${c(g)},${c(b)},${al})`});
 }
 function fixColors(doc,root){
+  root.querySelectorAll("details:not([open])").forEach(d=>[...d.children].forEach(c=>{if(c.tagName!=="SUMMARY")c.remove()}));
   const win=doc.defaultView, all=[root,...root.querySelectorAll("*")];
   for(const n of all){ const cs=win.getComputedStyle(n);
     for(const k of COLOR_PROPS){ const v=cs.getPropertyValue(k); if(v&&v.includes("color(")) n.style.setProperty(k,cssColorFix(v),"important") } }
@@ -1128,18 +1129,18 @@ function glTurn(img,rect,dir,{z=59,onFirst,onDone}={}){
   if(g.mat.uniforms.map.value) g.mat.uniforms.map.value.dispose();
   g.mat.uniforms.map.value=tex;
   const bg=getComputedStyle(document.querySelector(rect.book?".ipage":"#stage")).backgroundColor; try{g.mat.uniforms.back.value.set(bg.startsWith("rgb")?new THREE.Color(bg):new THREE.Color("#f4ecda"))}catch(e){}
-  g.mat.uniforms.alpha.value=1;
-  const t0=performance.now(), ms=paper.ms||1000, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; let first=true;
+  g.mat.uniforms.alpha.value=1; tex.needsUpdate=true; if(g.renderer.initTexture) g.renderer.initTexture(tex);
+  const t0=performance.now(), ms=paper.ms||1000, ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; let frames=0;
   g.cv.classList.add("on"); paper.busy=true;
   return new Promise(res=>{
     function frame(now){
       const t=Math.min(1,(now-t0)/ms), e=ease(t), p=dir>0?e:1-e;
       curl(rect,p,dir);
-      g.mat.uniforms.alpha.value = dir>0 ? (t>.86?1-(t-.86)/.14:1) : (t<.12?t/.12:1);
       g.renderer.render(g.scene,g.camera);
-      if(first){first=false; onFirst&&onFirst()}
+      // keep the static copy of the old page under the curl until the GPU has drawn a few frames
+      if(++frames===3&&onFirst) onFirst();
       if(t<1) requestAnimationFrame(frame);
-      else { g.cv.classList.remove("on"); g.renderer.clear(); paper.busy=false; onDone&&onDone(); res(); ribbonRelease(); schedulePre() }
+      else { if(frames<3&&onFirst) onFirst(); g.cv.classList.remove("on"); g.renderer.clear(); paper.busy=false; onDone&&onDone(); res(); ribbonRelease(); schedulePre() }
     }
     requestAnimationFrame(frame);
   });
@@ -1198,31 +1199,39 @@ async function paperBoot(){
 }
 
 /* ---------- fabric bookmark: a small cloth simulation hanging from the active tab ---------- */
-const fab={cv:null,ctx:null,pts:[],R:10,len:0,target:0,ax:0,aw:0,tx:0,tw:0,on:false,running:false,still:0,impulse:0,impT:0,colors:{fill:"#d9b45e",line:"#000"}};
+const fab={cv:null,ctx:null,pts:[],R:10,len:0,target:0,ax:0,aw:0,tx:0,tw:0,ay:0,ah:0,ty:0,th:0,on:false,running:false,still:0,impulse:0,impT:0,colors:{fill:"#d9b45e",line:"#000"}};
 function fabInit(){
   if(RM()) return false;
   const cv=document.createElement("canvas"); cv.className="fabric"; cv.setAttribute("aria-hidden","true"); document.body.appendChild(cv);
   fab.cv=cv; fab.ctx=cv.getContext("2d"); document.documentElement.classList.add("fabric-on");
-  addEventListener("resize",()=>{fabSize();fabWake()}); fabSize(); return true;
+  addEventListener("resize",()=>{fabSize(); if(fab.v) fabTarget(fab.v); fabWake()}); fabSize();
+  // the menu can wrap onto two lines when counts change; follow the tab wherever it lands
+  try{ new ResizeObserver(()=>{ if(fab.v&&!paper.busy) fabTarget(fab.v) }).observe(document.querySelector(".nav")) }catch(e){}
+  return true;
 }
 function fabSize(){const d=Math.min(window.devicePixelRatio||1,2);fab.cv.width=innerWidth*d;fab.cv.height=160*d;fab.cv.style.width=innerWidth+"px";fab.cv.style.height="160px";fab.ctx.setTransform(d,0,0,d,0,0);fab.dpr=d}
 function fabColors(){const cs=getComputedStyle(document.documentElement);fab.colors.fill=cs.getPropertyValue("--gold").trim()||"#d9b45e";fab.colors.line=cs.getPropertyValue("--on-gold").trim()||"#2a170c"}
 function fabTarget(v){
-  if(!fab.cv) return false;
+  if(!fab.cv) return false; fab.v=v;
   const btn=document.querySelector(`.nav [data-view="${v}"]`), band=document.querySelector(".band").getBoundingClientRect();
-  fab.cv.style.top=(band.bottom-1)+"px";
   if(!btn){fab.target=0;fabWake();return true}
-  const b=btn.getBoundingClientRect(); fab.tx=b.left; fab.tw=b.width; fab.target=48;
-  if(!fab.pts.length||fab.len<1){fab.ax=fab.tx;fab.aw=fab.tw;fabReset()}
+  const b=btn.getBoundingClientRect(); fab.tx=b.left; fab.tw=b.width; fab.ty=b.top; fab.th=b.height;
+  // hang from the tab itself, so on a two line menu the ribbon covers the row beneath it
+  const nt=48+Math.max(0,band.bottom-b.bottom), grew=nt-fab.target>4; fab.target=nt; if(grew&&fab.pts.length) fabUnfold();
+  if(!fab.pts.length||fab.len<1){fab.ax=fab.tx;fab.aw=fab.tw;fab.ay=fab.ty;fab.ah=fab.th;fabReset()}
+  fab.cv.style.top=(fab.ay+fab.ah-1)+"px";
   fabColors(); fabWake(); return true;
 }
-function fabReset(){fab.pts=[];for(let r=0;r<fab.R;r++)for(let c=0;c<2;c++){const x=fab.ax+c*fab.aw,y=0;fab.pts.push({x,y,px:x,py:y})}}
+function fabReset(){fab.pts=[];const L=Math.max(1,fab.len)/(fab.R-1);for(let r=0;r<fab.R;r++)for(let c=0;c<2;c++){const x=fab.ax+c*fab.aw,y=r*L;fab.pts.push({x,y,px:x,py:y})}}
+function fabUnfold(){ // a longer drop can leave the cloth pleated like an accordion; let it fall open
+  const L=fab.target/(fab.R-1); fab.pts.forEach((p,i)=>{const r=i>>1, y=r*L*.7; if(p.y<y){p.y=y;p.py=y}}) }
 function ribbonRelease(){ if(fab.pendingV!=null){ const v=fab.pendingV; fab.pendingV=null; fabTarget(v) } }
 function ribbonImpulse(dir){fab.impulse=dir;fab.impT=performance.now();fabWake()}
 function fabWake(){if(fab.cv&&!fab.running){fab.running=true;fab.still=0;requestAnimationFrame(fabStep)}}
 function fabStep(now){
   const P=fab.pts, R=fab.R; if(!P.length){fab.running=false;return}
   fab.ax+=(fab.tx-fab.ax)*0.14; fab.aw+=(fab.tw-fab.aw)*0.14; fab.len+=(fab.target-fab.len)*0.12;
+  fab.ay+=(fab.ty-fab.ay)*0.14; fab.ah+=(fab.th-fab.ah)*0.14; fab.cv.style.top=(fab.ay+fab.ah-1)+"px";
   const L=Math.max(0.01,fab.len/(R-1)), w=fab.aw;
   const imp=fab.impulse?Math.sin(Math.min(1,(now-fab.impT)/1000)*Math.PI):0; if(now-fab.impT>1000) fab.impulse=0;
   let mv=0;
@@ -1234,20 +1243,21 @@ function fabStep(now){
   for(let it=0;it<8;it++){
     for(let r=1;r<R;r++){link(P[(r-1)*2],P[r*2],L,1);link(P[(r-1)*2+1],P[r*2+1],L,1);link(P[r*2],P[r*2+1],w,.7);
       link(P[(r-1)*2],P[r*2+1],Math.hypot(w,L),.35);link(P[(r-1)*2+1],P[r*2],Math.hypot(w,L),.35)}
-    for(let r=1;r<R;r++)for(let c=0;c<2;c++){const p=P[r*2+c]; if(p.y<0)p.y=0}
+    // a hanging ribbon never folds back above the row it hangs from
+    for(let r=1;r<R;r++)for(let c=0;c<2;c++){const p=P[r*2+c], q=P[(r-1)*2+c], lo=q.y+L*.6; if(p.y<lo)p.y=lo}
   }
   fabDraw();
-  const settled=Math.abs(fab.tx-fab.ax)<.3&&Math.abs(fab.tw-fab.aw)<.3&&Math.abs(fab.target-fab.len)<.3&&mv<.03&&!fab.impulse;
+  const settled=Math.abs(fab.ty-fab.ay)<.3&&Math.abs(fab.tx-fab.ax)<.3&&Math.abs(fab.tw-fab.aw)<.3&&Math.abs(fab.target-fab.len)<.3&&mv<.03&&!fab.impulse;
   fab.still=settled?fab.still+1:0;
   if(fab.still<40) requestAnimationFrame(fabStep); else fab.running=false;
 }
 function navHi(){
   const hi=document.querySelector(".navhi"), nav=hi&&hi.parentElement; if(!hi) return;
-  const nr=nav.getBoundingClientRect(), b0=nav.querySelector("button").getBoundingClientRect(), vis=Math.max(0,Math.min(1,fab.len/40));
+  const nr=nav.getBoundingClientRect(), vis=Math.max(0,Math.min(1,fab.len/40));
   const left=fab.ax-nr.left+nav.scrollLeft;
-  hi.style.transform=`translateX(${left}px)`; hi.style.width=fab.aw+"px"; hi.style.top=(b0.top-nr.top)+"px"; hi.style.height=b0.height+"px"; hi.style.opacity=vis;
-  const cx=fab.ax+fab.aw/2;
-  nav.querySelectorAll("button").forEach(b=>{const r=b.getBoundingClientRect(); b.classList.toggle("lit",vis>.5&&cx>=r.left&&cx<=r.right)});
+  hi.style.transform=`translateX(${left}px)`; hi.style.width=fab.aw+"px"; hi.style.top=(fab.ay-nr.top)+"px"; hi.style.height=fab.ah+"px"; hi.style.opacity=vis;
+  const cx=fab.ax+fab.aw/2, cy=fab.ay+fab.ah/2;
+  nav.querySelectorAll("button").forEach(b=>{const r=b.getBoundingClientRect(); b.classList.toggle("lit",vis>.5&&cx>=r.left&&cx<=r.right&&cy>=r.top&&cy<=r.bottom)});
 }
 function fabDraw(){
   navHi();
@@ -2266,6 +2276,7 @@ function renderSpellbook(){
   const all=state.chosen;
   const used=[...all].filter(t=>spUses(t)>0).sort((a,b)=>spUses(b)-spUses(a)||(b.lastUsed||0)-(a.lastUsed||0)).slice(0,5);
   const newest=[...all].sort((a,b)=>(b.chosenAt||0)-(a.chosenAt||0)).slice(0,5);
+  const shown=new Set([...used,...newest].map(t=>t.key)).size, nc=$("#n-spells"); if(nc) nc.textContent=all.length?`${shown}/10`:"";
   const ever=all.filter(t=>t.evergreen);
   el.innerHTML=all.length?`
     ${sbSection("Most used","Your five most used spells. Every time a spell goes to the library or gets reshared, it counts.",used,"used","Add a spell to the library or reshare it and it shows up here.")}
