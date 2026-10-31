@@ -34,7 +34,7 @@
   color-scheme:dark;
 }
 /* leather bound: leather covers, cream pages with deep gray ink */
-:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx,:root:not([data-skin]) .capbox{
+:root:not([data-skin]) #stage,:root:not([data-skin]) .ipage,:root:not([data-skin]) .stagefx,:root:not([data-skin]) .capbox,:root:not([data-skin]) .omen{
   --paper:#F4ECDA; --sheet:#FBF6EA; --ink:#2F2F2F; --mute:#655E54; --rule:#CDBE9C;
   --gold:#8A6620; --gold-hi:#6C4F15; --on-gold:#FFF8EA;
   --ultra:#3D5E8C; --ultra-soft:#E2E7EF; --copper:#8A6620; --copper-soft:#EEE2C6;
@@ -343,9 +343,10 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .lq.sm{font-family:var(--f-head);font-weight:600;font-size:clamp(28px,4vw,44px);line-height:1.15}
 .lrow{display:grid;grid-template-columns:minmax(0,1fr) auto;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
 .lrow:focus-within{border-color:var(--gold-hi)}
-.lrow input{min-width:0;background:transparent;border:0;border-radius:0;padding:18px 0;font-family:var(--f-head);font-size:clamp(22px,2.8vw,30px);color:var(--ink)}
-.lrow input::placeholder{color:var(--mute);opacity:.75}
-.lrow input:focus-visible{outline:none}
+.lpanel .lrow textarea,.lrow textarea{min-height:0;border:0;border-radius:0;resize:none;font-size:clamp(22px,2.8vw,30px);font-family:var(--f-head);padding:18px 0;overflow:hidden;line-height:1.25;white-space:pre-wrap;overflow-wrap:anywhere;display:block;max-height:40vh}
+.lrow input,.lrow textarea{min-width:0;background:transparent;border:0;border-radius:0;padding:18px 0;font-family:var(--f-head);font-size:clamp(22px,2.8vw,30px);color:var(--ink)}
+.lrow textarea::placeholder,.lrow input::placeholder{color:var(--mute);opacity:.75}
+.lrow textarea:focus-visible,.lrow input:focus-visible{outline:none}
 .lbtn{background:transparent;border:0;border-left:1px solid var(--gold);border-radius:0;margin-left:16px;padding:0 0 0 22px;color:var(--gold);font-family:var(--f-title);font-weight:700;font-size:clamp(15px,1.6vw,18px);letter-spacing:.08em;cursor:pointer;white-space:nowrap}
 .lbtn:hover{color:var(--gold-hi)}
 .lbtn:disabled{opacity:.5;cursor:default}
@@ -588,7 +589,61 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 .props button span small{display:block;font-size:13px;color:var(--mute);margin-top:4px;font-weight:400}
 .props button span b{font-weight:500}
 .props button[aria-pressed="true"]{background:color-mix(in srgb,var(--gold) 12%,transparent);box-shadow:inset 3px 0 0 var(--gold)}
-@media (max-width:640px){.batch-from span{white-space:normal}}
+@media (max-width:640px){.batch-from span{white-space:normal}.batch-head{flex-direction:column;gap:6px}.batch-acts{justify-content:flex-start}}
+/* omens */
+.omen{position:fixed;left:0;right:0;height:25vh;z-index:40;pointer-events:none;opacity:0;transition:opacity .5s ease;overflow:hidden}
+.omen.on{opacity:1}
+.om-row{position:absolute;inset:0;display:flex;justify-content:space-around;align-items:flex-end;padding:0 2vw}
+.om-flower{width:auto;overflow:visible}
+.om-stem{fill:none;stroke:var(--ultra);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:omgrow 6s var(--d) ease-out infinite}
+.om-leaf{fill:var(--ultra);transform-box:fill-box;transform-origin:100% 100%;transform:scale(0);animation:omleaf 6s var(--d) ease-out infinite}
+.om-leaf.l2{transform-origin:0 100%}
+.om-bloom{fill:var(--c);transform-box:fill-box;transform-origin:50% 50%;transform:scale(0) rotate(-40deg);animation:ombloom 6s var(--d) cubic-bezier(.3,1.6,.5,1) infinite}
+.om-heart{fill:var(--gold-hi)}
+@keyframes omgrow{0%{stroke-dashoffset:1;opacity:1}30%,82%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+@keyframes omleaf{0%,18%{transform:scale(0)}34%,82%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:0}}
+@keyframes ombloom{0%,28%{transform:scale(0) rotate(-40deg)}44%,82%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(1.1) rotate(10deg);opacity:0}}
+.om-tree{width:auto;overflow:visible}
+.om-trunk{fill:none;stroke:color-mix(in srgb,var(--ink) 85%,var(--gold));stroke-width:4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:omtrunk 1.6s ease-out forwards}
+@keyframes omtrunk{to{stroke-dashoffset:0}}
+.om-tleaf{fill:var(--c);transform-box:fill-box;transform-origin:50% 50%;transform:scale(0);animation:omtleaf 7s calc(1.4s + var(--d)) ease-in-out infinite}
+@keyframes omtleaf{0%{transform:scale(0);opacity:1}14%,48%{transform:scale(1);opacity:1}82%{transform:translate(var(--dx),70px) rotate(var(--rot)) scale(.9);opacity:.9}92%,100%{transform:translate(var(--dx),80px) rotate(var(--rot)) scale(.9);opacity:0}}
+.om-mtn{position:absolute;left:0;bottom:0;width:100%;height:85%}
+.om-mtn .m3{fill:color-mix(in srgb,var(--ink) 22%,transparent)}
+.om-mtn .m2{fill:color-mix(in srgb,var(--ink) 45%,var(--paper))}
+.om-mtn .m1{fill:color-mix(in srgb,var(--ink) 75%,var(--gold))}
+.om-mtn .snow{fill:var(--sheet);opacity:.9}
+.om-cloud{position:absolute;left:0;height:auto;fill:var(--sheet);opacity:.92;filter:drop-shadow(0 2px 3px rgba(0,0,0,.15));animation:omcloud var(--t) var(--d) linear infinite}
+@keyframes omcloud{from{transform:translateX(-200px)}to{transform:translateX(calc(100vw + 40px))}}
+.om-ball{position:absolute;left:50%;bottom:0;height:96%;transform:translateX(-50%);overflow:visible}
+.om-stand{fill:color-mix(in srgb,var(--ink) 60%,var(--gold))}
+.om-orb{stroke:var(--gold);stroke-width:1.4;animation:omorb 3s ease-in-out infinite}
+@keyframes omorb{50%{filter:drop-shadow(0 0 10px var(--sp-audio))}}
+.om-st{fill:var(--gold-hi);animation:omtw 2.2s var(--d) ease-in-out infinite}
+@keyframes omtw{0%,100%{opacity:.2}50%{opacity:1}}
+.om-shine{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:.35}
+.om-shoot{position:absolute;inset:0}
+.om-shoot i{position:absolute;right:6%;top:6%;width:110px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold-hi),transparent);transform:rotate(-28deg);transform-origin:0 50%;opacity:0;animation:omshoot 3.4s 0.6s ease-in infinite}
+.om-shoot i::before{content:"";position:absolute;left:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--gold-hi);box-shadow:0 0 10px var(--gold-hi)}
+@keyframes omshoot{0%{transform:translate(0,0) rotate(-28deg);opacity:0}8%{opacity:1}55%{transform:translate(-62vw,22vh) rotate(-28deg);opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.omen *{animation-duration:0s!important;animation-delay:0s!important;stroke-dashoffset:0!important}.om-tleaf,.om-leaf,.om-bloom{transform:scale(1)!important}.om-shoot{display:none}}
+/* batch + idea editing, evergreen, reshare, archive */
+.batch-acts{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-end}
+.bedit,.tedit{display:grid;gap:8px;margin:0 0 18px;padding:16px;border:1px solid var(--gold);border-radius:16px;background:var(--sheet)}
+.bedit input,.tedit input,.tedit textarea{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:8px 12px;font:inherit;color:var(--ink);width:100%}
+.bedit-els{display:flex;flex-wrap:wrap;gap:8px;max-height:260px;overflow:auto}
+.bel{text-align:left;background:none;border:1.5px solid var(--rule);border-radius:12px;padding:6px 10px;font-size:14px;color:var(--ink);cursor:pointer;max-width:100%}
+.bel b{color:var(--gold);margin-right:4px}
+.bel[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 14%,transparent)}
+.echk{display:flex;gap:8px;align-items:center;font-size:14px}
+.echk input{width:auto}
+.badge.ever{background:color-mix(in srgb,var(--ultra) 22%,transparent);color:var(--ink)}
+.reshare{display:grid;gap:8px;margin-top:10px;padding:12px 14px;border-left:3px solid var(--gold)}
+.sbsec{margin-top:18px}
+.sball{margin-top:26px}
+.archive{margin-top:40px;padding-top:20px;border-top:2px solid var(--gold)}
+.arc-head{align-items:flex-start;gap:12px;flex-wrap:wrap}
+.arc-head .hint{max-width:62ch;margin:4px 0 0}
 .iback{transform:rotateY(180deg);background:var(--sheet);color:var(--mute)}
 .iowner-line{font-family:var(--f-head);font-style:italic;font-size:clamp(15px,1.6vw,19px);margin:0}
 .iowner{font-family:var(--f-display);color:var(--gold);font-size:clamp(28px,4vw,48px);margin:0;padding:0 18px 4px;border-bottom:1px solid var(--rule)}
@@ -787,7 +842,7 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- PROFILE -->
   <section class="view" id="v-profile" hidden>
-    <div><h2>Your spell book</h2><p class="lede">The archive of spells you chose in Alchemy. Ideas you haven't chosen stay brewing in Alchemy. Add any spell here to the library when you're ready to plan it.</p></div>
+    <div><h2>Your spell book</h2><p class="lede">Your working spells: the five you use most, the newest you chose in Alchemy, and your evergreen spells, the core brand principles you can reshare again and again with new visuals or copy. Ideas you haven't chosen stay brewing in Alchemy.</p></div>
     <div class="arch-readout" id="arch-readout"></div>
     <div id="spells"></div>
     <details class="panel addpanel" id="brandpanel">
@@ -822,11 +877,12 @@ a.btn{display:inline-block;text-decoration:none;justify-self:start}
 
   <!-- VAULT -->
   <section class="view" id="v-vault" hidden>
-    <div class="vhead"><div><h2>Library</h2><p class="lede">Your spell book and every take you kept, shelved as books. Open one to plan it as a single post or a series.</p></div>
+    <div class="vhead"><div><h2>Library</h2><p class="lede">Your brand book and every idea you are planning, shelved as books. Open one to plan it as a single post or a series. Every thirty days Handalf files the shelves into the archive, by style and by date.</p></div>
       <div class="filters" id="vault-group"><button class="btn ghost" type="button" data-goexport style="margin-right:6px">Conjurings</button><button class="chip" type="button" data-vgroup="idea" aria-pressed="true">By idea</button><button class="chip" type="button" data-vgroup="date" aria-pressed="false">By date</button></div></div>
     <div id="vault-list"></div>
   </section>
 </div></main></div>
+<div class="omen" id="omen" hidden aria-hidden="true"></div>
 <footer class="foot"><div class="wrap"><nav class="modes" id="modes" aria-label="Ways to start"></nav></div></footer>
 
 <div class="intro" id="intro" hidden role="dialog" aria-label="Welcome to Handalf">
@@ -871,7 +927,7 @@ function tier(m){return m>=5?["Outlier","t-out"]:m>=2.5?["Strong","t-str"]:m>=1.
 const fmt=m=>m>=10?m.toFixed(0):m.toFixed(1);
 
 /* ---------- state ---------- */
-const state={profile:{},stances:[],vault:[],sources:[],last:null,batches:[],chosen:[]};
+const state={profile:{},stances:[],vault:[],sources:[],last:null,batches:[],chosen:[],archiveAt:0};
 let queue=[]; // [{name, messages:[string]}]  unsent corpus
 let filter="all";
 
@@ -896,7 +952,7 @@ let db=null, uid=null, sample=null, dl=null, sync="browser";
 function setSync(k){ sync=k; const v=document.getElementById("sync-val"); if(v&&typeof syncCopy==="function"){const c=syncCopy();v.textContent=c[0];document.getElementById("sync-sub").textContent=c[1]} }
 const LS="handalf.v1";
 function lsLoad(){try{const j=JSON.parse(localStorage.getItem(LS)||"null");if(j)Object.assign(state,j)}catch(e){}}
-function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,batches:state.batches,chosen:state.chosen}))}catch(e){}}
+function lsSave(){try{localStorage.setItem(LS,JSON.stringify({profile:state.profile,stances:state.stances,vault:state.vault,sources:state.sources,batches:state.batches,chosen:state.chosen,archiveAt:state.archiveAt}))}catch(e){}}
 const writing={};const pending={};
 function persist(key){
   lsSave();
@@ -908,7 +964,7 @@ function persist(key){
     try{
       const body= key==="profile"?{profile:state.profile}
         : key==="stances"?{stances:state.stances,sources:state.sources}
-        : key==="vault"?{vault:state.vault}
+        : key==="vault"?{vault:state.vault,archiveAt:state.archiveAt||0}
         : key==="spells"?{chosen:state.chosen}
         : {batches:state.batches,last:null};
       await db.doc("data/users/"+uid+"/"+key).set(JSON.parse(JSON.stringify(body)));
@@ -931,7 +987,7 @@ async function initRuntime(){
         snaps.forEach((sn,i)=>{
           if(sn.exists){
             const v=sn.data();
-            if(keys[i]==="vault"){ const dbv=Array.isArray(v.vault)?v.vault.map(x=>({...x})):[]; const have=new Set(dbv.map(x=>x.key)); const extra=state.vault.filter(x=>!have.has(x.key)); state.vault=dbv.concat(extra); if(extra.length) persist("vault"); }
+            if(keys[i]==="vault"){ const dbv=Array.isArray(v.vault)?v.vault.map(x=>({...x})):[]; const have=new Set(dbv.map(x=>x.key)); const extra=state.vault.filter(x=>!have.has(x.key)); state.vault=dbv.concat(extra); if(v.archiveAt) state.archiveAt=Math.max(state.archiveAt||0,v.archiveAt); if(extra.length) persist("vault"); }
             else Object.assign(state,JSON.parse(JSON.stringify(v)));
           } else if(hasLocal(keys[i])) persist(keys[i]); });
         setSync("account");
@@ -1450,7 +1506,7 @@ function renderStart(){
     flash="";
     ebText="Conjure";
     panel=`<h2 class="lq">${esc(say("conjure"))}</h2>
-      <form class="lrow" id="l-form"><input id="l-topic" type="text" placeholder="A topic, an idea, a hunch" autocomplete="off" aria-label="${esc(say("conjure"))}"><button class="lbtn" type="submit">Conjure stances</button></form>
+      <form class="lrow" id="l-form"><textarea id="l-topic" rows="1" placeholder="A topic, an idea, a hunch" autocomplete="off" aria-label="${esc(say("conjure"))}"></textarea><button class="lbtn" type="submit">Conjure stances</button></form>
       <p class="lhint">${msg}${(state.batches||[]).length?` <button class="ltext" type="button" data-golast>Back to Alchemy</button>`:""}</p>
       ${sample?"":`<p class="lhint">Conjuring runs on Claude, so open this page inside Claude to use it.</p>`}`;
   }else if(mode==="quiz"){
@@ -1475,7 +1531,7 @@ function renderStart(){
   }else if(mode==="propose"){
     ebText="Conjure";
     const P=propose;
-    panel=P.busy?`<h2 class="lq sm">Turning “${esc(P.idea)}” over…</h2><p class="lhint">Handalf is working out the stances you could take on it. This takes about 20 seconds.</p>`
+    panel=P.busy?`<h2 class="lq sm">${esc((P.omen||OMENS[0]).say(P.idea))}</h2><p class="lhint">Handalf is working out the stances you could take on “${esc(P.idea)}”. This takes about 20 seconds.</p>`
       :P.err?`<h2 class="lq sm">That idea slipped away.</h2><p class="lhint">${esc(P.err)}</p><div class="lnav" style="justify-content:flex-start"><button class="lbtn solo" type="button" data-mode="conjure">Try again</button></div>`
       :`<h2 class="lq sm">Which of these do you actually believe about “${esc(P.idea)}”?</h2>
       <ol class="lopts props">${P.list.map((x,i)=>`<li style="--i:${i}"><button type="button" data-prop="${i}" aria-pressed="${P.pick.has(i)}"><span class="lk">✦</span><span><b>${esc(x.stance)}</b>${x.against?`<small>Against: ${esc(x.against)}</small>`:""}</span></button></li>`).join("")}</ol>
@@ -1593,6 +1649,9 @@ async function readProfile(text,source){
     hint.textContent=errCopy(e)||"Reading failed. Try again.";
   }
 }
+function growBox(t){ t.style.height="auto"; t.style.height=Math.min(t.scrollHeight+2,innerHeight*.4)+"px"; t.style.overflowY=t.scrollHeight>innerHeight*.4?"auto":"hidden" }
+$("#quiz").addEventListener("input",e=>{ if(e.target.id==="l-topic") growBox(e.target) });
+$("#quiz").addEventListener("keydown",e=>{ if(e.target.id==="l-topic"&&e.key==="Enter"&&!e.shiftKey&&!e.isComposing){ e.preventDefault(); $("#l-form").requestSubmit() } });
 $("#quiz").addEventListener("submit",e=>{
   if(e.target.id!=="l-form") return; e.preventDefault();
   const t=$("#l-topic").value.trim(); if(!t){$("#l-topic").focus();return}
@@ -1642,10 +1701,50 @@ $("#quiz").addEventListener("dragover",e=>{const d=e.target.closest(".ldrop");if
 $("#quiz").addEventListener("dragleave",e=>{const d=e.target.closest(".ldrop");if(d)d.classList.remove("over")});
 $("#quiz").addEventListener("drop",e=>{const d=e.target.closest(".ldrop");if(!d)return;e.preventDefault();d.classList.remove("over");const f=e.dataTransfer.files[0];if(f)loadBrief(f)});
 
+
+/* ---------- omens: what Handalf says, and what grows above the footer, while it thinks ---------- */
+const OMENS=[
+  {k:"flowers",say:i=>i?`Turning “${i}” over…`:"Turning it over…"},
+  {k:"ancients",say:()=>"Consulting the ancients…"},
+  {k:"mountains",say:()=>"The mountains whisper. Let's listen…"},
+  {k:"stars",say:()=>"The stars will tell us…"}
+];
+let omenLast=-1, omenN=0;
+function pickOmen(){let i=rnd(OMENS.length); if(i===omenLast) i=(i+1)%OMENS.length; omenLast=i; return OMENS[i]}
+const R=(a,b)=>a+Math.random()*(b-a);
+function omenArt(k){
+  if(k==="flowers"){
+    const n=Math.max(7,Math.round(innerWidth/110));
+    return `<div class="om-row">${Array.from({length:n},(_,i)=>{const h=R(55,100).toFixed(0), d=R(0,1.6).toFixed(2), c=["var(--gold)","var(--sp-video)","var(--sp-audio)","var(--gold-hi)"][i%4], sw=(Math.random()<.5?-1:1)*R(4,12);
+      return `<svg class="om-flower" style="height:${h}%;--d:${d}s;--sw:${sw.toFixed(1)}deg" viewBox="0 0 40 120" preserveAspectRatio="xMidYMax meet"><path class="om-stem" pathLength="1" d="M20 120 C ${20+sw} 90, ${20-sw} 60, 20 30"/><path class="om-leaf l1" d="M20 86 q -14 -6 -16 -18 q 12 2 16 18z"/><path class="om-leaf l2" d="M20 68 q 14 -6 16 -18 q -12 2 -16 18z"/><g class="om-bloom" style="--c:${c}">${[0,72,144,216,288].map(r=>`<ellipse cx="20" cy="20" rx="6" ry="11" transform="rotate(${r} 20 30) translate(0 0)"/>`).join("")}<circle cx="20" cy="30" r="5" class="om-heart"/></g></svg>`}).join("")}</div>`;
+  }
+  if(k==="ancients"){
+    const n=Math.max(3,Math.round(innerWidth/260));
+    return `<div class="om-row">${Array.from({length:n},(_,i)=>{const leaves=Array.from({length:30},(_,j)=>{const a=R(-2.9,-0.25), r=R(10,42), x=60+Math.cos(a)*r*1.25, y=56+Math.sin(a)*r*.95; return `<ellipse class="om-tleaf" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="6.5" ry="4" style="--d:${R(0,3).toFixed(2)}s;--dx:${R(-26,26).toFixed(0)}px;--rot:${R(-160,160).toFixed(0)}deg;--c:${["var(--gold)","var(--sp-video)","var(--copper)"][j%3]}"/>`}).join("");
+      return `<svg class="om-tree" style="height:${R(80,100).toFixed(0)}%" viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet"><path class="om-trunk" pathLength="1" d="M60 120 L60 70 M60 84 L38 56 M60 76 L84 50 M60 70 L58 40 M46 66 L30 60 M74 62 L92 58"/>${leaves}</svg>`}).join("")}</div>`;
+  }
+  if(k==="mountains"){
+    const clouds=Array.from({length:5},(_,i)=>`<svg class="om-cloud" style="top:${R(4,40).toFixed(0)}%;--t:${R(14,26).toFixed(1)}s;--d:${(-R(0,20)).toFixed(1)}s;width:${R(90,170).toFixed(0)}px" viewBox="0 0 120 50"><path d="M18 44 h86 a14 14 0 0 0 -2 -28 a20 20 0 0 0 -36 -8 a16 16 0 0 0 -30 10 a13 13 0 0 0 -18 26z"/></svg>`).join("");
+    return `<svg class="om-mtn" viewBox="0 0 1200 300" preserveAspectRatio="none"><path class="m3" d="M0 300 L0 170 L120 110 L230 160 L360 70 L470 150 L600 90 L720 160 L850 60 L980 150 L1090 100 L1200 150 L1200 300Z"/><path class="m2" d="M0 300 L0 210 L150 140 L300 200 L420 130 L560 210 L700 120 L840 200 L960 140 L1100 210 L1200 170 L1200 300Z"/><path class="m1" d="M0 300 L0 250 L180 190 L340 250 L520 180 L680 255 L860 190 L1020 250 L1200 210 L1200 300Z"/><path class="snow" d="M360 70 L385 85 L372 92 L360 84 L348 95 L338 82Z M850 60 L876 76 L862 82 L850 74 L838 86 L828 72Z"/></svg>${clouds}`;
+  }
+  const stars=Array.from({length:14},()=>`<circle class="om-st" cx="${R(28,92).toFixed(1)}" cy="${R(22,86).toFixed(1)}" r="${R(.8,2.2).toFixed(1)}" style="--d:${R(0,2).toFixed(2)}s"/>`).join("");
+  return `<svg class="om-ball" viewBox="0 0 120 130" preserveAspectRatio="xMidYMax meet"><defs><radialGradient id="omg" cx="40%" cy="35%" r="70%"><stop offset="0" style="stop-color:var(--sp-audio);stop-opacity:.6"/><stop offset=".7" style="stop-color:var(--band);stop-opacity:.88"/><stop offset="1" style="stop-color:var(--band)"/></radialGradient><clipPath id="omc"><circle cx="60" cy="54" r="40"/></clipPath></defs>
+    <path class="om-stand" d="M34 116 h52 l-8 -16 h-36z M28 124 h64 v6 h-64z"/><circle cx="60" cy="54" r="40" fill="url(#omg)" class="om-orb"/><g clip-path="url(#omc)">${stars}</g><path class="om-shine" d="M38 36 a28 28 0 0 1 18 -14"/></svg>
+    <div class="om-shoot"><i></i></div>`;
+}
+function omenShow(o){
+  const el=$("#omen"); if(!el) return; omenN++;
+  const f=$(".foot"), fb=f?f.getBoundingClientRect().height:0;
+  el.style.bottom=fb+"px"; el.className="omen om-"+o.k; el.innerHTML=omenArt(o.k); el.hidden=false;
+  requestAnimationFrame(()=>el.classList.add("on"));
+}
+function omenHide(){ if(--omenN>0) return; omenN=0; const el=$("#omen"); if(!el) return; el.classList.remove("on"); setTimeout(()=>{ if(!omenN){el.hidden=true;el.innerHTML=""} },600) }
+
 /* ---------- conjure: an idea becomes stances you can choose ---------- */
-const propose={idea:"",list:[],pick:new Set(),busy:false,err:""};
+const propose={idea:"",list:[],pick:new Set(),busy:false,err:"",omen:null};
 async function proposeStances(idea){
-  Object.assign(propose,{idea,list:[],pick:new Set(),busy:true,err:""}); mode="propose"; waveNext=true; renderStart();
+  const om=pickOmen();
+  Object.assign(propose,{idea,list:[],pick:new Set(),busy:true,err:"",omen:om}); mode="propose"; waveNext=true; renderStart(); omenShow(om);
   try{
     const out=await sample.json(`You are Handalf, a content strategist. A creator has an idea: "${idea}". Develop 6 stances they could take on it: positions that go against how most creators treat it, written in the first person, shaped by their brand and consistent with what they already believe. Make them distinct from each other. Write plainly, no em dashes.
 
@@ -1659,7 +1758,7 @@ Reply with only JSON: {"stances":[{"stance":"first person, one sentence","agains
     propose.list=(out&&Array.isArray(out.stances)?out.stances:[]).filter(x=>x&&x.stance).slice(0,8);
     if(!propose.list.length) propose.err="No stances came back. Try the idea again or phrase it another way.";
   }catch(e){ propose.err=errCopy(e)||"Conjuring failed. Try again." }
-  propose.busy=false; if(mode==="propose") renderStart();
+  propose.busy=false; omenHide(); if(mode==="propose") renderStart();
 }
 function addProposed(){
   if(!propose.pick.size) return;
@@ -1695,7 +1794,7 @@ function stanceText(){
   const s=[...state.stances].sort((a,b)=>(b.strength||0)-(a.strength||0)).slice(0,120);
   return s.length?s.map(x=>`${x.id}: ${x.stance} (against: ${x.against||"n/a"})`).join("\n"):"(No stances mined yet. Ownership must then stay at 3 or below.)";
 }
-const TAKE_SCHEMA=`{"title":"short, publishable title","hook":"opening line under 25 words","angle":"2-3 sentences on the argument","against":"consensus id like c2","stances":["stance ids that back it"],"format":"video essay | short | carousel | thread | post | podcast","divergence":0-10,"ownership":0-10,"defensibility":0-10,"fit":0-10,"risk":"one sentence on what could backfire"}`;
+const TAKE_SCHEMA=`{"title":"short, publishable title","hook":"opening line under 25 words","angle":"2-3 sentences on the argument","against":"consensus id like c2","stances":["stance ids that back it"],"format":"video essay | short | carousel | thread | post | podcast","evergreen":true,"divergence":0-10,"ownership":0-10,"defensibility":0-10,"fit":0-10,"risk":"one sentence on what could backfire"}`;
 function enginePrompt(topic){
 return `You are Handalf, a content strategy engine. Your job: find the most unique take a specific creator can own on a topic.
 
@@ -1719,7 +1818,7 @@ Reply with only JSON in this shape:
 Give 5 consensus items and 8 takes.`;
 }
 let runCtl=null;
-function combinePrompt(els){
+function combinePrompt(els,topicName){
 return `You are Handalf, a content strategy engine. A creator picked some of their own stances (their elements) and wants content ideas that combine them.
 
 Method, adapted from outlier research on video platforms: a video's outlier score is its views divided by the channel's normal views. Here the "normal" is the consensus take. First name the territory these elements share, then map the consensus: the takes most creators would make there (the 1x baseline). Then create content ideas that combine the chosen elements and move away from that baseline. Every idea must use at least two of the chosen elements when more than one was chosen, and cite them by id.
@@ -1730,10 +1829,10 @@ ${profileText()}
 CHOSEN ELEMENTS
 ${els.map(x=>`${x.id}: ${x.stance} (against: ${x.against||"n/a"})`).join("\n")}
 
-OTHER STANCES THEY HOLD (may also be cited)
-${stanceText()}
+${topicName?`NAME OF THE TERRITORY (use exactly this): ${topicName}\n`:""}
+Stay strictly inside what the chosen elements are about. Do not bring in subjects, technologies, trends or industries the elements do not mention: if no element mentions AI, no idea may be about AI. Do not file the creator into a lane or niche beyond what these elements say. Cite only the chosen element ids.
 
-Shape every idea to the creator's archetype and lean on their stated expertise. Vary the formats.
+Shape every idea to the creator's archetype and voice. Vary the formats. Mark an idea evergreen when it rests on a core brand principle rather than a trend or news, so it can be reshared for years with new visuals or copy.
 
 Scoring rules: divergence = distance from the consensus. ownership = how directly the cited stances back it. defensibility = can it survive pushback with evidence or lived experience. fit = match to the audience, voice and platforms. Score honestly; most ideas should land between 4 and 7. Write plainly, no em dashes.
 
@@ -1741,27 +1840,29 @@ Reply with only JSON in this shape:
 {"topic":"a short name for the territory these elements share, 3 to 7 words","consensus":[{"id":"c1","take":"the common take in one sentence","why":"why most creators say it"}],"takes":[${TAKE_SCHEMA}]}
 Give 5 consensus items and 8 ideas.`;
 }
-async function runCombine(){
-  const els=[...elSel].map(id=>state.stances.find(s=>s.id===id)).filter(Boolean);
+async function runCombine(ids,replaceId,topicName){
+  const els=[...(ids||elSel)].map(id=>state.stances.find(s=>s.id===id)).filter(Boolean);
   if(!els.length||!sample) return;
   if(runCtl) runCtl.abort();
-  runCtl=new AbortController(); combining=true; renderCombine(); showNotice("");
+  runCtl=new AbortController(); combining=pickOmen(); renderCombine(); showNotice(""); omenShow(combining);
   try{
-    const out=await sample.json(combinePrompt(els),{signal:runCtl.signal,cache:false});
+    const out=await sample.json(combinePrompt(els,topicName),{signal:runCtl.signal,cache:false});
     if(!out||!Array.isArray(out.takes)) throw {code:"invalid_json"};
-    const b={id:"b"+Date.now().toString(36),topic:String(out.topic||els.map(x=>x.topic||x.stance).slice(0,2).join(" + ")),from:els.map(x=>x.id),fromText:els.map(x=>x.stance),consensus:out.consensus||[],takes:out.takes.map(normTake),at:Date.now()};
-    state.batches.unshift(b);
+    const b={id:replaceId||"b"+Date.now().toString(36),topic:String(topicName||out.topic||els.map(x=>x.topic||x.stance).slice(0,2).join(" + ")),from:els.map(x=>x.id),fromText:els.map(x=>x.stance),consensus:out.consensus||[],takes:out.takes.map(normTake),at:Date.now()};
+    const ri=replaceId?state.batches.findIndex(x=>x.id===replaceId):-1;
+    if(ri>=0){ state.batches[ri]=b; bEdit.delete(replaceId) } else state.batches.unshift(b);
     if(!state.profile.ran){state.profile.ran=true;persist("profile")}
-    elSel.clear(); persist("last"); renderStances(); renderEngine(); show("engine");
-  }catch(e){ const m=$("#combine-msg"); if(m) m.textContent=errCopy(e); }
-  finally{ combining=false; runCtl=null; renderCombine() }
+    if(!ids) elSel.clear(); persist("last"); renderStances(); renderEngine(); if(view!=="engine") show("engine");
+    if(replaceId){const el=document.getElementById("batch-"+replaceId); if(el) el.scrollIntoView({block:"start"})}
+  }catch(e){ const m=$("#combine-msg"); if(m) m.textContent=errCopy(e); if(replaceId) showNotice(errCopy(e)||"That batch didn't come back. Try again.",true) }
+  finally{ combining=false; runCtl=null; omenHide(); renderCombine() }
 }
 let tk=0;
 function normTake(t){
   const ids=Array.isArray(t.stances)?t.stances:[];
   const backing=ids.map(id=>state.stances.find(s=>s.id===String(id).trim())).filter(Boolean).map(s=>({id:s.id,text:s.stance,quote:s.quote}));
   return {key:"k"+Date.now().toString(36)+(tk++),title:t.title,hook:t.hook,angle:t.angle,against:t.against,format:t.format,risk:t.risk,
-    divergence:clamp(t.divergence),ownership:clamp(t.ownership),defensibility:clamp(t.defensibility),fit:clamp(t.fit),stances:backing,remixOf:t.remixOf||null};
+    divergence:clamp(t.divergence),ownership:clamp(t.ownership),defensibility:clamp(t.defensibility),fit:clamp(t.fit),stances:backing,remixOf:t.remixOf||null,evergreen:t.evergreen===true||t.evergreen==="true"};
 }
 /* ---------- deepen: add your context, talk it through, rebuild ---------- */
 const open=new Set(); const busy={};
@@ -1825,6 +1926,7 @@ async function build(key){
   const hasTalk=(t.thread||[]).some(m=>m.role==="user");
   if(!t.context&&!hasTalk){showNotice("Add some context or talk it through first, so the remix has something of yours to work with.",true);return}
   busy[key]=true; renderPanel(key);
+  const om=pickOmen(); omenShow(om); showNotice(om.say(t.title));
   const btn=document.querySelector(`#panel-${key} [data-act="build"]`); if(btn) btn.textContent="Building…";
   const p=`You are Handalf. A creator picked one contrary take and gave you more of themselves. Rebuild it into 3 sharper takes grounded in what they told you. Keep the core position, use their real details (moments, examples, work), and vary the frame (format, hook, evidence).
 
@@ -1858,9 +1960,9 @@ Reply with only JSON: {"stances":[{"id":"n1","stance":"first person, one sentenc
     const i=run.takes.findIndex(x=>x.key===key);
     let j=i+1; while(j<run.takes.length&&run.takes[j].remixOf===key) j++;
     run.takes.splice(j,0,...news);
-    busy[key]=false; persist("last"); renderEngine();
+    busy[key]=false; omenHide(); persist("last"); renderEngine();
     showNotice(`Added ${news.length} remixes under “${t.title}”${Object.keys(map).length?`, and ${Object.keys(map).length} new elements to your bank`:""}. Each remix can be chosen or added to the library as its own book.`);
-  }catch(e){ busy[key]=false; renderPanel(key); showNotice(errCopy(e),true) }
+  }catch(e){ busy[key]=false; omenHide(); renderPanel(key); showNotice(errCopy(e),true) }
 }
 function takeHTML(t,ctx){
   const m=multiple(t), [tn,tc]=tier(m);
@@ -1873,7 +1975,7 @@ function takeHTML(t,ctx){
     <div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
     <div style="min-width:0">
       ${t.remixOfTitle?`<p class="remix-of">Remix of “${esc(t.remixOfTitle)}”</p>`:""}
-      <h4>${esc(t.title)}${t.deepened?`<span class="badge">From your context</span>`:""}</h4>
+      <h4>${esc(t.title)}${t.deepened?`<span class="badge">From your context</span>`:""}${t.evergreen?`<span class="badge ever">Evergreen</span>`:""}</h4>
       <p class="hook">${esc(t.hook)}</p>
       <p class="angle">${esc(t.angle)}</p>
       <div class="meta"><span>Against <b>${esc(t.against||"n/a")}</b>${cons?` · ${esc(cons.take)}`:""}</span><span>Format <b>${esc(t.format||"n/a")}</b></span></div>
@@ -1882,11 +1984,33 @@ function takeHTML(t,ctx){
       ${t.risk?`<p class="risk">Risk: ${esc(t.risk)}</p>`:""}
       ${`<div class="actions">
         <button class="btn" data-act="choose" data-key="${t.key}" type="button">Choose spell</button>
+        <button class="btn ghost" data-act="tedit" data-key="${t.key}" type="button">Edit</button>
         <button class="btn ghost" data-act="save" data-key="${t.key}" type="button">${saved?"In library":"Add to library"}</button>
         ${ctx.vault?`<button class="btn ghost" data-act="copy" data-key="${t.key}" type="button">Copy</button><button class="btn quiet" data-act="unsave" data-key="${t.key}" type="button">Remove</button>`:`<button class="btn ghost" data-act="remix" data-key="${t.key}" type="button" aria-expanded="${open.has(t.key)}">${open.has(t.key)?"Close":(t.thread&&t.thread.length?"Continue":"Remix")}</button>`}
       </div>`}
+      ${tEdit.has(t.key)?takeEditHTML(t):""}
       ${ctx.vault?"":`<div id="panel-${t.key}">${open.has(t.key)?deepHTML(t):""}</div>`}
     </div></article>`;
+}
+const bEdit=new Map(), tEdit=new Set();
+function batchEditHTML(run){
+  const ed=bEdit.get(run.id), all=[...state.stances].sort((a,b)=>(b.strength||0)-(a.strength||0));
+  return `<div class="bedit" data-beditbox="${esc(run.id)}">
+    <label class="label" for="bt-${esc(run.id)}">Name this territory</label>
+    <input id="bt-${esc(run.id)}" data-btopic="${esc(run.id)}" value="${esc(ed.topic)}">
+    <p class="label" style="margin-top:6px">Elements in this batch</p>
+    <div class="bedit-els">${all.map(x=>`<button type="button" class="bel" data-bel="${esc(x.id)}" data-run="${esc(run.id)}" aria-pressed="${ed.ids.has(x.id)}"><b>${esc(x.id)}</b> ${esc(x.stance)}</button>`).join("")}</div>
+    <div class="cl-go"><button class="btn" type="button" data-bagain="${esc(run.id)}" ${ed.ids.size&&sample&&!combining?"":"disabled"}>${combining?"Conjuring…":"Conjure this batch again"}</button><button class="btn ghost" type="button" data-bkeep="${esc(run.id)}">Just rename it</button></div>
+    <p class="hint">Conjuring again replaces the ideas in this batch. Ideas you already chose stay in your spell book.</p>
+  </div>`;
+}
+function takeEditHTML(t){
+  return `<div class="tedit"><label class="label" for="te-t-${t.key}">Title</label><input id="te-t-${t.key}" value="${esc(t.title)}">
+    <label class="label" for="te-h-${t.key}">Hook</label><textarea id="te-h-${t.key}" rows="2">${esc(t.hook||"")}</textarea>
+    <label class="label" for="te-a-${t.key}">Angle</label><textarea id="te-a-${t.key}" rows="3">${esc(t.angle||"")}</textarea>
+    <label class="label" for="te-f-${t.key}">Format</label><input id="te-f-${t.key}" value="${esc(t.format||"")}">
+    <label class="echk"><input type="checkbox" id="te-e-${t.key}" ${t.evergreen?"checked":""}> Evergreen: a core brand principle, not a trend</label>
+    <div class="actions"><button class="btn" type="button" data-act="tsave" data-key="${t.key}">Save changes</button><button class="btn ghost" type="button" data-act="tcancel" data-key="${t.key}">Cancel</button></div></div>`;
 }
 function batchHTML(run){
   const takes=run.takes||[];
@@ -1896,7 +2020,8 @@ function batchHTML(run){
   ordered=ordered.filter(t=>{const m=multiple(t);return filter==="all"||(filter==="out"&&m>=5)||(filter==="owned"&&t.ownership>=6)||(filter==="safe"&&t.defensibility>=7)});
   const from=(run.fromText||[]).length?`<p class="batch-from">From ${run.fromText.map(x=>`<span>${esc(x)}</span>`).join("")}</p>`:"";
   return `<section class="batch" id="batch-${esc(run.id)}">
-    <div class="batch-head"><div><p class="leyebrow">${run.example?"Example batch":"Conjured "+savedLabel(run.at)}</p><h3>${esc(run.topic)}</h3>${from}</div>${run.example?"":`<button class="ltext" type="button" data-bdel="${esc(run.id)}">Clear this batch</button>`}</div>
+    <div class="batch-head"><div><p class="leyebrow">${run.example?"Example batch":"Conjured "+savedLabel(run.at)}</p><h3>${esc(run.topic)}</h3>${from}</div>${run.example?"":`<div class="batch-acts"><button class="ltext" type="button" data-bedit="${esc(run.id)}">${bEdit.has(run.id)?"Cancel":"Edit elements"}</button><button class="ltext" type="button" data-bdel="${esc(run.id)}">Clear this batch</button></div>`}</div>
+    ${bEdit.has(run.id)?batchEditHTML(run):""}
     <div class="results">
     <aside>
       <div class="col-head"><h3>Consensus</h3><span class="baseline">= 1x</span></div>
@@ -1930,7 +2055,8 @@ function vaultEntry(t,run){
 function chooseTake(key){
   const run=batchOf(key); if(!run) return; const t=run.takes.find(x=>x.key===key);
   const {thread,...rest}=t;
-  state.chosen.unshift({...rest,topic:run.topic,batchId:run.id,fromText:run.fromText||[],againstText:((run.consensus||[]).find(c=>c.id===t.against)||{}).take||"",chosenAt:Date.now()});
+  const inLib=state.vault.filter(v=>v.key===key||v.spellKey===key).length;
+  state.chosen.unshift({...rest,topic:run.topic,batchId:run.id,fromText:run.fromText||[],againstText:((run.consensus||[]).find(c=>c.id===t.against)||{}).take||"",chosenAt:Date.now(),uses:inLib,lastUsed:inLib?Date.now():0});
   run.takes=run.takes.filter(x=>x.key!==key).map(x=>x.remixOf===key?{...x,remixOf:null}:x); open.delete(key);
   persist("last"); persist("spells"); renderEngine(); renderSpellbook();
   showNotice(`“${t.title}” moved to your spell book.`);
@@ -1939,6 +2065,14 @@ $("#results").addEventListener("click",e=>{
   if(e.target.closest("[data-setup]")){openSetup();return}
   if(e.target.closest("[data-goel]")){show("stances");return}
   const f=e.target.closest("[data-filter]"); if(f){filter=f.dataset.filter;renderEngine();return}
+  const be=e.target.closest("button[data-bedit]");
+  if(be){const id=be.dataset.bedit, r=state.batches.find(x=>x.id===id); if(bEdit.has(id)) bEdit.delete(id); else if(r) bEdit.set(id,{topic:r.topic,ids:new Set(r.from||[])}); renderEngine(); return}
+  const bl=e.target.closest("button[data-bel]");
+  if(bl){const ed=bEdit.get(bl.dataset.run); if(!ed) return; const id=bl.dataset.bel; ed.ids.has(id)?ed.ids.delete(id):ed.ids.add(id); bl.setAttribute("aria-pressed",ed.ids.has(id)); const g=document.querySelector(`[data-bagain="${bl.dataset.run}"]`); if(g) g.disabled=!ed.ids.size||!sample; return}
+  const bk=e.target.closest("button[data-bkeep]");
+  if(bk){const id=bk.dataset.bkeep, r=state.batches.find(x=>x.id===id), ed=bEdit.get(id); if(r&&ed&&ed.topic.trim()){r.topic=ed.topic.trim(); persist("last")} bEdit.delete(id); renderEngine(); return}
+  const ba=e.target.closest("button[data-bagain]");
+  if(ba){const id=ba.dataset.bagain, ed=bEdit.get(id), r=state.batches.find(x=>x.id===id); if(!ed||!ed.ids.size) return; const nm=ed.topic.trim(); runCombine([...ed.ids],id,nm&&r&&nm!==r.topic?nm:""); return}
   const bd=e.target.closest("button[data-bdel]"); if(bd){state.batches=state.batches.filter(x=>x.id!==bd.dataset.bdel);persist("last");renderEngine();return}
   const b=e.target.closest("button[data-act]"); if(!b) return;
   // the sample batch becomes yours the moment you act on one of its ideas
@@ -1948,12 +2082,18 @@ $("#results").addEventListener("click",e=>{
   if(b.dataset.act==="talk"){ask(k);return}
   if(b.dataset.act==="build"){build(k);return}
   if(b.dataset.act==="choose"&&t){chooseTake(k);return}
+  if(b.dataset.act==="tedit"){tEdit.has(k)?tEdit.delete(k):tEdit.add(k); renderEngine(); return}
+  if(b.dataset.act==="tcancel"){tEdit.delete(k); renderEngine(); return}
+  if(b.dataset.act==="tsave"&&t){const g=id=>(document.getElementById(id)||{}).value; t.title=(g("te-t-"+k)||t.title).trim(); t.hook=(g("te-h-"+k)||"").trim(); t.angle=(g("te-a-"+k)||"").trim(); t.format=(g("te-f-"+k)||"").trim(); t.evergreen=!!(document.getElementById("te-e-"+k)||{}).checked; t.edited=true; tEdit.delete(k);
+    const vb=vfind(k); if(vb){Object.assign(vb,{title:t.title,hook:t.hook,angle:t.angle,format:t.format}); persist("vault"); renderVault()}
+    persist("last"); renderEngine(); return}
   if(b.dataset.act==="save"&&t&&run&&!state.vault.some(v=>v.key===t.key)){
     state.vault.push(vaultEntry(t,run)); persist("vault"); renderEngine(); renderVault();
   }
 });
 
-$("#results").addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.ctx;if(!k)return;const t=findTake(k);if(t){t.context=e.target.value;persist("last")}});
+$("#results").addEventListener("input",e=>{ const bt=e.target.dataset&&e.target.dataset.btopic; if(bt){const ed=bEdit.get(bt); if(ed) ed.topic=e.target.value; return}
+  const k=e.target.dataset&&e.target.dataset.ctx;if(!k)return;const t=findTake(k);if(t){t.context=e.target.value;persist("last")}});
 $("#results").addEventListener("submit",e=>{
   const f=e.target.closest("[data-say]"); if(!f) return; e.preventDefault();
   const k=f.dataset.say, inp=document.getElementById("say-"+k), t=findTake(k);
@@ -2065,7 +2205,7 @@ function renderCombine(){
   const bar=$("#combine-bar"); if(!bar) return;
   [...elSel].forEach(id=>{if(!state.stances.some(s=>s.id===id))elSel.delete(id)});
   const n=elSel.size;
-  bar.innerHTML=`<div><span class="label">Combine elements</span><p class="hint" id="combine-msg">${n?`${n} element${n===1?"":"s"} chosen. Handalf combines them into content ideas in Alchemy.`:"Tap elements below to choose up to five, then combine them into spells."}</p></div>
+  bar.innerHTML=`<div><span class="label">Combine elements</span><p class="hint" id="combine-msg">${combining?esc(combining.say("")):n?`${n} element${n===1?"":"s"} chosen. Handalf combines them into content ideas in Alchemy.`:"Tap elements below to choose up to five, then combine them into spells."}</p></div>
     <div class="cl-go">${n?`<button class="ltext" type="button" data-eclear>Clear</button>`:""}<button class="btn" type="button" data-combine ${!n||combining||!sample?"disabled":""}>${combining?"Combining…":"Combine into spells"}</button></div>`;
 }
 function renderStances(){
@@ -2098,31 +2238,82 @@ function renderProfile(){
 $("#arch-readout").addEventListener("click",e=>{if(e.target.closest("[data-story]"))playBrandStory();if(e.target.closest("[data-retake]"))startQuiz();if(e.target.closest("[data-setup]"))openSetup("bio")});
 pf.addEventListener("input",e=>{if(!e.target.name)return;state.profile[e.target.name]=e.target.value;persist("profile");$("#profile-saved").textContent="Saved."});
 
-/* ---------- spell book: the archive of chosen spells ---------- */
-function spellCardHTML(t){
-  const m=multiple(t),[tn,tc]=tier(m), saved=state.vault.some(v=>v.key===t.key);
+/* ---------- spell book: most used, newest and evergreen spells ---------- */
+const sbOpen=new Set(); let sbBusy="";
+const spUses=t=>t.uses||0;
+function spellCardHTML(t,where){
+  const m=multiple(t),[tn,tc]=tier(m), u=spUses(t), id=where+"-"+t.key;
   return `<article class="take chosen"><div class="scorecol"><div class="mult">${fmt(m)}<small>x</small></div><span class="tier ${tc}">${tn}</span></div>
     <div style="min-width:0">
-      <p class="leyebrow">${esc(t.topic||"Spell")} · chosen ${savedLabel(t.chosenAt)}</p>
+      <p class="leyebrow">${esc(t.topic||"Spell")} · chosen ${savedLabel(t.chosenAt)}${u?` · used ${u} time${u===1?"":"s"}`:""}</p>
       ${t.remixOfTitle?`<p class="remix-of">Remix of “${esc(t.remixOfTitle)}”</p>`:""}
-      <h4>${esc(t.title)}</h4><p class="hook">${esc(t.hook||"")}</p>${t.angle?`<p class="angle">${esc(t.angle)}</p>`:""}
+      <h4>${esc(t.title)}${t.evergreen?`<span class="badge ever">Evergreen</span>`:""}</h4><p class="hook">${esc(t.hook||"")}</p>${t.angle?`<p class="angle">${esc(t.angle)}</p>`:""}
       ${t.context?`<p class="ctx-note"><b>Your context:</b> ${esc(t.context)}</p>`:""}
       <div class="meta">${t.againstText?`<span>Against <b>${esc(t.againstText)}</b></span>`:""}<span>Format <b>${esc(t.format||"n/a")}</b></span></div>
-      <div class="actions"><button class="btn ghost" type="button" data-sb="save" data-key="${t.key}">${saved?"In library":"Add to library"}</button><button class="btn ghost" type="button" data-sb="back" data-key="${t.key}">Back to Alchemy</button><button class="btn quiet" type="button" data-sb="del" data-key="${t.key}">Remove</button></div>
+      <div class="actions"><button class="btn ghost" type="button" data-sb="save" data-key="${t.key}">${u?"Use it again":"Add to library"}</button>
+        ${t.evergreen?`<button class="btn" type="button" data-sb="reshare" data-key="${t.key}" aria-expanded="${sbOpen.has(id)}" data-where="${where}">Reshare</button>`:""}
+        <button class="btn ghost" type="button" data-sb="ever" data-key="${t.key}">${t.evergreen?"Not evergreen":"Mark evergreen"}</button>
+        <button class="btn quiet" type="button" data-sb="back" data-key="${t.key}">Back to Alchemy</button><button class="btn quiet" type="button" data-sb="del" data-key="${t.key}">Remove</button></div>
+      ${sbOpen.has(id)?`<div class="reshare"><p class="label">Reshare this spell with</p><div class="seg" role="group" aria-label="Reshare with">${[["copy","New copy"],["visuals","New visuals"],["both","Both"]].map(([k,l])=>`<button type="button" data-sb="rs" data-mode="${k}" data-key="${t.key}" ${sbBusy?"disabled":""}>${l}</button>`).join("")}</div><p class="hint">Handalf keeps the principle and writes a fresh version as a new library book.</p></div>`:""}
     </div></article>`;
+}
+function sbSection(title,hint,list,where,empty){
+  return `<section class="sbsec"><div class="col-head sb-head"><h3>${title}</h3><span class="label">${list.length?`${list.length} spell${list.length===1?"":"s"}`:""}</span></div>${hint?`<p class="hint">${hint}</p>`:""}
+    ${list.length?list.map(t=>spellCardHTML(t,where)).join(""):`<p class="sempty">${empty}</p>`}</section>`;
 }
 function renderSpellbook(){
   const el=$("#spells"); if(!el) return; migrateRuns();
-  const list=state.chosen;
-  el.innerHTML=`<div class="col-head sb-head"><h3>Chosen spells</h3><span class="label">${list.length?`${list.length} spell${list.length===1?"":"s"}`:""}</span></div>
-    ${list.length?list.map(spellCardHTML).join(""):`<div class="empty"><strong>No spells chosen yet</strong>In Alchemy, press Choose spell on the ideas you want to keep. They move here, out of the way of the ones still brewing.</div>`}`;
+  const all=state.chosen;
+  const used=[...all].filter(t=>spUses(t)>0).sort((a,b)=>spUses(b)-spUses(a)||(b.lastUsed||0)-(a.lastUsed||0)).slice(0,5);
+  const newest=[...all].sort((a,b)=>(b.chosenAt||0)-(a.chosenAt||0)).slice(0,5);
+  const ever=all.filter(t=>t.evergreen);
+  el.innerHTML=all.length?`
+    ${sbSection("Most used","Your five most used spells. Every time a spell goes to the library or gets reshared, it counts.",used,"used","Add a spell to the library or reshare it and it shows up here.")}
+    ${sbSection("Newest","The latest spells you chose in Alchemy.",newest,"new","")}
+    ${sbSection("Evergreen","Spells built on your core brand principles rather than trends. Reshare them for years with new visuals, new copy or both.",ever,"ever","No evergreen spells yet. Ideas Handalf marks evergreen in Alchemy land here when you choose them, or mark one yourself.")}
+    <details class="panel addpanel sball"><summary><span class="label">Every spell you've chosen · ${all.length}</span><span class="addchev" aria-hidden="true"></span></summary><div class="addbody">${all.map(t=>spellCardHTML(t,"all")).join("")}</div></details>`
+    :`<div class="empty"><strong>No spells chosen yet</strong>In Alchemy, press Choose spell on the ideas you want to keep. Your most used, newest and evergreen spells collect here.</div>`;
+}
+function spellToBook(t,over){
+  const n=(t.uses||0)+1, {chosenAt,batchId,uses,lastUsed,...r}=t;
+  const key=vfind(t.key)?t.key+"-"+n+Date.now().toString(36).slice(-3):t.key;
+  state.vault.push({...r,...(over||{}),key,spellKey:t.key,savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]});
+  t.uses=n; t.lastUsed=Date.now(); persist("vault"); persist("spells"); renderVault();
+}
+async function reshare(t,how){
+  if(!sample){showNotice("Resharing runs on Claude, so open this page inside Claude to use it.",true);return}
+  const om=pickOmen(); sbBusy=t.key; omenShow(om); renderSpellbook(); showNotice(om.say(t.title));
+  const want=how==="copy"?"new copy (title, hook and angle) while keeping the same visual approach":how==="visuals"?"a new visual treatment (what the viewer sees: imagery, layout, scenes) while keeping the copy close to the original":"both new copy and a new visual treatment";
+  try{
+    const out=await sample.json(`You are Handalf, a content strategist. This creator has an evergreen spell: a content idea built on a core brand principle. Reshare it with ${want}. Keep the principle and the creator's voice. Do not bring in subjects or trends the original does not mention. Write plainly, no em dashes.
+
+CREATOR PROFILE
+${profileText()}
+
+THE SPELL
+Title: ${t.title}
+Hook: ${t.hook||""}
+Angle: ${t.angle||""}
+Format: ${t.format||""}
+${t.visual?`Previous visuals: ${t.visual}`:""}
+
+Reply with only JSON: {"title":"","hook":"under 25 words","angle":"2-3 sentences","format":"video essay | short | carousel | thread | post | podcast","visual":"2-3 sentences on what the audience sees"}`,{cache:false});
+    if(!out||!out.title) throw {code:"invalid_json"};
+    spellToBook(t,{title:String(out.title),hook:String(out.hook||t.hook||""),angle:String(out.angle||t.angle||""),format:String(out.format||t.format||""),visual:String(out.visual||""),reshareOf:t.title,reshareHow:how,topic:t.topic});
+    showNotice(`Reshared “${t.title}” as a new library book: “${out.title}”.`);
+  }catch(e){ showNotice(errCopy(e)||"The reshare didn't come back. Try again.",true) }
+  sbBusy=""; omenHide(); sbOpen.clear(); renderSpellbook();
 }
 $("#spells").addEventListener("click",e=>{
   const b=e.target.closest("button[data-sb]"); if(!b) return;
   const i=state.chosen.findIndex(x=>x.key===b.dataset.key); if(i<0) return; const t=state.chosen[i];
-  if(b.dataset.sb==="save"){ if(!state.vault.some(v=>v.key===t.key)){ const {chosenAt,batchId,...r}=t; state.vault.push({...r,savedAt:Date.now(),kind:"single",planDate:"",cadence:"weekly",episodes:[]}); persist("vault"); renderVault() } }
-  if(b.dataset.sb==="back"){ state.chosen.splice(i,1); const {chosenAt,batchId,topic,fromText,...r}=t; let run=state.batches.find(x=>x.id===batchId); if(!run){run={id:"b"+Date.now().toString(36),topic:topic||"Returned spells",fromText:fromText||[],consensus:[],takes:[],at:Date.now()}; state.batches.unshift(run)} run.takes.push(r); persist("last"); renderEngine() }
-  if(b.dataset.sb==="del"){ state.chosen.splice(i,1) }
+  const act=b.dataset.sb;
+  if(act==="save") spellToBook(t);
+  if(act==="ever") t.evergreen=!t.evergreen;
+  if(act==="reshare"){const id=b.dataset.where+"-"+t.key; sbOpen.has(id)?sbOpen.delete(id):(sbOpen.clear(),sbOpen.add(id)); return renderSpellbook()}
+  if(act==="rs") return reshare(t,b.dataset.mode);
+  if(act==="back"){ state.chosen.splice(i,1); const {chosenAt,batchId,topic,fromText,uses,lastUsed,...r}=t; let run=state.batches.find(x=>x.id===batchId); if(!run){run={id:"b"+Date.now().toString(36),topic:topic||"Returned spells",fromText:fromText||[],consensus:[],takes:[],at:Date.now()}; state.batches.unshift(run)} run.takes.push(r); persist("last"); renderEngine() }
+  if(act==="del"){ state.chosen.splice(i,1) }
   persist("spells"); renderSpellbook();
 });
 
@@ -2193,12 +2384,37 @@ function openPanel(keys){
   if(vOpen==="__brand") return `<div class="vopen">${brandOpen()}</div>`;
   const v=vfind(vOpen); return v?`<div class="vopen"><button class="ltext vclose" type="button" data-vclose>Close the book</button>${vaultCard(v)}</div>`:"";
 }
+const DAY=86400000, CYCLE=30*DAY; let agroup="style";
+function styleOf(x){const f=String(x.format||"").toLowerCase().trim(); if(!f) return MEDIA[(exMedia(x)[0])]||"Other"; return f.replace(/\b\w/g,c=>c.toUpperCase())}
+function sweepArchive(){
+  const now=Date.now(); if(!state.archiveAt){ state.archiveAt=now; persist("vault"); return }
+  if(now-state.archiveAt<CYCLE) return;
+  const today=todayISO(); let n=0;
+  state.vault.forEach(x=>{ if(x.archivedAt) return; const future=x.planDate&&x.planDate>=today; if(!future&&(x.savedAt||0)<now){x.archivedAt=now;n++} });
+  state.archiveAt=state.archiveAt+Math.floor((now-state.archiveAt)/CYCLE)*CYCLE; persist("vault");
+  if(n) showNotice(`${n} book${n===1?"":"s"} moved to the archive. Handalf files the shelves every thirty days.`);
+}
+function archiveHTML(){
+  const arc=state.vault.filter(x=>x.archivedAt);
+  const next=Math.max(0,Math.ceil(((state.archiveAt||Date.now())+CYCLE-Date.now())/DAY));
+  let body="";
+  if(arc.length){
+    const groups=new Map(), key=x=>agroup==="style"?styleOf(x):new Date(x.planDate?x.planDate+"T12:00":x.savedAt||Date.now()).toLocaleDateString(undefined,{month:"long",year:"numeric"});
+    const sortKey=x=>x.planDate?Date.parse(x.planDate):(x.savedAt||0);
+    [...arc].sort((a,b)=>sortKey(b)-sortKey(a)).forEach(x=>{const k=key(x); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(x)});
+    body=[...groups.entries()].map(([k,items])=>shelf(k,`${items.length} book${items.length===1?"":"s"}`,items.map(bookCover).join(""),"")).join("");
+  }
+  return `<section class="archive"><div class="col-head arc-head"><div><h3>Archive</h3><p class="hint">Every thirty days Handalf files the shelves: books saved before then move here, except ones scheduled ahead. Next filing in ${next} day${next===1?"":"s"}.</p></div>
+    ${arc.length?`<div class="filters"><button class="chip" type="button" data-agroup="style" aria-pressed="${agroup==="style"}">By style</button><button class="chip" type="button" data-agroup="date" aria-pressed="${agroup==="date"}">By date</button></div>`:""}</div>
+    ${arc.length?body:`<p class="sempty">Nothing archived yet.</p>`}</section>`;
+}
 function renderVault(){
-  const v=state.vault;
+  sweepArchive();
+  const v=state.vault.filter(x=>!x.archivedAt);
   $("#n-vault").textContent=v.length?v.length:"";
   document.querySelectorAll("[data-vgroup]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.vgroup===vgroup));
   let html=shelf("Your spell book","",brandBook(),openPanel(["__brand"]));
-  if(!v.length){$("#vault-list").innerHTML=html+`<div class="empty"><strong>No takes on the shelves yet</strong>Save takes from an Alchemy run. Each one becomes a book here that you can plan as a single post or a series.</div>`;return}
+  if(!v.length){$("#vault-list").innerHTML=html+`<div class="empty"><strong>No books on the shelves right now</strong>Add ideas from Alchemy or spells from your spell book. Each one becomes a book here that you can plan as a single post or a series.</div>`+archiveHTML();refreshTakeBook();return}
   if(vgroup==="idea"){
     const groups=new Map();
     v.forEach(x=>{const t=x.topic||"Untitled";if(!groups.has(t))groups.set(t,[]);groups.get(t).push(x)});
@@ -2212,7 +2428,7 @@ function renderVault(){
     html+=days.map(d=>{const s=buckets.get(d);
       return shelf(d==="none"?"Not scheduled":dayLabel(d)+(d===today?" · Today":d<today?" · Past":""),`${s.length} book${s.length===1?"":"s"}`,s.map(bookCover).join(""),openPanel(s.map(x=>x.key)))}).join("");
   }
-  $("#vault-list").innerHTML=html;
+  $("#vault-list").innerHTML=html+archiveHTML();
   refreshTakeBook(); if(view==="profile") renderSpellbook();
 }
 $("#vault-group").addEventListener("click",e=>{const b=e.target.closest("[data-vgroup]");if(!b)return;vgroup=b.dataset.vgroup;renderVault()});
@@ -2220,6 +2436,7 @@ const vfind=k=>state.vault.find(x=>x.key===k);
 $("#vault-list").addEventListener("click",async e=>{
   const bk=e.target.closest("button[data-vbook]");
   if(bk){const k=bk.dataset.vbook; if(k==="__brand"){bk.classList.add("lift");setTimeout(()=>{bk.classList.remove("lift");openBook(answers().some(x=>x!=null)?"story":"first")},260);return} return openTake(k,bk)}
+  const ag=e.target.closest("button[data-agroup]"); if(ag){agroup=ag.dataset.agroup; return renderVault()}
   return vaultAct(e);
 });
 async function vaultAct(e){
@@ -2231,6 +2448,7 @@ async function vaultAct(e){
   if(kd){const v=vfind(kd.dataset.key);if(v&&v.kind!==kd.dataset.kind){v.kind=kd.dataset.kind;persist("vault");renderVault()}return true}
   const b=e.target.closest("button[data-act]"); if(!b) return false;
   const t=vfind(b.dataset.key); if(!t) return false;
+  if(b.dataset.act==="restore"){delete t.archivedAt; persist("vault"); renderVault(); return true}
   if(b.dataset.act==="unsave"){state.vault=state.vault.filter(x=>x.key!==t.key);persist("vault");if(book.mode==="take"&&book.vkey===t.key)endIntro();renderVault();renderEngine()}
   if(b.dataset.act==="copy"){
     let txt=`${t.title}\n\n${t.hook}\n\n${t.angle}\n\nFormat: ${t.format}${t.planDate?`\nPlanned: ${t.planDate}`:""}`;
@@ -2739,7 +2957,7 @@ function setCover(){
   const ms=exMedia(v), series=v.kind==="series", m=multiple(v), [tn]=tier(m);
   bk.dataset.cover="take"; bk.style.setProperty("--spine",`var(--sp-${ms.includes("video")?"video":ms.includes("audio")?"audio":"text"})`);
   f.innerHTML=`<button class="ltext iskip iskip-cover" type="button" data-skip>Close</button>
-    <p class="tcov-eye">${v.remixOfTitle?"Remix · ":""}${esc(ms.map(x=>MEDIA[x]).join(" · "))}${series?" · Series":""}</p>
+    <p class="tcov-eye">${v.reshareOf?"Reshare · ":v.remixOfTitle?"Remix · ":""}${v.archivedAt?"Archived · ":""}${esc(ms.map(x=>MEDIA[x]).join(" · "))}${series?" · Series":""}</p>
     <p class="tcov-title">${esc(v.title)}</p>
     <p class="tcov-rule" aria-hidden="true"></p>
     <p class="itag">${esc(v.topic||"A take from your library")}</p>
@@ -2749,11 +2967,12 @@ function takeBookHTML(key){
   const v=vfind(book.vkey); if(!v) return `<p class="leyebrow">Library</p><h2 class="lq sm">This book is no longer on the shelf.</h2><div class="bturn"><button class="btn" type="button" data-skip>Close the book</button></div>`;
   const m=multiple(v),[tn,tc]=tier(m), series=v.kind==="series", eps=v.episodes||[], k=v.key;
   if(key==="t-take") return `<p class="leyebrow">Chapter one · ${esc(v.topic||"The take")}</p>
-    ${v.remixOfTitle?`<p class="remix-of">Remix of “${esc(v.remixOfTitle)}”</p>`:""}
+    ${v.remixOfTitle?`<p class="remix-of">Remix of “${esc(v.remixOfTitle)}”</p>`:""}${v.reshareOf?`<p class="remix-of">Reshare of “${esc(v.reshareOf)}”</p>`:""}
     <h2 class="lq sm">${esc(v.title)}</h2>
     <p class="inscribed">${esc(v.hook||"")}</p>
     ${v.angle?`<p>${esc(v.angle)}</p>`:""}
     ${v.context?`<p class="ctx-note"><b>Your context:</b> ${esc(v.context)}</p>`:""}
+    ${v.visual?`<p class="ctx-note"><b>Visuals:</b> ${esc(v.visual)}</p>`:""}
     <div class="tmeta"><span class="tscore">${fmt(m)}<small>x</small></span><span class="tier ${tc}">${tn}</span><span>Format <b>${esc(v.format||"n/a")}</b></span>${v.againstText?`<span>Against <b>${esc(v.againstText)}</b></span>`:""}<span>Saved <b>${savedLabel(v.savedAt)}</b></span></div>
     ${turnHint()}`;
   if(key==="t-plan") return `<p class="leyebrow">Chapter two · The plan</p>
@@ -2777,7 +2996,8 @@ function takeBookHTML(key){
   return `<p class="leyebrow">The last page</p>
     <h2 class="lq sm">This ${series?"series":"take"} ${when}.</h2>
     <p>${esc(v.title)}${series&&eps.length?`, told in ${eps.length} episodes`:""}.</p>
-    <div class="bturn bturn2"><button class="btn" type="button" data-act="copy" data-key="${v.key}">Copy it</button><button class="ltext" type="button" data-skip>Close the book</button><button class="ltext tremove" type="button" data-act="unsave" data-key="${v.key}">Take it off the shelf</button></div>
+    ${v.archivedAt?`<p class="bmute">Archived ${savedLabel(v.archivedAt)} under ${esc(styleOf(v))}.</p>`:""}
+    <div class="bturn bturn2"><button class="btn" type="button" data-act="copy" data-key="${v.key}">Copy it</button>${v.archivedAt?`<button class="ltext" type="button" data-act="restore" data-key="${v.key}">Put it back on the shelf</button>`:""}<button class="ltext" type="button" data-skip>Close the book</button><button class="ltext tremove" type="button" data-act="unsave" data-key="${v.key}">Take it off the shelf</button></div>
     <div class="bnav">${bookBack()}</div>`;
 }
 function refreshTakeBook(){
